@@ -37,9 +37,9 @@ export function ContactForm() {
   if (submitted) {
     return (
       <div className="flex flex-col items-center gap-4 py-12 text-center">
-        <CheckCircle2 size={48} className="text-gold" />
-        <h3 className="font-display text-2xl font-semibold">Demande envoyée</h3>
-        <p className="max-w-sm text-white/60">
+        <CheckCircle2 size={48} className="text-teal-500" />
+        <h3 className="font-display text-2xl font-bold text-ink">Demande envoyée</h3>
+        <p className="max-w-sm text-ink-soft">
           Merci ! Notre équipe revient vers vous sous 48&nbsp;heures ouvrées pour étudier votre projet.
         </p>
       </div>
@@ -109,7 +109,7 @@ export function ContactForm() {
         <FieldError>{errors.message?.message}</FieldError>
       </div>
 
-      {serverError ? <p className="text-sm text-red-400">{serverError}</p> : null}
+      {serverError ? <p className="text-sm text-coral-dark">{serverError}</p> : null}
 
       <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
         {isSubmitting ? (
@@ -120,7 +120,7 @@ export function ContactForm() {
           "Envoyer ma demande"
         )}
       </Button>
-      <p className="text-center text-xs text-white/40">
+      <p className="text-center text-xs text-ink-muted">
         En envoyant ce formulaire, vous acceptez d&apos;être recontacté par {""}
         HBS FORMATION au sujet de votre demande.
       </p>

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Inter } from "next/font/google";
+import { Poppins, Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
@@ -8,10 +8,10 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { OrganizationJsonLd } from "@/components/seo/JsonLd";
 
-const cormorant = Cormorant_Garamond({
+const poppins = Poppins({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-cormorant",
+  weight: ["500", "600", "700", "800"],
+  variable: "--font-poppins",
   display: "swap",
 });
 
@@ -60,8 +60,8 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="fr" className={`${cormorant.variable} ${inter.variable}`}>
-      <body className="bg-black text-[color:var(--color-text-primary)] font-body antialiased">
+    <html lang="fr" className={`${poppins.variable} ${inter.variable}`}>
+      <body className="bg-white font-body text-ink-soft antialiased">
         <OrganizationJsonLd />
         <Header />
         <main>{children}</main>

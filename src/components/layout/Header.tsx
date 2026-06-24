@@ -4,20 +4,20 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useScroll, useMotionValueEvent } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Menu, X, User, GraduationCap } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { navLinks, site } from "@/lib/site";
+import { navLinks } from "@/lib/site";
 import { Button } from "@/components/ui/Button";
 
 function Logo({ onClick }: { onClick?: () => void }) {
   return (
-    <Link
-      href="/"
-      onClick={onClick}
-      className="font-display text-2xl font-semibold tracking-wide text-gold"
-      aria-label={`${site.name} — accueil`}
-    >
-      HBS<span className="text-[color:var(--color-text-primary)]"> FORMATION</span>
+    <Link href="/" onClick={onClick} className="flex items-center gap-2" aria-label="HBS FORMATION — accueil">
+      <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-gradient text-white">
+        <GraduationCap size={20} />
+      </span>
+      <span className="font-display text-xl font-extrabold tracking-tight text-ink">
+        HBS<span className="text-teal-500"> FORMATION</span>
+      </span>
     </Link>
   );
 }
@@ -28,9 +28,8 @@ export function Header() {
   const [open, setOpen] = useState(false);
   const { scrollY } = useScroll();
 
-  useMotionValueEvent(scrollY, "change", (y) => setScrolled(y > 80));
+  useMotionValueEvent(scrollY, "change", (y) => setScrolled(y > 20));
 
-  // Bloquer le scroll quand le menu mobile est ouvert
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     return () => {
@@ -38,110 +37,90 @@ export function Header() {
     };
   }, [open]);
 
-  const isActive = (href: string) =>
-    href === "/" ? pathname === "/" : pathname.startsWith(href);
+  const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
 
   return (
-    <motion.header
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+    <header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-all duration-500",
-        scrolled
-          ? "border-b border-white/[0.08] bg-black/60 backdrop-blur-xl"
-          : "border-b border-transparent bg-transparent",
+        "fixed inset-x-0 top-0 z-50 bg-white transition-shadow duration-300",
+        scrolled ? "shadow-soft" : "border-b border-mist",
       )}
     >
-      <nav className="container-luxury flex h-20 items-center justify-between">
+      <nav className="container-page flex h-[72px] items-center justify-between gap-4">
         <Logo />
 
-        {/* Navigation bureau */}
-        <ul className="hidden items-center gap-9 lg:flex">
+        <ul className="hidden items-center gap-7 lg:flex">
           {navLinks.map((link) => (
             <li key={link.href}>
               <Link
                 href={link.href}
                 className={cn(
-                  "group relative text-[13px] uppercase tracking-[0.16em] transition-colors",
-                  isActive(link.href)
-                    ? "text-gold"
-                    : "text-white/70 hover:text-white",
+                  "text-[15px] font-medium transition-colors",
+                  isActive(link.href) ? "text-teal-600" : "text-ink-soft hover:text-teal-600",
                 )}
               >
                 {link.label}
-                <span
-                  className={cn(
-                    "absolute -bottom-1.5 left-0 h-px bg-gold transition-all duration-300",
-                    isActive(link.href) ? "w-full" : "w-0 group-hover:w-full",
-                  )}
-                />
               </Link>
             </li>
           ))}
         </ul>
 
-        <div className="hidden lg:block">
+        <div className="hidden items-center gap-3 lg:flex">
+          <Link
+            href="/connexion"
+            className="inline-flex items-center gap-1.5 text-[15px] font-medium text-ink-soft hover:text-teal-600"
+          >
+            <User size={17} /> Se connecter
+          </Link>
           <Button href="/contact" size="sm">
-            Demander un devis
+            Trouver ma formation
           </Button>
         </div>
 
-        {/* Bouton menu mobile */}
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
-          className="text-gold lg:hidden"
+          className="text-ink lg:hidden"
           aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
         >
           {open ? <X size={26} /> : <Menu size={26} />}
         </button>
       </nav>
 
-      {/* Menu mobile plein écran */}
       <AnimatePresence>
         {open && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 top-20 z-40 bg-black/95 backdrop-blur-xl lg:hidden"
+            className="fixed inset-0 top-[72px] z-40 bg-white lg:hidden"
           >
-            <motion.ul
-              initial="initial"
-              animate="animate"
-              variants={{ animate: { transition: { staggerChildren: 0.08 } } }}
-              className="container-luxury flex flex-col gap-2 pt-10"
-            >
+            <div className="container-page flex flex-col gap-1 pt-6">
               {navLinks.map((link) => (
-                <motion.li
+                <Link
                   key={link.href}
-                  variants={{
-                    initial: { opacity: 0, x: -20 },
-                    animate: { opacity: 1, x: 0 },
-                  }}
+                  href={link.href}
+                  onClick={() => setOpen(false)}
+                  className={cn(
+                    "border-b border-mist py-4 text-lg font-medium",
+                    isActive(link.href) ? "text-teal-600" : "text-ink",
+                  )}
                 >
-                  <Link
-                    href={link.href}
-                    onClick={() => setOpen(false)}
-                    className={cn(
-                      "block border-b border-white/[0.06] py-5 font-display text-3xl",
-                      isActive(link.href) ? "text-gold" : "text-white/80",
-                    )}
-                  >
-                    {link.label}
-                  </Link>
-                </motion.li>
+                  {link.label}
+                </Link>
               ))}
-              <li className="pt-8">
-                <Button href="/contact" className="w-full" onClick={() => setOpen(false)}>
-                  Demander un devis
+              <div className="mt-6 flex flex-col gap-3">
+                <Button href="/connexion" variant="outline" onClick={() => setOpen(false)}>
+                  Se connecter
                 </Button>
-              </li>
-            </motion.ul>
+                <Button href="/contact" onClick={() => setOpen(false)}>
+                  Trouver ma formation
+                </Button>
+              </div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.header>
+    </header>
   );
 }

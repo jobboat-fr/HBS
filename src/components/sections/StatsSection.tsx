@@ -15,7 +15,7 @@ function Counter({ value, suffix }: { value: string; suffix: string }) {
   useEffect(() => {
     if (!isNumeric || !inView) return;
     const controls = animate(0, target, {
-      duration: 1.6,
+      duration: 1.4,
       ease: [0.22, 1, 0.36, 1],
       onUpdate: (v) => setDisplay(Math.round(v)),
     });
@@ -32,21 +32,35 @@ function Counter({ value, suffix }: { value: string; suffix: string }) {
 
 export function StatsSection() {
   return (
-    <section className="relative py-[var(--section-padding)]">
-      <div className="container-luxury">
+    <section className="py-20 lg:py-24">
+      <div className="container-page">
+        <motion.h2
+          variants={fadeUp}
+          initial="initial"
+          whileInView="animate"
+          viewport={viewportOnce}
+          className="text-center font-display text-display-md font-extrabold text-ink"
+        >
+          Pourquoi choisir HBS FORMATION ?
+        </motion.h2>
+
         <motion.div
           variants={staggerContainer}
           initial="initial"
           whileInView="animate"
           viewport={viewportOnce}
-          className="grid gap-10 text-center sm:grid-cols-2 lg:grid-cols-4"
+          className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
         >
           {stats.map((s) => (
-            <motion.div key={s.label} variants={fadeUp}>
-              <div className="font-display text-5xl font-semibold text-gold-gradient lg:text-6xl">
+            <motion.div
+              key={s.label}
+              variants={fadeUp}
+              className="rounded-2xl bg-cloud p-8 text-center"
+            >
+              <div className="font-display text-5xl font-extrabold text-teal-gradient">
                 <Counter value={s.value} suffix={s.suffix} />
               </div>
-              <p className="mt-3 text-sm text-white/55">{s.label}</p>
+              <p className="mt-3 text-sm text-ink-soft">{s.label}</p>
             </motion.div>
           ))}
         </motion.div>

@@ -15,7 +15,7 @@ export function SignOutButton() {
   return (
     <button
       onClick={signOut}
-      className="inline-flex items-center gap-2 text-sm text-white/60 transition-colors hover:text-gold"
+      className="inline-flex items-center gap-2 text-sm text-ink-soft transition-colors hover:text-teal-600"
     >
       <LogOut size={16} /> Déconnexion
     </button>

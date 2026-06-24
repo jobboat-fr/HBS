@@ -32,10 +32,10 @@ export default function ConnexionPage() {
   }
 
   return (
-    <div className="flex min-h-[100svh] items-center justify-center px-5 py-32">
+    <div className="flex min-h-[100svh] items-center justify-center bg-cloud px-5 py-32">
       <GlassCard className="w-full max-w-md p-8 md:p-10">
-        <h1 className="font-display text-3xl font-semibold">Connexion</h1>
-        <p className="mt-2 text-sm text-white/55">Accédez à votre espace client HBS FORMATION.</p>
+        <h1 className="font-display text-3xl font-bold text-ink">Connexion</h1>
+        <p className="mt-2 text-sm text-ink-soft">Accédez à votre espace client HBS FORMATION.</p>
 
         <form onSubmit={onSubmit} className="mt-8 space-y-5">
           <div>
@@ -64,9 +64,9 @@ export default function ConnexionPage() {
           </Button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-white/55">
+        <p className="mt-6 text-center text-sm text-ink-soft">
           Pas encore de compte ?{" "}
-          <Link href="/inscription" className="text-gold hover:underline">
+          <Link href="/inscription" className="font-semibold text-teal-600 hover:underline">
             Créer un compte
           </Link>
         </p>

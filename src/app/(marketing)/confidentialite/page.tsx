@@ -12,7 +12,7 @@ export default function ConfidentialitePage() {
     <>
       <PageHeader eyebrow="Informations" title="Politique de confidentialité" />
       <section className="pb-[var(--section-padding)] pt-4">
-        <div className="container-luxury mx-auto max-w-3xl space-y-8 text-sm leading-relaxed text-white/65">
+        <div className="container-page mx-auto max-w-3xl space-y-8 text-sm leading-relaxed text-ink-soft">
           <Block title="Responsable du traitement">
             <p>
               {legal.raisonSociale}, {legal.siege}. Contact : {site.email}.
@@ -53,7 +53,7 @@ export default function ConfidentialitePage() {
 function Block({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div>
-      <h2 className="font-display text-xl font-semibold text-gold">{title}</h2>
+      <h2 className="font-display text-xl font-bold text-teal-600">{title}</h2>
       <div className="mt-3 space-y-1">{children}</div>
     </div>
   );

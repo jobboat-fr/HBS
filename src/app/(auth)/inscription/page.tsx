@@ -67,11 +67,11 @@ export default function InscriptionPage() {
 
   if (done) {
     return (
-      <div className="flex min-h-[100svh] items-center justify-center px-5 py-32">
+      <div className="flex min-h-[100svh] items-center justify-center bg-cloud px-5 py-32">
         <GlassCard className="w-full max-w-md p-10 text-center">
-          <CheckCircle2 size={48} className="mx-auto text-gold" />
-          <h1 className="mt-4 font-display text-2xl font-semibold">Compte créé</h1>
-          <p className="mt-3 text-sm text-white/60">
+          <CheckCircle2 size={48} className="mx-auto text-teal-500" />
+          <h1 className="mt-4 font-display text-2xl font-bold text-ink">Compte créé</h1>
+          <p className="mt-3 text-sm text-ink-soft">
             Vérifiez votre boîte mail pour confirmer votre adresse, puis connectez-vous.
           </p>
           <div className="mt-6">
@@ -85,10 +85,10 @@ export default function InscriptionPage() {
   }
 
   return (
-    <div className="flex min-h-[100svh] items-center justify-center px-5 py-32">
+    <div className="flex min-h-[100svh] items-center justify-center bg-cloud px-5 py-32">
       <GlassCard className="w-full max-w-md p-8 md:p-10">
-        <h1 className="font-display text-3xl font-semibold">Créer un compte</h1>
-        <p className="mt-2 text-sm text-white/55">Suivez vos demandes et vos formations.</p>
+        <h1 className="font-display text-3xl font-bold text-ink">Créer un compte</h1>
+        <p className="mt-2 text-sm text-ink-soft">Suivez vos demandes et vos formations.</p>
 
         <form onSubmit={onSubmit} className="mt-8 space-y-5">
           <div>
@@ -133,9 +133,9 @@ export default function InscriptionPage() {
           </Button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-white/55">
+        <p className="mt-6 text-center text-sm text-ink-soft">
           Déjà inscrit ?{" "}
-          <Link href="/connexion" className="text-gold hover:underline">
+          <Link href="/connexion" className="font-semibold text-teal-600 hover:underline">
             Se connecter
           </Link>
         </p>

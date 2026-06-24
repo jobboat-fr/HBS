@@ -1,36 +1,48 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { fadeUp, viewportOnce } from "@/lib/animations";
+import { media } from "@/lib/site";
 
 export function CTASection() {
   return (
-    <section className="relative py-[var(--section-padding)]">
-      <div className="container-luxury">
+    <section className="py-20 lg:py-28">
+      <div className="container-page">
         <motion.div
           variants={fadeUp}
           initial="initial"
           whileInView="animate"
           viewport={viewportOnce}
-          className="relative overflow-hidden rounded-3xl border border-gold/20 bg-gradient-to-br from-gold-muted to-transparent p-12 text-center md:p-20"
+          className="overflow-hidden rounded-3xl bg-ink"
         >
-          <div className="absolute inset-0 bg-hero-radial opacity-60" />
-          <div className="relative z-10 mx-auto max-w-2xl">
-            <h2 className="font-display text-display-lg font-semibold text-balance">
-              Prêt à construire votre <span className="text-gold-gradient">projet de formation</span> ?
-            </h2>
-            <p className="mt-5 text-white/60">
-              Échangeons sur vos objectifs et identifions ensemble le parcours et le financement
-              adaptés à votre situation.
-            </p>
-            <div className="mt-10 flex flex-col justify-center gap-4 sm:flex-row">
-              <Button href="/contact" size="lg">
-                Demander un devis gratuit →
-              </Button>
-              <Button href="/formations" variant="secondary" size="lg">
-                Voir toutes les formations
-              </Button>
+          <div className="grid items-center gap-8 lg:grid-cols-2">
+            <div className="p-10 md:p-14">
+              <h2 className="font-display text-display-md font-extrabold text-white text-balance">
+                Prêt à lancer votre projet de formation ?
+              </h2>
+              <p className="mt-4 text-white/70">
+                Échangeons sur vos objectifs et identifions ensemble le parcours et le financement
+                adaptés à votre situation. Réponse sous 48 heures.
+              </p>
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                <Button href="/contact" size="lg">
+                  Demander un devis gratuit
+                </Button>
+                <Button href="/formations" variant="outline" size="lg" className="border-white/30 text-white hover:bg-white/10">
+                  Voir les formations
+                </Button>
+              </div>
+            </div>
+            <div className="relative hidden h-full min-h-[280px] lg:block">
+              <Image
+                src={media.ctaImage}
+                alt="Équipe en formation professionnelle"
+                fill
+                sizes="50vw"
+                className="object-cover"
+              />
             </div>
           </div>
         </motion.div>

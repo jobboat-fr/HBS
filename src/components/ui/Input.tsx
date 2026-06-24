@@ -2,7 +2,7 @@ import { forwardRef } from "react";
 import { cn } from "@/lib/utils";
 
 const fieldBase =
-  "w-full rounded-xl border border-white/[0.1] bg-white/[0.03] px-4 py-3 text-sm text-[color:var(--color-text-primary)] placeholder:text-white/30 transition-colors focus:border-gold/60 focus:outline-none focus:ring-1 focus:ring-gold/40";
+  "w-full rounded-xl border border-mist bg-cloud px-4 py-3 text-sm text-ink placeholder:text-ink-muted/70 transition-colors focus:border-teal-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-400/30";
 
 export const Input = forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(
   function Input({ className, ...props }, ref) {
@@ -30,14 +30,11 @@ export const Select = forwardRef<
 
 export function Label({ className, ...props }: React.LabelHTMLAttributes<HTMLLabelElement>) {
   return (
-    <label
-      className={cn("mb-2 block text-xs uppercase tracking-widest text-white/60", className)}
-      {...props}
-    />
+    <label className={cn("mb-1.5 block text-sm font-medium text-ink", className)} {...props} />
   );
 }
 
 export function FieldError({ children }: { children?: React.ReactNode }) {
   if (!children) return null;
-  return <p className="mt-1.5 text-xs text-red-400">{children}</p>;
+  return <p className="mt-1.5 text-xs text-coral-dark">{children}</p>;
 }

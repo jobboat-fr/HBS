@@ -6,7 +6,7 @@
 export const site = {
   name: "HBS FORMATION",
   shortName: "HBS",
-  baseline: "L'excellence de la formation professionnelle",
+  baseline: "Votre montée en compétences, 100 % en ligne et 100 % accompagnée",
   description:
     "Organisme de formation à Rouen : formations professionnelles certifiantes, bilans de compétences, VAE, apprentissage et e-learning. Un accompagnement sur mesure pour les entreprises et les particuliers.",
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://www.hbs-formation.fr",
@@ -37,9 +37,10 @@ export const legal = {
 };
 
 export const navLinks = [
-  { label: "Accueil", href: "/" },
   { label: "Formations", href: "/formations" },
-  { label: "Réalisations", href: "/realisations" },
+  { label: "Alternance", href: "/alternance" },
+  { label: "Financement", href: "/financement" },
+  { label: "Entreprises", href: "/entreprises" },
   { label: "À propos", href: "/a-propos" },
   { label: "Contact", href: "/contact" },
 ] as const;
@@ -169,8 +170,8 @@ export const processSteps = [
 export const stats = [
   { value: "6", suffix: "", label: "domaines de formation" },
   { value: "100", suffix: "%", label: "parcours personnalisés" },
-  { value: "3", suffix: "", label: "modalités : présentiel, distanciel, mixte" },
-  { value: "2026", suffix: "", label: "année de création" },
+  { value: "48", suffix: "h", label: "pour une réponse à votre demande" },
+  { value: "3", suffix: "", label: "modalités : présentiel, distance, mixte" },
 ] as const;
 
 /** Modes de financement mobilisables (formulaire de contact). */
@@ -188,3 +189,36 @@ export const social = {
   linkedin: "https://www.linkedin.com/company/hbs-formation",
   instagram: "https://www.instagram.com/hbs.formation",
 };
+
+/**
+ * Médias (photos d'illustration libres de droits — Unsplash).
+ * À remplacer par les visuels définitifs de HBS FORMATION.
+ */
+const U = (id: string, w = 900) =>
+  `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&q=80`;
+
+export const media = {
+  heroPerson: U("1531123897727-8f129e1688ce", 1100),
+  heroSecondary: U("1522202176988-66273c2fd55f", 700),
+  ctaImage: U("1542744173-8e7e53415bb0", 1100),
+  aboutTeam: U("1521737604893-d14cc237f11d", 1100),
+  entreprises: U("1600880292203-757bb62b4baf", 1100),
+  formationImages: {
+    "formations-certifiantes": U("1517245386807-bb43f82c33c4"),
+    "bilan-de-competences": U("1454165804606-c3d57bc86b40"),
+    vae: U("1434030216411-0b793f4b4173"),
+    "apprentissage-cfa": U("1556761175-5973dc0f32e7"),
+    "e-learning-foad": U("1516321318423-f06f85e504b3"),
+    "conseil-ingenierie": U("1552664730-d307ca884978"),
+  } as Record<string, string>,
+};
+
+/** Financeurs / dispositifs (libellés publics — pas de logos propriétaires). */
+export const financeurs = [
+  "CPF",
+  "OPCO",
+  "France Travail",
+  "Plan de développement des compétences",
+  "Région Normandie",
+  "Financement personnel",
+] as const;
