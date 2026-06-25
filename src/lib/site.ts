@@ -268,7 +268,7 @@ export const mascot = {
 /** Studio / agence ayant conçu le site. */
 export const azzco = {
   name: "AZZ&CO Labs",
-  url: "https://www.azzco.dev",
+  url: "https://www.azzcolabs.business",
   credit: "Conçu & développé par AZZ&CO Labs",
 };
 

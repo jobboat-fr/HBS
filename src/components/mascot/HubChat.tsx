@@ -6,7 +6,8 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { X, Send } from "lucide-react";
 import { Mascot, type MascotVariant } from "./Mascot";
-import { mascot, faqs } from "@/lib/site";
+import { mascot } from "@/lib/site";
+import { localAnswer } from "@/lib/assistant";
 
 type CLink = { label: string; href: string };
 type Msg = { from: "hub" | "user"; text: string; links?: CLink[] };
@@ -21,9 +22,6 @@ function contextFor(pathname: string): { outfit: MascotVariant; tip: string } {
   return { outfit: "graduate", tip: "Besoin d'aide pour choisir votre formation ? Demandez-moi !" };
 }
 
-const norm = (s: string) =>
-  s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
-
 const QUICK = [
   "Quelles formations proposez-vous ?",
   "Comment financer ma formation ?",
@@ -31,36 +29,14 @@ const QUICK = [
   "Parler à un conseiller",
 ];
 
-function answer(input: string): Msg {
-  const t = norm(input);
-  const has = (...k: string[]) => k.some((w) => t.includes(w));
-
-  if (has("financ", "cpf", "opco", "prix", "cout", "tarif", "payer", "france travail"))
-    return { from: "hub", text: faqs[2].a, links: [{ label: "Voir le financement", href: "/financement" }] };
-  if (has("distance", "ligne", "foad", "e-learning", "elearning", "visio"))
-    return { from: "hub", text: faqs[1].a, links: [{ label: "Découvrir les formations", href: "/formations" }] };
-  if (has("altern", "apprentis", "cfa"))
-    return { from: "hub", text: faqs[3].a, links: [{ label: "Tout sur l'alternance", href: "/alternance" }] };
-  if (has("bilan"))
-    return { from: "hub", text: faqs[4].a, links: [{ label: "Bilan de compétences", href: "/formations#bilan-de-competences" }] };
-  if (has("vae", "acquis", "experience"))
-    return { from: "hub", text: "La VAE permet de faire reconnaître officiellement les compétences acquises par votre expérience. Nous vous accompagnons de la recevabilité au jury.", links: [{ label: "En savoir plus sur la VAE", href: "/formations#vae" }] };
-  if (has("entreprise", "equipe", "salarie", "intra", "collaborateur"))
-    return { from: "hub", text: "Nous concevons des formations intra-entreprise sur mesure pour faire monter vos équipes en compétences, du diagnostic au suivi.", links: [{ label: "Offre entreprises", href: "/entreprises" }] };
-  if (has("ou ", "adresse", "rouen", "situe", "situé", "localisation"))
-    return { from: "hub", text: faqs[5].a, links: [{ label: "Nous contacter", href: "/contact" }] };
-  if (has("delai", "combien de temps", "reponse", "recontact", "rappel"))
-    return { from: "hub", text: faqs[6].a, links: [{ label: "Faire une demande", href: "/contact" }] };
-  if (has("conseiller", "contact", "devis", "rdv", "rendez", "parler", "telephone", "appeler", "humain"))
-    return { from: "hub", text: "Avec plaisir ! Laissez-nous vos coordonnées et un conseiller vous recontacte sous 48 heures pour étudier votre projet.", links: [{ label: "Demander un devis", href: "/contact" }] };
-  if (has("formation", "cours", "parcours", "certifi", "diplome", "apprendre"))
-    return { from: "hub", text: "Nous proposons 6 domaines : formations certifiantes, bilan de compétences, VAE, alternance, e-learning et conseil. Dites-moi votre objectif et je vous oriente.", links: [{ label: "Voir les formations", href: "/formations" }] };
-
-  return {
-    from: "hub",
-    text: "Bonne question ! Le plus simple est d'en parler avec un conseiller : il étudiera votre projet et vos financements sous 48 heures.",
-    links: [{ label: "Parler à un conseiller", href: "/contact" }],
-  };
+function makeSessionId() {
+  if (typeof window === "undefined") return "ssr";
+  let id = sessionStorage.getItem("hub_sid");
+  if (!id) {
+    id = (window.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`);
+    sessionStorage.setItem("hub_sid", id);
+  }
+  return id;
 }
 
 export function HubChat() {
@@ -71,30 +47,26 @@ export function HubChat() {
   const [showTip, setShowTip] = useState(false);
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
+  const [pending, setPending] = useState(false);
+  const [sessionId] = useState(makeSessionId);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Masquer sur le studio Sanity
   const hidden = pathname.startsWith("/studio");
 
-  // Bulle d'accroche (une fois par session, après quelques secondes)
   useEffect(() => {
     if (hidden) return;
-    const seen = typeof window !== "undefined" && sessionStorage.getItem("hub_tip_seen");
-    if (seen) return;
+    if (sessionStorage.getItem("hub_tip_seen")) return;
     const id = setTimeout(() => setShowTip(true), 3500);
     return () => clearTimeout(id);
   }, [hidden]);
 
-  // Message d'accueil à l'ouverture
   useEffect(() => {
-    if (open && messages.length === 0) {
-      setMessages([{ from: "hub", text: mascot.greeting }]);
-    }
+    if (open && messages.length === 0) setMessages([{ from: "hub", text: mascot.greeting }]);
   }, [open, messages.length]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
-  }, [messages, open]);
+  }, [messages, open, pending]);
 
   function openChat() {
     setShowTip(false);
@@ -106,18 +78,33 @@ export function HubChat() {
     sessionStorage.setItem("hub_tip_seen", "1");
   }
 
-  function send(text: string) {
+  async function send(text: string) {
     const value = text.trim();
-    if (!value) return;
-    setMessages((m) => [...m, { from: "user", text: value }, answer(value)]);
+    if (!value || pending) return;
+    setMessages((m) => [...m, { from: "user", text: value }]);
     setInput("");
+    setPending(true);
+    try {
+      const res = await fetch("/api/agent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId, message: value, page: pathname }),
+      });
+      const data = (await res.json()) as { text: string; links?: CLink[] };
+      setMessages((m) => [...m, { from: "hub", text: data.text, links: data.links }]);
+    } catch {
+      const a = localAnswer(value);
+      setMessages((m) => [...m, { from: "hub", text: a.text, links: a.links }]);
+    } finally {
+      setPending(false);
+    }
   }
 
   if (hidden) return null;
 
   return (
     <div className="pointer-events-none fixed bottom-5 right-5 z-[80] flex flex-col items-end gap-3">
-      {/* Bulle d'accroche (style picture-in-picture) */}
+      {/* Bulle d'accroche (picture-in-picture) */}
       <AnimatePresence>
         {showTip && !open && (
           <motion.div
@@ -126,18 +113,11 @@ export function HubChat() {
             exit={{ opacity: 0, y: 12, scale: 0.95 }}
             className="pointer-events-auto relative max-w-[260px] rounded-2xl rounded-br-sm border border-mist bg-white p-4 shadow-card"
           >
-            <button
-              onClick={dismissTip}
-              aria-label="Fermer"
-              className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-ink text-white"
-            >
+            <button onClick={dismissTip} aria-label="Fermer" className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-ink text-white">
               <X size={13} />
             </button>
             <p className="text-sm text-ink-soft">{tip}</p>
-            <button
-              onClick={openChat}
-              className="mt-3 text-sm font-semibold text-teal-600 hover:underline"
-            >
+            <button onClick={openChat} className="mt-3 text-sm font-semibold text-teal-600 hover:underline">
               Discuter avec {mascot.name} →
             </button>
           </motion.div>
@@ -155,7 +135,6 @@ export function HubChat() {
             aria-label={`Chat avec ${mascot.name}`}
             className="pointer-events-auto flex h-[520px] w-[min(92vw,380px)] flex-col overflow-hidden rounded-3xl border border-mist bg-white shadow-card"
           >
-            {/* En-tête */}
             <div className="flex items-center gap-3 bg-ink p-4 text-white">
               <span className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full bg-teal-gradient">
                 <Mascot variant={outfit} className="h-12 w-12 translate-y-1" />
@@ -169,7 +148,6 @@ export function HubChat() {
               </button>
             </div>
 
-            {/* Messages */}
             <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto bg-cloud p-4">
               {messages.map((m, i) => (
                 <div key={i} className={m.from === "user" ? "flex justify-end" : "flex justify-start"}>
@@ -199,7 +177,19 @@ export function HubChat() {
                 </div>
               ))}
 
-              {messages.length <= 1 && (
+              {pending && (
+                <div className="flex justify-start">
+                  <div className="rounded-2xl rounded-bl-sm border border-mist bg-white px-4 py-3">
+                    <span className="flex gap-1">
+                      <span className="h-2 w-2 animate-bounce rounded-full bg-teal-400 [animation-delay:-0.2s]" />
+                      <span className="h-2 w-2 animate-bounce rounded-full bg-teal-400 [animation-delay:-0.1s]" />
+                      <span className="h-2 w-2 animate-bounce rounded-full bg-teal-400" />
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {messages.length <= 1 && !pending && (
                 <div className="flex flex-wrap gap-2 pt-1">
                   {QUICK.map((q) => (
                     <button
@@ -214,7 +204,6 @@ export function HubChat() {
               )}
             </div>
 
-            {/* Saisie */}
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -228,11 +217,7 @@ export function HubChat() {
                 placeholder={`Écrivez à ${mascot.name}…`}
                 className="flex-1 rounded-full border border-mist bg-cloud px-4 py-2.5 text-sm text-ink placeholder:text-ink-muted focus:border-teal-400 focus:outline-none"
               />
-              <button
-                type="submit"
-                aria-label="Envoyer"
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-teal-500 text-white hover:bg-teal-600"
-              >
+              <button type="submit" aria-label="Envoyer" disabled={pending} className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-teal-500 text-white hover:bg-teal-600 disabled:opacity-50">
                 <Send size={17} />
               </button>
             </form>
@@ -240,7 +225,7 @@ export function HubChat() {
         )}
       </AnimatePresence>
 
-      {/* Lanceur (picture-in-picture) */}
+      {/* Lanceur */}
       {!open && (
         <motion.button
           initial={{ scale: 0 }}

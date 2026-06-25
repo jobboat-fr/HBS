@@ -1,0 +1,86 @@
+import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
+import { createClient } from "@/lib/supabase/server";
+import { localAnswer, type AssistantReply } from "@/lib/assistant";
+
+const schema = z.object({
+  sessionId: z.string().min(6).max(64),
+  message: z.string().min(1).max(2000),
+  page: z.string().max(120).optional(),
+});
+
+/**
+ * Pont de communication Hub (site HBS) <-> agent VIGIL/AZZ&CO.
+ * - Journalise chaque message dans Supabase (hbs_agent_messages) pour que l'agent suive les conversations.
+ * - Si AGENT_ENDPOINT_URL est défini, relaie le message à l'agent (OVH) et renvoie sa réponse.
+ * - Sinon, répond via l'assistant guidé local.
+ */
+export async function POST(request: NextRequest) {
+  try {
+    const { sessionId, message, page } = schema.parse(await request.json());
+
+    const supabase = createClient();
+    // Boîte de réception (l'agent lit via la clé service_role)
+    await supabase.from("hbs_agent_messages").insert({
+      session_id: sessionId,
+      role: "user",
+      content: message,
+      page: page ?? null,
+    });
+
+    let reply: AssistantReply;
+    let source: "agent" | "local" = "local";
+
+    const endpoint = process.env.AGENT_ENDPOINT_URL;
+    if (endpoint) {
+      try {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 12000);
+        const res = await fetch(endpoint, {
+          method: "POST",
+          signal: controller.signal,
+          headers: {
+            "Content-Type": "application/json",
+            ...(process.env.AGENT_TOKEN ? { Authorization: `Bearer ${process.env.AGENT_TOKEN}` } : {}),
+          },
+          body: JSON.stringify({ sessionId, message, page, channel: "hub_chat", site: "hbs-formation" }),
+        });
+        clearTimeout(timer);
+        if (res.ok) {
+          const data = (await res.json()) as { reply?: string; text?: string; links?: AssistantReply["links"] };
+          const text = data.reply ?? data.text;
+          if (text) {
+            reply = { text, links: data.links };
+            source = "agent";
+          } else {
+            reply = localAnswer(message);
+          }
+        } else {
+          reply = localAnswer(message);
+        }
+      } catch {
+        reply = localAnswer(message); // repli si l'agent ne répond pas
+      }
+    } else {
+      reply = localAnswer(message);
+    }
+
+    await supabase.from("hbs_agent_messages").insert({
+      session_id: sessionId,
+      role: "agent",
+      content: reply.text,
+      page: page ?? null,
+      handled: source === "agent",
+    });
+
+    return NextResponse.json({ ...reply, source });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json({ error: "Requête invalide" }, { status: 400 });
+    }
+    return NextResponse.json(
+      { text: "Désolé, une erreur est survenue. Réessayez ou contactez-nous.", links: [{ label: "Contact", href: "/contact" }] },
+      { status: 200 },
+    );
+  }
+}
