@@ -1,11 +1,11 @@
 "use client";
 
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Search, Star, BadgeCheck, Clock } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { VideoPlayer } from "@/components/media/VideoPlayer";
 import { formations, media } from "@/lib/site";
 
 export function HeroSection() {
@@ -84,14 +84,7 @@ export function HeroSection() {
           className="relative mx-auto w-full max-w-lg"
         >
           <div className="relative aspect-[4/5] overflow-hidden rounded-3xl shadow-card">
-            <Image
-              src={media.heroPerson}
-              alt="Apprenante suivant une formation HBS FORMATION"
-              fill
-              priority
-              sizes="(max-width: 1024px) 90vw, 45vw"
-              className="object-cover"
-            />
+            <VideoPlayer src={media.heroVideo} poster={media.heroVideoPoster} rounded={false} />
           </div>
 
           {/* Cartes flottantes */}

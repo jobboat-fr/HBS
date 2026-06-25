@@ -203,6 +203,11 @@ export const media = {
   ctaImage: U("1542744173-8e7e53415bb0", 1100),
   aboutTeam: U("1521737604893-d14cc237f11d", 1100),
   entreprises: U("1600880292203-757bb62b4baf", 1100),
+  // Vidéos auto-hébergées (stock Pexels, licence libre — à remplacer par les vidéos HBS).
+  heroVideo: "/media/videos/hero.mp4",
+  heroVideoPoster: U("1522202176988-66273c2fd55f", 900),
+  showcaseVideo: "/media/videos/classroom.mp4",
+  showcasePoster: U("1524178232363-1fb2b075b655", 1200),
   formationImages: {
     "formations-certifiantes": U("1517245386807-bb43f82c33c4"),
     "bilan-de-competences": U("1454165804606-c3d57bc86b40"),
