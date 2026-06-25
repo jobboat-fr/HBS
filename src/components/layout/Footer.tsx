@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { MapPin, Mail, Phone, GraduationCap } from "lucide-react";
+import { MapPin, Mail, Phone } from "lucide-react";
 import { navLinks, site, legal, social, formations } from "@/lib/site";
+import { LogoMark } from "@/components/ui/Logo";
 
 export function Footer() {
   return (
@@ -9,9 +10,7 @@ export function Footer() {
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
           <div>
             <div className="flex items-center gap-2">
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-gradient text-white">
-                <GraduationCap size={20} />
-              </span>
+              <LogoMark className="h-9 w-9" />
               <span className="font-display text-lg font-extrabold text-white">
                 HBS<span className="text-teal-400"> FORMATION</span>
               </span>

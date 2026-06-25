@@ -4,17 +4,16 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useScroll, useMotionValueEvent } from "framer-motion";
-import { Menu, X, User, GraduationCap } from "lucide-react";
+import { Menu, X, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { navLinks } from "@/lib/site";
 import { Button } from "@/components/ui/Button";
+import { LogoMark } from "@/components/ui/Logo";
 
 function Logo({ onClick }: { onClick?: () => void }) {
   return (
     <Link href="/" onClick={onClick} className="flex items-center gap-2" aria-label="HBS FORMATION — accueil">
-      <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-gradient text-white">
-        <GraduationCap size={20} />
-      </span>
+      <LogoMark className="h-9 w-9" />
       <span className="font-display text-xl font-extrabold tracking-tight text-ink">
         HBS<span className="text-teal-500"> FORMATION</span>
       </span>
