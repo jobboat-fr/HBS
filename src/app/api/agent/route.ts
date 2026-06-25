@@ -4,6 +4,9 @@ import { createClient } from "@/lib/supabase/server";
 import { localAnswer, suggestLink, type AssistantReply } from "@/lib/assistant";
 import { aiAnswer } from "@/lib/llm";
 
+export const runtime = "nodejs";
+export const maxDuration = 30;
+
 const schema = z.object({
   sessionId: z.string().min(6).max(64),
   message: z.string().min(1).max(2000),

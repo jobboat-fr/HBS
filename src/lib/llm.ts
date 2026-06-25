@@ -38,7 +38,7 @@ export async function aiAnswer(message: string, page?: string): Promise<string |
 
   try {
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 15000);
+    const timer = setTimeout(() => controller.abort(), 28000);
     const res = await fetch(`${base}/chat/completions`, {
       method: "POST",
       signal: controller.signal,
