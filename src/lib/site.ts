@@ -8,7 +8,7 @@ export const site = {
   shortName: "HBS",
   baseline: "Votre montée en compétences, 100 % en ligne et 100 % accompagnée",
   description:
-    "Organisme de formation à Rouen : formations professionnelles certifiantes, bilans de compétences, VAE, apprentissage et e-learning. Un accompagnement sur mesure pour les entreprises et les particuliers.",
+    "HBS FORMATION, organisme de formation à Rouen : formations certifiantes, bilan de compétences, VAE, alternance et e-learning. Éligible CPF, OPCO et France Travail. Un accompagnement 100 % humain, en ligne ou en présentiel.",
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://www.hbs-formation.fr",
   email: "contact@hbs-formation.fr",
   phone: "+33 2 00 00 00 00",
@@ -191,6 +191,41 @@ export const social = {
 };
 
 /**
+ * Foire aux questions — alimente la section FAQ et le balisage FAQPage (JSON-LD).
+ * Pensée pour les moteurs de réponse IA (AEO) : questions réelles, réponses factuelles.
+ */
+export const faqs = [
+  {
+    q: "Les formations HBS FORMATION sont-elles éligibles au CPF ?",
+    a: "Oui, plusieurs de nos parcours sont éligibles au CPF (Compte Personnel de Formation). Nous vous aidons à vérifier votre éligibilité et à monter votre dossier de financement.",
+  },
+  {
+    q: "Peut-on suivre une formation à distance ?",
+    a: "Oui. Nos formations sont proposées en présentiel, à distance (FOAD, classes virtuelles) ou en format mixte, pour s'adapter à votre rythme et à vos contraintes.",
+  },
+  {
+    q: "Comment financer ma formation ?",
+    a: "Selon votre situation, votre formation peut être prise en charge par le CPF, votre OPCO, France Travail, le plan de développement des compétences de votre entreprise, la Région ou un financement personnel. Nous vous orientons vers le bon dispositif.",
+  },
+  {
+    q: "Proposez-vous des formations en alternance ?",
+    a: "Oui, nous accompagnons les parcours en alternance et apprentissage : alternance entre le centre de formation et l'entreprise, avec un suivi administratif et pédagogique complet.",
+  },
+  {
+    q: "Comment se déroule un bilan de compétences ?",
+    a: "Le bilan de compétences se déroule en entretiens individuels et confidentiels : analyse de vos compétences et motivations, exploration des pistes, puis construction d'un projet professionnel réaliste. Il est éligible au CPF.",
+  },
+  {
+    q: "Où se situe HBS FORMATION ?",
+    a: "HBS FORMATION est un organisme de formation basé à Rouen (50 Passage Saint-Étienne des Tonneliers, 76000 Rouen), intervenant en présentiel et partout en France à distance.",
+  },
+  {
+    q: "Sous combien de temps suis-je recontacté·e ?",
+    a: "Après votre demande, un conseiller vous recontacte sous 48 heures ouvrées pour étudier votre projet et vos possibilités de financement.",
+  },
+] as const;
+
+/**
  * Médias (photos d'illustration libres de droits — Unsplash).
  * À remplacer par les visuels définitifs de HBS FORMATION.
  */
@@ -216,6 +251,25 @@ export const media = {
     "e-learning-foad": U("1516321318423-f06f85e504b3"),
     "conseil-ingenierie": U("1552664730-d307ca884978"),
   } as Record<string, string>,
+};
+
+/**
+ * Hub — la mascotte / persona IA de HBS FORMATION.
+ * Histoire : Hub a porté toutes les casquettes (formateur en costume, créatif, terrain…)
+ * avant de comprendre que la meilleure formation s'adapte à chacun. Il change donc de style
+ * selon l'univers de la page — et vous accompagne dans le chat.
+ */
+export const mascot = {
+  name: "Hub",
+  tagline: "votre copilote formation",
+  greeting: "Bonjour, moi c'est Hub, votre copilote formation. Comment puis-je vous aider ?",
+};
+
+/** Studio / agence ayant conçu le site. */
+export const azzco = {
+  name: "AZZ&CO Labs",
+  url: "https://www.azzco.dev",
+  credit: "Conçu & développé par AZZ&CO Labs",
 };
 
 /** Financeurs / dispositifs (libellés publics — pas de logos propriétaires). */

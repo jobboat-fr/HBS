@@ -1,4 +1,4 @@
-import { site, legal, social } from "@/lib/site";
+import { site, legal, social, faqs, formations } from "@/lib/site";
 
 export function OrganizationJsonLd() {
   const data = {
@@ -30,6 +30,46 @@ export function OrganizationJsonLd() {
       type="application/ld+json"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
     />
+  );
+}
+
+export function FaqJsonLd() {
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+  return (
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />
+  );
+}
+
+export function CoursesJsonLd() {
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    itemListElement: formations.map((f, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "Course",
+        name: f.title,
+        description: f.description,
+        url: `${site.url}/formations#${f.slug}`,
+        provider: {
+          "@type": "EducationalOrganization",
+          name: legal.raisonSociale,
+          sameAs: site.url,
+        },
+      },
+    })),
+  };
+  return (
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />
   );
 }
 

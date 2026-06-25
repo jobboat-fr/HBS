@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { MapPin, Mail, Phone } from "lucide-react";
-import { navLinks, site, legal, social, formations } from "@/lib/site";
+import { navLinks, site, legal, social, formations, azzco } from "@/lib/site";
 import { LogoMark } from "@/components/ui/Logo";
+import { AzzcoLogo } from "@/components/ui/AzzcoLogo";
 
 export function Footer() {
   return (
@@ -89,6 +90,19 @@ export function Footer() {
             Enregistré sous le n° {legal.numeroDeclarationActivite} auprès du {legal.declarationAutorite}.
             Cet enregistrement ne vaut pas agrément de l&apos;État.
           </p>
+
+          <div className="mt-6 flex justify-end">
+            <a
+              href={azzco.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[11px] text-white/55 transition-colors hover:border-white/25 hover:text-white"
+            >
+              <span>{azzco.credit}</span>
+              <AzzcoLogo className="h-4 w-4" />
+              <span className="font-semibold text-white/80 group-hover:text-white">{azzco.name}</span>
+            </a>
+          </div>
         </div>
       </div>
     </footer>

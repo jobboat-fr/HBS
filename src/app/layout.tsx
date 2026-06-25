@@ -6,6 +6,7 @@ import "./globals.css";
 import { site } from "@/lib/site";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { HubChat } from "@/components/mascot/HubChat";
 import { OrganizationJsonLd } from "@/components/seo/JsonLd";
 
 const poppins = Poppins({
@@ -45,7 +46,6 @@ export const metadata: Metadata = {
     url: site.url,
     title: `${site.name} — ${site.baseline}`,
     description: site.description,
-    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: site.name }],
   },
   twitter: { card: "summary_large_image" },
   robots: {
@@ -63,9 +63,16 @@ export default function RootLayout({
     <html lang="fr" className={`${poppins.variable} ${inter.variable}`}>
       <body className="bg-white font-body text-ink-soft antialiased">
         <OrganizationJsonLd />
+        <a
+          href="#contenu"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-teal-600 focus:px-4 focus:py-2 focus:text-white"
+        >
+          Aller au contenu
+        </a>
         <Header />
-        <main>{children}</main>
+        <main id="contenu">{children}</main>
         <Footer />
+        <HubChat />
         <Analytics />
         <SpeedInsights />
       </body>
