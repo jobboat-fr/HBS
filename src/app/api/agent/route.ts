@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
-import { localAnswer, type AssistantReply } from "@/lib/assistant";
+import { localAnswer, suggestLink, type AssistantReply } from "@/lib/assistant";
+import { aiAnswer } from "@/lib/llm";
 
 const schema = z.object({
   sessionId: z.string().min(6).max(64),
@@ -29,7 +30,19 @@ export async function POST(request: NextRequest) {
     });
 
     let reply: AssistantReply;
-    let source: "agent" | "local" = "local";
+    let source: "agent" | "ai" | "local" = "local";
+
+    // IA (LLM) si configurée, sinon assistant FAQ local.
+    const aiOrLocal = async (): Promise<AssistantReply> => {
+      const ai = await aiAnswer(message, page);
+      if (ai) {
+        source = "ai";
+        const link = suggestLink(message);
+        return { text: ai, links: link ? [link] : undefined };
+      }
+      source = "local";
+      return localAnswer(message);
+    };
 
     const endpoint = process.env.AGENT_ENDPOINT_URL;
     if (endpoint) {
@@ -53,16 +66,16 @@ export async function POST(request: NextRequest) {
             reply = { text, links: data.links };
             source = "agent";
           } else {
-            reply = localAnswer(message);
+            reply = await aiOrLocal();
           }
         } else {
-          reply = localAnswer(message);
+          reply = await aiOrLocal();
         }
       } catch {
-        reply = localAnswer(message); // repli si l'agent ne répond pas
+        reply = await aiOrLocal(); // repli IA/FAQ si l'agent ne répond pas
       }
     } else {
-      reply = localAnswer(message);
+      reply = await aiOrLocal();
     }
 
     await supabase.from("hbs_agent_messages").insert({
@@ -70,7 +83,7 @@ export async function POST(request: NextRequest) {
       role: "agent",
       content: reply.text,
       page: page ?? null,
-      handled: source === "agent",
+      handled: source !== "local",
     });
 
     return NextResponse.json({ ...reply, source });

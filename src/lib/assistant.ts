@@ -5,6 +5,20 @@ export type AssistantReply = { text: string; links?: AssistantLink[] };
 
 const norm = (s: string) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
 
+/** Suggère un lien pertinent à partir du message (utilisé pour enrichir une réponse IA). */
+export function suggestLink(input: string): AssistantLink | undefined {
+  const t = norm(input);
+  const has = (...k: string[]) => k.some((w) => t.includes(w));
+  if (has("financ", "cpf", "opco", "france travail", "prix", "cout", "tarif")) return { label: "Voir le financement", href: "/financement" };
+  if (has("altern", "apprentis", "cfa")) return { label: "Alternance", href: "/alternance" };
+  if (has("entreprise", "equipe", "salarie", "intra")) return { label: "Offre entreprises", href: "/entreprises" };
+  if (has("bilan")) return { label: "Bilan de compétences", href: "/formations#bilan-de-competences" };
+  if (has("vae")) return { label: "La VAE", href: "/formations#vae" };
+  if (has("formation", "cours", "parcours", "certif", "diplome")) return { label: "Voir les formations", href: "/formations" };
+  if (has("contact", "conseiller", "devis", "rdv", "rendez", "parler", "inscri")) return { label: "Nous contacter", href: "/contact" };
+  return undefined;
+}
+
 /** Assistant guidé local (repli quand l'agent VIGIL n'est pas joignable). */
 export function localAnswer(input: string): AssistantReply {
   const t = norm(input);

@@ -8,6 +8,7 @@ import { GlassCard } from "@/components/ui/GlassCard";
 import { Input, Label, Select, FieldError } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { createClient } from "@/lib/supabase/client";
+import { OAuthButtons } from "@/components/auth/OAuthButtons";
 
 export default function InscriptionPage() {
   const router = useRouter();
@@ -90,7 +91,11 @@ export default function InscriptionPage() {
         <h1 className="font-display text-3xl font-bold text-ink">Créer un compte</h1>
         <p className="mt-2 text-sm text-ink-soft">Suivez vos demandes et vos formations.</p>
 
-        <form onSubmit={onSubmit} className="mt-8 space-y-5">
+        <div className="mt-8">
+          <OAuthButtons />
+        </div>
+
+        <form onSubmit={onSubmit} className="space-y-5">
           <div>
             <Label htmlFor="fullName">Nom complet</Label>
             <Input id="fullName" value={form.fullName} onChange={set("fullName")} required />

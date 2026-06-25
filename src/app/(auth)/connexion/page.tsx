@@ -8,6 +8,7 @@ import { GlassCard } from "@/components/ui/GlassCard";
 import { Input, Label, FieldError } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { createClient } from "@/lib/supabase/client";
+import { OAuthButtons } from "@/components/auth/OAuthButtons";
 
 export default function ConnexionPage() {
   const router = useRouter();
@@ -37,7 +38,11 @@ export default function ConnexionPage() {
         <h1 className="font-display text-3xl font-bold text-ink">Connexion</h1>
         <p className="mt-2 text-sm text-ink-soft">Accédez à votre espace client HBS FORMATION.</p>
 
-        <form onSubmit={onSubmit} className="mt-8 space-y-5">
+        <div className="mt-8">
+          <OAuthButtons />
+        </div>
+
+        <form onSubmit={onSubmit} className="space-y-5">
           <div>
             <Label htmlFor="email">Email</Label>
             <Input
