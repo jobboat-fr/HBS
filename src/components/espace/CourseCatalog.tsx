@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Search, Clock, CheckCircle2, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { RncpBadge } from "@/components/ui/RncpBadge";
 
 export type CatalogCourse = {
   slug: string;
@@ -14,6 +15,8 @@ export type CatalogCourse = {
   modalite?: string;
   duration_hours?: number;
   cover_url?: string;
+  rncp_code?: string | null;
+  rncp_level?: string | null;
 };
 
 const MODALITE_LABEL: Record<string, string> = {
@@ -92,6 +95,11 @@ export function CourseCatalog({
                 <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-white/95 px-2.5 py-1 text-xs font-semibold text-teal-700">
                   <CheckCircle2 size={13} /> Inscrit
                 </span>
+              )}
+              {c.rncp_code && (
+                <div className="absolute left-3 top-3">
+                  <RncpBadge code={c.rncp_code} level={c.rncp_level} />
+                </div>
               )}
             </div>
             <div className="flex flex-1 flex-col p-5">

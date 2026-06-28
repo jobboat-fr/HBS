@@ -13,6 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     page("", 1, "weekly"),
     page("/formations", 0.9),
+    page("/certifications", 0.9),
     page("/alternance", 0.8),
     page("/financement", 0.8),
     page("/entreprises", 0.8),

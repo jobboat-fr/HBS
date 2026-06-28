@@ -5,7 +5,7 @@ export default async function CataloguePage() {
   const supabase = createClient();
   const { data: courses } = await supabase
     .from("hbs_courses")
-    .select("slug, title, summary, category, modalite, duration_hours, cover_url")
+    .select("slug, title, summary, category, modalite, duration_hours, cover_url, rncp_code, rncp_level")
     .eq("published", true)
     .order("position");
 

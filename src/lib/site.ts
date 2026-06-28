@@ -38,6 +38,7 @@ export const legal = {
 
 export const navLinks = [
   { label: "Formations", href: "/formations" },
+  { label: "Certifications", href: "/certifications" },
   { label: "Alternance", href: "/alternance" },
   { label: "Financement", href: "/financement" },
   { label: "Entreprises", href: "/entreprises" },

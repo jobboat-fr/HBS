@@ -5,6 +5,8 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { Reveal } from "@/components/ui/Reveal";
 import { Button } from "@/components/ui/Button";
 import { CTASection } from "@/components/sections/CTASection";
+import { AlternanceSearch } from "@/components/sections/AlternanceSearch";
+import { Badge } from "@/components/ui/Badge";
 import { media } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -34,6 +36,25 @@ export default function AlternancePage() {
         }
         subtitle="Alternez théorie en centre de formation et pratique en entreprise — tout en étant rémunéré."
       />
+
+      {/* Recherche d'alternance (offres jobboat via VIGIL) */}
+      <section className="border-b border-mist bg-cloud py-16 lg:py-20">
+        <div className="container-page">
+          <Reveal>
+            <Badge>Trouver une alternance</Badge>
+            <h2 className="mt-4 font-display text-display-md font-extrabold text-ink">
+              Des offres d&apos;alternance, <span className="text-teal-600">trouvées pour vous</span>
+            </h2>
+            <p className="mt-3 max-w-2xl text-ink-soft">
+              Décrivez le métier visé et le lieu : notre recherche intelligente parcourt les offres
+              d&apos;alternance et vous propose les plus pertinentes.
+            </p>
+          </Reveal>
+          <div className="mt-8">
+            <AlternanceSearch />
+          </div>
+        </div>
+      </section>
 
       <section className="py-16 lg:py-24">
         <div className="container-page grid items-center gap-12 lg:grid-cols-2">
