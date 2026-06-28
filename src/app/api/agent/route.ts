@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { localAnswer, suggestLink, type AssistantReply } from "@/lib/assistant";
 import { aiAnswer } from "@/lib/llm";
+import { log, errMsg } from "@/lib/log";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -22,6 +23,7 @@ const schema = z.object({
 export async function POST(request: NextRequest) {
   try {
     const { sessionId, message, page } = schema.parse(await request.json());
+    log.info("agent.request", { sessionId, page: page ?? null, len: message.length });
 
     const supabase = createClient();
     // Boîte de réception (l'agent lit via la clé service_role)
@@ -89,11 +91,13 @@ export async function POST(request: NextRequest) {
       handled: source !== "local",
     });
 
+    log.info("agent.reply", { source });
     return NextResponse.json({ ...reply, source });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: "Requête invalide" }, { status: 400 });
     }
+    log.error("agent.error", { err: errMsg(error) });
     return NextResponse.json(
       { text: "Désolé, une erreur est survenue. Réessayez ou contactez-nous.", links: [{ label: "Contact", href: "/contact" }] },
       { status: 200 },

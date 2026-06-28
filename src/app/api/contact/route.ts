@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { contactSchema } from "@/lib/validation/contact";
 import { buildNotificationEmail, buildConfirmationEmail } from "@/lib/email/templates";
+import { log, errMsg } from "@/lib/log";
 
 export async function POST(request: NextRequest) {
   try {
@@ -27,9 +28,10 @@ export async function POST(request: NextRequest) {
     });
 
     if (dbError) {
-      console.error("Supabase insert error:", dbError.message);
+      log.error("contact.db", { err: dbError.message });
       return NextResponse.json({ error: "Enregistrement impossible." }, { status: 500 });
     }
+    log.info("contact.saved", { email: data.email, formation: data.formation || null });
 
     // 2) Emails via Resend — ignorés proprement si la clé n'est pas configurée
     const resendKey = process.env.RESEND_API_KEY;
@@ -54,6 +56,9 @@ export async function POST(request: NextRequest) {
           html: buildConfirmationEmail(data),
         }),
       ]);
+      log.info("contact.email.sent", { to: process.env.CONTACT_NOTIFY_TO || data.email });
+    } else {
+      log.warn("contact.email.skipped", { reason: "no RESEND_API_KEY" });
     }
 
     return NextResponse.json({ success: true });
@@ -64,7 +69,7 @@ export async function POST(request: NextRequest) {
         { status: 400 },
       );
     }
-    console.error("Contact route error:", error);
+    log.error("contact.error", { err: errMsg(error) });
     return NextResponse.json({ error: "Erreur interne." }, { status: 500 });
   }
 }
