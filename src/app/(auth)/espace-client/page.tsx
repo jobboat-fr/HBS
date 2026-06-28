@@ -1,17 +1,8 @@
+import Link from "next/link";
+import { ArrowRight, GraduationCap, Trophy, Clock } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { Button } from "@/components/ui/Button";
-import { SignOutButton } from "@/components/SignOutButton";
-import { formatDate } from "@/lib/utils";
-
-const STATUS_LABELS: Record<string, string> = {
-  demande: "Demande reçue",
-  positionnement: "Positionnement",
-  inscrit: "Inscrit",
-  en_formation: "En formation",
-  termine: "Terminée",
-  certifie: "Certifié",
-  abandon: "Abandon",
-};
+import { ProgressBar } from "@/components/espace/ProgressBar";
 
 export default async function EspaceClientPage() {
   const supabase = createClient();
@@ -21,78 +12,87 @@ export default async function EspaceClientPage() {
 
   const { data: client } = await supabase
     .from("hbs_clients")
-    .select("*")
+    .select("full_name")
     .eq("user_id", user!.id)
     .maybeSingle();
 
-  const { data: inscriptions } = await supabase
-    .from("hbs_inscriptions")
-    .select("*")
-    .order("created_at", { ascending: false });
+  const { data: enrollments } = await supabase
+    .from("hbs_enrollments")
+    .select("id, status, progress, course:hbs_courses(slug, title, cover_url, category)")
+    .order("enrolled_at", { ascending: false });
+
+  const list = enrollments ?? [];
+  const enCours = list.filter((e) => e.status === "en_cours" || e.status === "inscrit").length;
+  const termines = list.filter((e) => e.status === "termine" || e.status === "certifie").length;
+
+  const firstName = client?.full_name?.split(" ")[0] ?? "";
 
   return (
-    <div className="container-page pb-24">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <p className="text-sm font-semibold text-teal-600">Espace client</p>
-          <h1 className="mt-2 font-display text-display-md font-extrabold text-ink">
-            Bonjour{client?.full_name ? `, ${client.full_name}` : ""}
-          </h1>
-        </div>
-        <SignOutButton />
+    <div>
+      <p className="text-sm font-semibold text-teal-600">Espace client</p>
+      <h1 className="mt-1 font-display text-display-md font-extrabold text-ink">
+        Bonjour{firstName ? ` ${firstName}` : ""} 👋
+      </h1>
+
+      <div className="mt-8 grid gap-4 sm:grid-cols-3">
+        <Stat icon={GraduationCap} value={list.length} label="formations" />
+        <Stat icon={Clock} value={enCours} label="en cours" />
+        <Stat icon={Trophy} value={termines} label="terminées" />
       </div>
 
-      <div className="mt-10 grid gap-6 lg:grid-cols-3">
-        <div className="rounded-2xl border border-mist bg-white p-8 shadow-card">
-          <h2 className="font-display text-xl font-bold text-ink">Mon profil</h2>
-          <dl className="mt-5 space-y-3 text-sm">
-            <Line label="Email" value={user!.email ?? "—"} />
-            <Line label="Type" value={client?.type === "entreprise" ? "Entreprise" : "Particulier"} />
-            {client?.company_name ? <Line label="Entreprise" value={client.company_name} /> : null}
-            {client?.phone ? <Line label="Téléphone" value={client.phone} /> : null}
-          </dl>
-        </div>
+      <div className="mt-8 flex items-center justify-between">
+        <h2 className="font-display text-xl font-bold text-ink">Mes formations</h2>
+        <Link href="/espace-client/formations" className="inline-flex items-center gap-1.5 text-sm font-semibold text-teal-600 hover:underline">
+          Explorer le catalogue <ArrowRight size={15} />
+        </Link>
+      </div>
 
-        <div className="rounded-2xl border border-mist bg-white p-8 shadow-card lg:col-span-2">
-          <h2 className="font-display text-xl font-bold text-ink">Mes formations</h2>
-          {!inscriptions || inscriptions.length === 0 ? (
-            <div className="mt-6 rounded-xl border border-dashed border-mist bg-cloud p-8 text-center">
-              <p className="text-ink-soft">Vous n&apos;avez pas encore de formation enregistrée.</p>
-              <div className="mt-5">
-                <Button href="/formations" variant="outline" size="sm">
-                  Découvrir les formations
-                </Button>
-              </div>
-            </div>
-          ) : (
-            <ul className="mt-6 space-y-4">
-              {inscriptions.map((i) => (
-                <li
-                  key={i.id}
-                  className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-mist bg-cloud p-5"
-                >
-                  <div>
-                    <p className="font-semibold text-ink">{i.formation_title}</p>
-                    <p className="text-xs text-ink-muted">Demande du {formatDate(i.created_at)}</p>
+      {list.length === 0 ? (
+        <div className="mt-4 rounded-2xl border border-dashed border-mist bg-white p-10 text-center">
+          <p className="text-ink-soft">Vous n&apos;êtes inscrit·e à aucune formation pour le moment.</p>
+          <div className="mt-5">
+            <Button href="/espace-client/formations" size="md">Parcourir le catalogue</Button>
+          </div>
+        </div>
+      ) : (
+        <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          {list.map((e) => {
+            const course = e.course as unknown as { slug: string; title: string; cover_url?: string; category?: string };
+            return (
+              <Link
+                key={e.id}
+                href={`/espace-client/formations/${course.slug}`}
+                className="group overflow-hidden rounded-2xl border border-mist bg-white shadow-card transition-all hover:-translate-y-0.5 hover:shadow-card-hover"
+              >
+                <div className="p-5">
+                  <span className="text-xs font-semibold uppercase tracking-wide text-teal-600">{course.category}</span>
+                  <h3 className="mt-1 font-display text-lg font-bold text-ink">{course.title}</h3>
+                  <div className="mt-4">
+                    <ProgressBar value={e.progress ?? 0} />
                   </div>
-                  <span className="rounded-full bg-teal-50 px-3 py-1 text-xs font-semibold text-teal-700">
-                    {STATUS_LABELS[i.status] ?? i.status}
+                  <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-teal-600">
+                    {e.progress ? "Continuer" : "Commencer"} <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
                   </span>
-                </li>
-              ))}
-            </ul>
-          )}
+                </div>
+              </Link>
+            );
+          })}
         </div>
-      </div>
+      )}
     </div>
   );
 }
 
-function Line({ label, value }: { label: string; value: string }) {
+function Stat({ icon: Icon, value, label }: { icon: typeof GraduationCap; value: number; label: string }) {
   return (
-    <div className="flex justify-between gap-4 border-b border-mist pb-2">
-      <dt className="text-ink-muted">{label}</dt>
-      <dd className="text-right font-medium text-ink">{value}</dd>
+    <div className="flex items-center gap-4 rounded-2xl border border-mist bg-white p-5 shadow-card">
+      <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-teal-50 text-teal-600">
+        <Icon size={22} />
+      </span>
+      <div>
+        <div className="font-display text-2xl font-extrabold text-ink">{value}</div>
+        <div className="text-sm text-ink-muted">{label}</div>
+      </div>
     </div>
   );
 }
