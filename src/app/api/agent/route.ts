@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { localAnswer, suggestLink, type AssistantReply } from "@/lib/assistant";
 import { aiAnswer } from "@/lib/llm";
 import { log, errMsg } from "@/lib/log";
+import { isSecretSeeking, redactSecrets, SAFE_REFUSAL } from "@/lib/guard";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -33,6 +34,19 @@ export async function POST(request: NextRequest) {
       content: message,
       page: page ?? null,
     });
+
+    // Garde-fou anti prompt-injection : ne jamais transmettre une demande de secrets à l'agent.
+    if (isSecretSeeking(message)) {
+      log.warn("agent.blocked", { sessionId, page: page ?? null });
+      await supabase.from("hbs_agent_messages").insert({
+        session_id: sessionId,
+        role: "agent",
+        content: SAFE_REFUSAL.text,
+        page: page ?? null,
+        handled: false,
+      });
+      return NextResponse.json({ ...SAFE_REFUSAL, source: "guard" });
+    }
 
     let reply: AssistantReply;
     let source: "agent" | "ai" | "local" = "local";
@@ -83,16 +97,20 @@ export async function POST(request: NextRequest) {
       reply = await aiOrLocal();
     }
 
+    // Backstop : masquer tout secret éventuel dans la réponse (même si l'agent en renvoie).
+    const safeText = redactSecrets(reply.text);
+    if (safeText !== reply.text) log.warn("agent.redacted", { sessionId, source });
+
     await supabase.from("hbs_agent_messages").insert({
       session_id: sessionId,
       role: "agent",
-      content: reply.text,
+      content: safeText,
       page: page ?? null,
       handled: source !== "local",
     });
 
     log.info("agent.reply", { source });
-    return NextResponse.json({ ...reply, source });
+    return NextResponse.json({ ...reply, text: safeText, source });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: "Requête invalide" }, { status: 400 });

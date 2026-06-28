@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Lint, type-check & build
+    runs-on: ubuntu-latest
+    env:
+      # Placeholders : le build n'a pas besoin des vrais secrets (runtime = Vercel).
+      NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder
+      NEXT_PUBLIC_SITE_URL: https://hbs-formation.vercel.app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build
+      - name: npm audit (high, non-bloquant)
+        run: npm audit --omit=dev --audit-level=high || true
+
+  secrets-scan:
+    name: Secret scan (gitleaks)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Run gitleaks
+        run: |
+          VER=8.18.4
+          curl -sSL "https://github.com/gitleaks/gitleaks/releases/download/v${VER}/gitleaks_${VER}_linux_x64.tar.gz" | tar -xz gitleaks
+          ./gitleaks detect --source . --no-banner --redact --exit-code 1
