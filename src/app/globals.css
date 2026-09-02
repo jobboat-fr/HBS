@@ -6,8 +6,8 @@
   :root {
     --color-ink: #0b2239;
     --color-ink-soft: #41506a;
-    --color-teal: #10b8aa;
-    --color-coral: #ff6b5b;
+    --color-teal: #1d3fae;
+    --color-coral: #111111;
   }
 
   html {
@@ -28,7 +28,7 @@
   }
 
   ::selection {
-    background: #c5f2ec;
+    background: #cbdbfc;
     color: var(--color-ink);
   }
 }
@@ -46,7 +46,7 @@
   border: 2px solid #eef3f8;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #10b8aa;
+  background: #1d3fae;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -65,7 +65,7 @@
     text-wrap: balance;
   }
   .text-teal-gradient {
-    background: linear-gradient(135deg, #10b8aa 0%, #22c3b1 100%);
+    background: linear-gradient(135deg, #2e5fe0 0%, #0f2159 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -78,7 +78,7 @@
   }
   /* Trait surligné façon Studi sous un mot clé */
   .underline-brush {
-    background-image: linear-gradient(120deg, rgba(16, 184, 170, 0.25), rgba(16, 184, 170, 0.25));
+    background-image: linear-gradient(120deg, rgba(29, 63, 174, 0.25), rgba(29, 63, 174, 0.25));
     background-repeat: no-repeat;
     background-position: 0 88%;
     background-size: 100% 0.35em;

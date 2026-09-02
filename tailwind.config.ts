@@ -11,26 +11,26 @@ const config: Config = {
           soft: "#41506A",
           muted: "#6B7A90",
         },
-        // Teal Studi-like (couleur principale)
+        // Bleu marine du logo officiel (couleur principale) — clé "teal" conservée pour ne pas casser les classes existantes
         teal: {
-          50: "#E6FAF7",
-          100: "#C5F2EC",
-          200: "#8FE6DA",
-          300: "#54D6C6",
-          400: "#22C3B1",
-          500: "#10B8AA",
-          DEFAULT: "#10B8AA",
-          600: "#0E9E92",
-          700: "#0B7E75",
+          50: "#EAF0FE",
+          100: "#CBDBFC",
+          200: "#96B6F7",
+          300: "#5C8CEF",
+          400: "#2E5FE0",
+          500: "#1D3FAE",
+          DEFAULT: "#1D3FAE",
+          600: "#16307F",
+          700: "#0F2159",
         },
-        // Corail (accent secondaire)
+        // Noir (accent secondaire)
         coral: {
-          DEFAULT: "#FF6B5B",
-          dark: "#F2503E",
-          light: "#FFE3DF",
+          DEFAULT: "#111111",
+          dark: "#000000",
+          light: "#E7E7E7",
         },
-        // Jaune (badges / highlights)
-        sun: { DEFAULT: "#FFC94D", light: "#FFF3D6" },
+        // Gris acier (badges / highlights)
+        sun: { DEFAULT: "#D9DCE1", light: "#F2F3F5" },
         // Surfaces claires
         cloud: "#F4F7FB",
         mist: "#EEF3F8",
@@ -52,7 +52,7 @@ const config: Config = {
       boxShadow: {
         soft: "0 10px 40px -12px rgba(11,34,57,0.12)",
         card: "0 12px 32px -10px rgba(11,34,57,0.14)",
-        "card-hover": "0 24px 60px -16px rgba(16,184,170,0.28)",
+        "card-hover": "0 24px 60px -16px rgba(29,63,174,0.28)",
       },
       animation: {
         "fade-up": "fadeUp 0.7s cubic-bezier(0.22,1,0.36,1) forwards",
@@ -63,8 +63,8 @@ const config: Config = {
         float: { "0%,100%": { transform: "translateY(0)" }, "50%": { transform: "translateY(-12px)" } },
       },
       backgroundImage: {
-        "teal-gradient": "linear-gradient(135deg, #10B8AA 0%, #22C3B1 100%)",
-        "hero-soft": "radial-gradient(60% 60% at 80% 0%, rgba(16,184,170,0.14) 0%, transparent 70%), radial-gradient(50% 50% at 0% 30%, rgba(255,107,91,0.10) 0%, transparent 70%)",
+        "teal-gradient": "linear-gradient(135deg, #2E5FE0 0%, #0F2159 100%)",
+        "hero-soft": "radial-gradient(60% 60% at 80% 0%, rgba(29,63,174,0.14) 0%, transparent 70%), radial-gradient(50% 50% at 0% 30%, rgba(17,17,17,0.07) 0%, transparent 70%)",
       },
     },
   },

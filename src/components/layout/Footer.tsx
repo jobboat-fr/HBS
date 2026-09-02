@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { MapPin, Mail, Phone } from "lucide-react";
 import { navLinks, site, legal, social, formations, azzco } from "@/lib/site";
-import { LogoMark } from "@/components/ui/Logo";
+import { HbsBadge } from "@/components/ui/Logo";
 import { AzzcoLogo } from "@/components/ui/AzzcoLogo";
 
 export function Footer() {
@@ -10,12 +10,7 @@ export function Footer() {
       <div className="container-page py-16">
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
           <div>
-            <div className="flex items-center gap-2">
-              <LogoMark className="h-9 w-9" />
-              <span className="font-display text-lg font-extrabold text-white">
-                HBS<span className="text-teal-400"> FORMATION</span>
-              </span>
-            </div>
+            <HbsBadge variant="dark" className="h-40" />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/60">
               {site.baseline}. Organisme de formation basé à {site.city}.
             </p>

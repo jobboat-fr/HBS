@@ -3,9 +3,9 @@ import { cn } from "@/lib/utils";
 export type MascotVariant = "graduate" | "suit" | "hiphop" | "casual";
 
 const NAVY = "#0B2239";
-const TEAL = "#10B8AA";
-const CORAL = "#FF6B5B";
-const GOLD = "#FFC94D";
+const TEAL = "#1D3FAE";
+const CORAL = "#111111";
+const GOLD = "#D9DCE1";
 
 /**
  * Hub — la mascotte de HBS FORMATION.
@@ -33,7 +33,7 @@ export function Mascot({
       <defs>
         <linearGradient id="hubBody" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0" stopColor={TEAL} />
-          <stop offset="1" stopColor="#22C3B1" />
+          <stop offset="1" stopColor="#0F2159" />
         </linearGradient>
       </defs>
 
@@ -56,7 +56,7 @@ export function Mascot({
       )}
       {variant === "hiphop" && (
         <>
-          <path d="M48 134 Q80 112 112 134 L106 150 Q80 134 54 150 Z" fill="#e85949" />
+          <path d="M48 134 Q80 112 112 134 L106 150 Q80 134 54 150 Z" fill={CORAL} />
           <path d="M62 132 Q80 156 98 132" fill="none" stroke={GOLD} strokeWidth="4" strokeLinecap="round" />
           <circle cx="80" cy="150" r="3.5" fill={GOLD} />
         </>

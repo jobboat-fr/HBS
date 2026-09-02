@@ -37,7 +37,7 @@ chaleureux·se sur la forme.
 4. **Reconnaissance** — certifications et diplômes reconnus.
 
 ## Couleurs / identité
-- Teal `#10B8AA` (principal), corail `#FF6B5B` (accent), encre navy `#0B2239`.
+- Bleu marine `#1D3FAE` (principal, clé Tailwind `teal` — couleur du logo officiel), noir `#111111` (accent, clé `coral`), blanc, encre navy `#0B2239` (texte).
 - Typo : Poppins (titres), Inter (texte).
 
 ## Open questions (à trancher par le propriétaire)
