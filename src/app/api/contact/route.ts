@@ -4,10 +4,30 @@ import { createClient } from "@/lib/supabase/server";
 import { contactSchema } from "@/lib/validation/contact";
 import { buildNotificationEmail, buildConfirmationEmail } from "@/lib/email/templates";
 import { log, errMsg } from "@/lib/log";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rateLimit";
+
+// En dessous de ce délai entre le rendu du formulaire et sa soumission, on considère que
+// c'est un script (un humain ne remplit jamais un formulaire de contact en < 2s).
+const MIN_FILL_TIME_MS = 2000;
 
 export async function POST(request: NextRequest) {
   try {
+    if (!(await checkRateLimit(request, "contact", RATE_LIMITS.contact.windowSeconds, RATE_LIMITS.contact.limit))) {
+      return NextResponse.json({ error: "Trop de demandes. Réessayez plus tard." }, { status: 429 });
+    }
+
     const body = await request.json();
+
+    // Anti-bot : champ piège rempli, ou soumission trop rapide -> on répond succès sans
+    // rien faire (ne pas donner de signal au bot qu'il a été détecté).
+    const honeypotFilled = typeof body.website === "string" && body.website.trim().length > 0;
+    const tooFast =
+      typeof body.renderedAt === "number" && Date.now() - body.renderedAt < MIN_FILL_TIME_MS;
+    if (honeypotFilled || tooFast) {
+      log.warn("contact.bot_blocked", { honeypotFilled, tooFast });
+      return NextResponse.json({ success: true });
+    }
+
     const data = contactSchema.parse(body);
 
     const financement = data.financement ? data.financement : null;

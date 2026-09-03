@@ -5,6 +5,7 @@ import { localAnswer, suggestLink, type AssistantReply } from "@/lib/assistant";
 import { aiAnswer } from "@/lib/llm";
 import { log, errMsg } from "@/lib/log";
 import { isSecretSeeking, redactSecrets, SAFE_REFUSAL } from "@/lib/guard";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rateLimit";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -23,6 +24,13 @@ const schema = z.object({
  */
 export async function POST(request: NextRequest) {
   try {
+    if (!(await checkRateLimit(request, "agent", RATE_LIMITS.agent.windowSeconds, RATE_LIMITS.agent.limit))) {
+      return NextResponse.json(
+        { text: "Trop de messages envoyés d'un coup — laissez-moi une minute et réessayez.", links: [] },
+        { status: 429 },
+      );
+    }
+
     const { sessionId, message, page } = schema.parse(await request.json());
     log.info("agent.request", { sessionId, page: page ?? null, len: message.length });
 

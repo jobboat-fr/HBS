@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { log, errMsg } from "@/lib/log";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rateLimit";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -64,6 +65,10 @@ async function vigilParse(query: string): Promise<{ q: string; loc: string } | n
 
 export async function POST(request: NextRequest) {
   try {
+    if (!(await checkRateLimit(request, "alternance", RATE_LIMITS.alternance.windowSeconds, RATE_LIMITS.alternance.limit))) {
+      return NextResponse.json({ offers: [], error: "Trop de recherches. Réessayez plus tard." }, { status: 429 });
+    }
+
     const body = await request.json();
     const query = String(body.query ?? "").trim();
     const location = String(body.location ?? "").trim();

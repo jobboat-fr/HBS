@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckCircle2, Loader2 } from "lucide-react";
@@ -12,6 +12,9 @@ import { formations, financements } from "@/lib/site";
 export function ContactForm() {
   const [submitted, setSubmitted] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
+  // Anti-bot : horodatage de rendu (une soumission quasi instantanée trahit un script) +
+  // champ piège "website" (invisible pour un humain, souvent auto-rempli par les bots).
+  const renderedAt = useRef(Date.now());
 
   const {
     register,
@@ -19,13 +22,14 @@ export function ContactForm() {
     formState: { errors, isSubmitting },
   } = useForm<ContactInput>({ resolver: zodResolver(contactSchema) });
 
-  const onSubmit = async (values: ContactInput) => {
+  const onSubmit = async (values: ContactInput, event?: React.BaseSyntheticEvent) => {
     setServerError(null);
+    const honeypot = (event?.target as HTMLFormElement | undefined)?.website?.value;
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
+        body: JSON.stringify({ ...values, website: honeypot, renderedAt: renderedAt.current }),
       });
       if (!res.ok) throw new Error("Une erreur est survenue. Merci de réessayer.");
       setSubmitted(true);
@@ -48,6 +52,13 @@ export function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
+      {/* Champ piège anti-bot : invisible et exclu du tabulateur pour un humain, souvent
+          rempli automatiquement par les bots. Ne pas nommer "honeypot" (repérable). */}
+      <div className="absolute left-[-9999px] top-auto h-0 w-0 overflow-hidden" aria-hidden="true">
+        <label htmlFor="website">Site web</label>
+        <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+      </div>
+
       <div className="grid gap-5 sm:grid-cols-2">
         <div>
           <Label htmlFor="name">Nom complet *</Label>
