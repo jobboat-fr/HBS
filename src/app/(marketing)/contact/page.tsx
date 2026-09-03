@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { MapPin, Mail, Phone, Clock } from "lucide-react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { ContactForm } from "@/components/forms/ContactForm";
+import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 import { site, legal } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -13,6 +14,12 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <>
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Accueil", url: site.url },
+          { name: "Contact", url: `${site.url}/contact` },
+        ]}
+      />
       <PageHeader
         eyebrow="Contact"
         title={

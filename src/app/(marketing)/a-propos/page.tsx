@@ -4,6 +4,7 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { Reveal } from "@/components/ui/Reveal";
 import { CTASection } from "@/components/sections/CTASection";
 import { StatsSection } from "@/components/sections/StatsSection";
+import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 import { legal, site, media } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -21,6 +22,12 @@ const values = [
 export default function AProposPage() {
   return (
     <>
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Accueil", url: site.url },
+          { name: "À propos", url: `${site.url}/a-propos` },
+        ]}
+      />
       <PageHeader
         eyebrow="À propos"
         title={

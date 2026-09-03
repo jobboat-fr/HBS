@@ -6,7 +6,9 @@ import { Reveal } from "@/components/ui/Reveal";
 import { Button } from "@/components/ui/Button";
 import { RncpBadge } from "@/components/ui/RncpBadge";
 import { CTASection } from "@/components/sections/CTASection";
+import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 import { createClient } from "@/lib/supabase/server";
+import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Certifications RNCP",
@@ -38,6 +40,12 @@ export default async function CertificationsPage() {
 
   return (
     <>
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Accueil", url: site.url },
+          { name: "Certifications", url: `${site.url}/certifications` },
+        ]}
+      />
       <PageHeader
         eyebrow="Certifications RNCP"
         title={

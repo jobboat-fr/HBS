@@ -4,9 +4,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useScroll, useMotionValueEvent } from "framer-motion";
-import { Menu, X, User } from "lucide-react";
+import { Menu, X, User, Phone } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { navLinks } from "@/lib/site";
+import { navLinks, site } from "@/lib/site";
 import { Button } from "@/components/ui/Button";
 import { LogoMark } from "@/components/ui/Logo";
 
@@ -65,6 +65,12 @@ export function Header() {
         </ul>
 
         <div className="hidden items-center gap-3 lg:flex">
+          <a
+            href={`tel:${site.phone.replace(/\s/g, "")}`}
+            className="inline-flex items-center gap-1.5 text-[15px] font-semibold text-teal-600 hover:text-teal-700"
+          >
+            <Phone size={17} /> {site.phone}
+          </a>
           <Link
             href="/connexion"
             className="inline-flex items-center gap-1.5 text-[15px] font-medium text-ink-soft hover:text-teal-600"
@@ -109,6 +115,12 @@ export function Header() {
                 </Link>
               ))}
               <div className="mt-6 flex flex-col gap-3">
+                <a
+                  href={`tel:${site.phone.replace(/\s/g, "")}`}
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-teal-200 bg-teal-50 py-3 text-[15px] font-semibold text-teal-700"
+                >
+                  <Phone size={17} /> {site.phone}
+                </a>
                 <Button href="/connexion" variant="outline" onClick={() => setOpen(false)}>
                   Se connecter
                 </Button>

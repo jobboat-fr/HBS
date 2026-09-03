@@ -3,6 +3,8 @@ import { Wallet, Building2, Briefcase, UserCheck, MapPin, CreditCard } from "luc
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Reveal } from "@/components/ui/Reveal";
 import { CTASection } from "@/components/sections/CTASection";
+import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
+import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Financement — CPF, OPCO, France Travail",
@@ -22,6 +24,12 @@ const dispositifs = [
 export default function FinancementPage() {
   return (
     <>
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Accueil", url: site.url },
+          { name: "Financement", url: `${site.url}/financement` },
+        ]}
+      />
       <PageHeader
         eyebrow="Financement"
         title={

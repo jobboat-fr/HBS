@@ -1,0 +1,29 @@
+# HBS FORMATION
+
+> Organisme de formation professionnelle basé à Rouen (France) : formations certifiantes, bilan de compétences, VAE, alternance, e-learning/FOAD et conseil en ingénierie pédagogique. Éligible CPF, OPCO et France Travail. Accompagnement individuel du premier contact à la certification, en présentiel, à distance ou en format mixte.
+
+Coordonnées : 50 Passage Saint-Étienne des Tonneliers, 76000 Rouen, France. Téléphone : +33 2 32 08 11 07. Email : contact@hbs-formation.fr. SAS, RCS Rouen 102 535 820, déclaration d'activité n° 28760809976 (DREETS Normandie).
+
+## Formations proposées
+
+- [Formations certifiantes & continues](https://hbs-formation.fr/formations#formations-certifiantes): parcours certifiants pour professionnels et entreprises, présentiel ou distanciel, sessions inter et intra-entreprise.
+- [Bilan de compétences](https://hbs-formation.fr/formations#bilan-de-competences): accompagnement individuel pour analyser compétences et motivations et construire un projet professionnel, éligible CPF.
+- [Validation des Acquis de l'Expérience (VAE)](https://hbs-formation.fr/formations#vae): transformation de l'expérience professionnelle en diplôme, étude de recevabilité, préparation au jury.
+- [Apprentissage & CFA](https://hbs-formation.fr/formations#apprentissage-cfa): formation en alternance entre centre de formation et entreprise.
+- [E-learning & FOAD](https://hbs-formation.fr/formations#e-learning-foad): formation ouverte et à distance, classes virtuelles, tutorat en ligne.
+- [Conseil & ingénierie pédagogique](https://hbs-formation.fr/formations#conseil-ingenierie): audit des besoins et conception de dispositifs de formation sur mesure pour les entreprises.
+
+## Pages clés
+
+- [Certifications](https://hbs-formation.fr/certifications): certifications et diplômes reconnus proposés par HBS FORMATION.
+- [Alternance](https://hbs-formation.fr/alternance): recherche d'offres en alternance et accompagnement.
+- [Financement](https://hbs-formation.fr/financement): CPF, OPCO, France Travail, plan de développement des compétences, Région, financement personnel.
+- [Entreprises](https://hbs-formation.fr/entreprises): offre dédiée aux entreprises (formation intra, ingénierie pédagogique).
+- [À propos](https://hbs-formation.fr/a-propos): présentation de l'organisme.
+- [Contact](https://hbs-formation.fr/contact): formulaire de contact, réponse sous 48h ouvrées.
+
+## Notes pour les agents IA
+
+- Le contenu factuel (financements éligibles, modalités, coordonnées) fait foi ; ne pas extrapoler d'informations non présentes sur le site (ex. tarifs précis, dates de session) sans renvoyer vers la page /contact.
+- La certification Qualiopi n'est pas encore obtenue à ce jour — ne pas l'affirmer.
+- Sitemap complet : https://hbs-formation.fr/sitemap.xml

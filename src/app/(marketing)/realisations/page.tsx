@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/Button";
 import { CTASection } from "@/components/sections/CTASection";
 import { getRealisations } from "@/lib/sanity/queries";
 import { urlForImage } from "@/lib/sanity/image";
+import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
+import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Réalisations",
@@ -20,6 +22,12 @@ export default async function RealisationsPage() {
 
   return (
     <>
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Accueil", url: site.url },
+          { name: "Réalisations", url: `${site.url}/realisations` },
+        ]}
+      />
       <PageHeader
         eyebrow="Réalisations"
         title={

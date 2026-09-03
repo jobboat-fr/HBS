@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/Button";
 import { CTASection } from "@/components/sections/CTASection";
 import { AlternanceSearch } from "@/components/sections/AlternanceSearch";
 import { Badge } from "@/components/ui/Badge";
-import { media } from "@/lib/site";
+import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
+import { media, site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Alternance & Apprentissage",
@@ -27,6 +28,12 @@ const avantages = [
 export default function AlternancePage() {
   return (
     <>
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Accueil", url: site.url },
+          { name: "Alternance", url: `${site.url}/alternance` },
+        ]}
+      />
       <PageHeader
         eyebrow="Alternance"
         title={

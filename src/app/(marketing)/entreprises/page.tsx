@@ -5,7 +5,8 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { Reveal } from "@/components/ui/Reveal";
 import { Button } from "@/components/ui/Button";
 import { CTASection } from "@/components/sections/CTASection";
-import { media } from "@/lib/site";
+import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
+import { media, site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Entreprises & Organisations",
@@ -23,6 +24,12 @@ const offres = [
 export default function EntreprisesPage() {
   return (
     <>
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Accueil", url: site.url },
+          { name: "Entreprises", url: `${site.url}/entreprises` },
+        ]}
+      />
       <PageHeader
         eyebrow="Entreprises"
         title={

@@ -5,7 +5,8 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { Reveal } from "@/components/ui/Reveal";
 import { Button } from "@/components/ui/Button";
 import { CTASection } from "@/components/sections/CTASection";
-import { formations, media } from "@/lib/site";
+import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
+import { formations, media, site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Formations — Certifiantes, Bilan de compétences, VAE, Apprentissage",
@@ -16,6 +17,12 @@ export const metadata: Metadata = {
 export default function FormationsPage() {
   return (
     <>
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Accueil", url: site.url },
+          { name: "Formations", url: `${site.url}/formations` },
+        ]}
+      />
       <PageHeader
         eyebrow="Nos formations"
         title={
