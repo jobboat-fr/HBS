@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useScroll, useMotionValueEvent } from "framer-motion";
-import { Menu, X, User, Phone } from "lucide-react";
+import { Menu, X, Phone, ClipboardList } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { navLinks, site } from "@/lib/site";
 import { Button } from "@/components/ui/Button";
@@ -45,7 +45,7 @@ export function Header() {
         scrolled ? "shadow-soft" : "border-b border-mist",
       )}
     >
-      <nav className="container-page flex h-[72px] items-center justify-between gap-4">
+      <nav className="mx-auto flex h-[72px] w-full max-w-[1440px] items-center justify-between gap-4 px-5 sm:px-8 lg:px-12">
         <Logo />
 
         <ul className="hidden items-center gap-7 lg:flex">
@@ -71,11 +71,12 @@ export function Header() {
           >
             <Phone size={17} /> {site.phone}
           </a>
+          {/* "Se connecter" désactivé temporairement — remplacé par l'appel au quiz de positionnement. */}
           <Link
-            href="/connexion"
+            href="/contact"
             className="inline-flex items-center gap-1.5 text-[15px] font-medium text-ink-soft hover:text-teal-600"
           >
-            <User size={17} /> Se connecter
+            <ClipboardList size={17} /> Passer le quiz
           </Link>
           <Button href="/contact" size="sm">
             Trouver ma formation
@@ -100,7 +101,7 @@ export function Header() {
             exit={{ opacity: 0 }}
             className="fixed inset-0 top-[72px] z-40 bg-white lg:hidden"
           >
-            <div className="container-page flex flex-col gap-1 pt-6">
+            <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-1 px-5 pt-6 sm:px-8">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
@@ -121,8 +122,8 @@ export function Header() {
                 >
                   <Phone size={17} /> {site.phone}
                 </a>
-                <Button href="/connexion" variant="outline" onClick={() => setOpen(false)}>
-                  Se connecter
+                <Button href="/contact" variant="outline" onClick={() => setOpen(false)}>
+                  Passer le quiz
                 </Button>
                 <Button href="/contact" onClick={() => setOpen(false)}>
                   Trouver ma formation
