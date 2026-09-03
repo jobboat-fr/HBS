@@ -78,9 +78,6 @@ export function Header() {
           >
             <ClipboardList size={17} /> Passer le quiz
           </Link>
-          <Button href="/contact" size="sm">
-            Trouver ma formation
-          </Button>
         </div>
 
         <button
@@ -99,9 +96,9 @@ export function Header() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 top-[72px] z-40 bg-white lg:hidden"
+            className="fixed inset-0 top-[72px] z-40 overflow-y-auto overscroll-contain bg-white lg:hidden"
           >
-            <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-1 px-5 pt-6 sm:px-8">
+            <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-1 px-5 pb-10 pt-6 sm:px-8">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
@@ -116,6 +113,9 @@ export function Header() {
                 </Link>
               ))}
               <div className="mt-6 flex flex-col gap-3">
+                <p className="text-center text-sm font-semibold text-ink-soft">
+                  Prêt·e à passer à l&apos;étape suivante ?
+                </p>
                 <a
                   href={`tel:${site.phone.replace(/\s/g, "")}`}
                   className="inline-flex items-center justify-center gap-2 rounded-xl border border-teal-200 bg-teal-50 py-3 text-[15px] font-semibold text-teal-700"

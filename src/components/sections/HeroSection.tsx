@@ -2,8 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
-import { Search, Star, BadgeCheck, Clock } from "lucide-react";
+import { Search, Star, BadgeCheck, Clock, ClipboardList } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { VideoPlayer } from "@/components/media/VideoPlayer";
 import { formations, media } from "@/lib/site";
@@ -26,9 +27,17 @@ export function HeroSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         >
-          <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-1.5 text-xs font-semibold text-teal-700 shadow-soft">
-            <Star size={14} className="fill-sun text-sun" /> Organisme de formation · Rouen
-          </span>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-1.5 text-xs font-semibold text-teal-700 shadow-soft">
+              <Star size={14} className="fill-sun text-sun" /> Organisme de formation · Rouen
+            </span>
+            <Link
+              href="/quiz"
+              className="inline-flex items-center gap-2 rounded-full bg-teal-500 px-4 py-1.5 text-xs font-semibold text-white shadow-soft transition-colors hover:bg-teal-600"
+            >
+              <ClipboardList size={14} /> Testez votre niveau — quiz gratuit
+            </Link>
+          </div>
 
           <h1 className="mt-6 font-display text-display-xl font-extrabold text-ink">
             Montez en compétences,{" "}
