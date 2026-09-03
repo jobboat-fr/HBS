@@ -30,7 +30,7 @@ type RncpCourse = {
 };
 
 export default async function CertificationsPage() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data } = await supabase
     .from("hbs_courses")
     .select("slug, title, summary, cover_url, rncp_code, rncp_level, certificateur, rncp_url")

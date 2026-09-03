@@ -4,7 +4,7 @@ import { site, legal } from "@/lib/site";
 import { ContactCentre } from "@/components/espace/ContactCentre";
 
 export default async function ContactCentrePage() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();

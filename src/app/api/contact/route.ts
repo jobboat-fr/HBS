@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
       request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? null;
 
     // 1) Enregistrement dans Supabase (table hbs_contact_submissions, RLS insert public)
-    const supabase = createClient();
+    const supabase = await createClient();
     const { error: dbError } = await supabase.from("hbs_contact_submissions").insert({
       name: data.name,
       email: data.email,

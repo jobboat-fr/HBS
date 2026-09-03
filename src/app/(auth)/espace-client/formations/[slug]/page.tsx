@@ -4,8 +4,9 @@ import { ArrowLeft } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { CoursePlayer, type CourseModule } from "@/components/espace/CoursePlayer";
 
-export default async function CourseDetailPage({ params }: { params: { slug: string } }) {
-  const supabase = createClient();
+export default async function CourseDetailPage(props: { params: Promise<{ slug: string }> }) {
+  const params = await props.params;
+  const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();

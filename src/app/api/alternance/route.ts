@@ -18,7 +18,7 @@ type Offer = {
 };
 
 async function search(q: string, loc: string) {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data, error } = await supabase.rpc("hbs_search_alternance", { p_q: q, p_loc: loc, p_limit: 24 });
   if (error) {
     log.error("alternance.rpc", { err: error.message });

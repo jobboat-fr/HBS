@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { KanbanBoard } from "@/components/espace/KanbanBoard";
 
 export default async function TableauPage() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();

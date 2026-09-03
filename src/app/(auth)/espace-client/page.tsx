@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { ProgressBar } from "@/components/espace/ProgressBar";
 
 export default async function EspaceClientPage() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();

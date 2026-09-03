@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
     const { sessionId, message, page } = schema.parse(await request.json());
     log.info("agent.request", { sessionId, page: page ?? null, len: message.length });
 
-    const supabase = createClient();
+    const supabase = await createClient();
     // Boîte de réception (l'agent lit via la clé service_role)
     await supabase.from("hbs_agent_messages").insert({
       session_id: sessionId,

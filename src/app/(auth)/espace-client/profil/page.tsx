@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { ProfileSettings } from "@/components/espace/ProfileSettings";
 
 export default async function ProfilPage() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
