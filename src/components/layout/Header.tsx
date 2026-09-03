@@ -73,7 +73,7 @@ export function Header() {
           </a>
           {/* "Se connecter" désactivé temporairement — remplacé par l'appel au quiz de positionnement. */}
           <Link
-            href="/contact"
+            href="/quiz"
             className="inline-flex items-center gap-1.5 text-[15px] font-medium text-ink-soft hover:text-teal-600"
           >
             <ClipboardList size={17} /> Passer le quiz
@@ -122,7 +122,7 @@ export function Header() {
                 >
                   <Phone size={17} /> {site.phone}
                 </a>
-                <Button href="/contact" variant="outline" onClick={() => setOpen(false)}>
+                <Button href="/quiz" variant="outline" onClick={() => setOpen(false)}>
                   Passer le quiz
                 </Button>
                 <Button href="/contact" onClick={() => setOpen(false)}>
