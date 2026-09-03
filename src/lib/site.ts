@@ -11,7 +11,7 @@ export const site = {
     "HBS FORMATION, organisme de formation à Rouen : formations certifiantes, bilan de compétences, VAE, alternance et e-learning. Éligible CPF, OPCO et France Travail. Un accompagnement 100 % humain, en ligne ou en présentiel.",
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://www.hbs-formation.fr",
   email: "contact@hbs-formation.fr",
-  phone: "+33 2 00 00 00 00",
+  phone: "+33 2 32 08 11 07",
   city: "Rouen",
 };
 

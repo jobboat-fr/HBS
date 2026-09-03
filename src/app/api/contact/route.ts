@@ -39,7 +39,9 @@ export async function POST(request: NextRequest) {
       const { Resend } = await import("resend");
       const resend = new Resend(resendKey);
       const from = process.env.CONTACT_FROM || "onboarding@resend.dev";
-      const notifyTo = process.env.CONTACT_NOTIFY_TO || data.email;
+      const notifyTo = process.env.CONTACT_NOTIFY_TO
+        ? process.env.CONTACT_NOTIFY_TO.split(",").map((addr) => addr.trim()).filter(Boolean)
+        : [data.email];
 
       await Promise.allSettled([
         resend.emails.send({
@@ -56,7 +58,7 @@ export async function POST(request: NextRequest) {
           html: buildConfirmationEmail(data),
         }),
       ]);
-      log.info("contact.email.sent", { to: process.env.CONTACT_NOTIFY_TO || data.email });
+      log.info("contact.email.sent", { to: notifyTo });
     } else {
       log.warn("contact.email.skipped", { reason: "no RESEND_API_KEY" });
     }
