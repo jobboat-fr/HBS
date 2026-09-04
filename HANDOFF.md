@@ -175,24 +175,39 @@ SQL editor, or the same direct-connection approach) — nothing does it for you.
 
 ---
 
-## 6. Two big initiatives — both explicitly blocked, don't restart from scratch
+## 6. Two big initiatives — one replanned and unblocked, one still blocked
 
-### HBS LEARN (multi-tenant learning platform, roles/quiz/exam system)
-This was a large, separate initiative — NOT the same as the site's existing course
-tables in §2. Roles: `super_admin > admin > dev > manager > formateur > auditor > user`,
-each can only create a role strictly below itself, `super_admin` is platform-wide and
-every other role is tenant-scoped.
+### HBS LEARN — **replanned 2026-09-04, no longer blocked**
+A large, separate initiative — NOT the same as the site's existing course tables in §2.
+Rescoped from "roles/quiz/exam system" to a **training-administration and compliance
+platform** for an organisme de formation: planning/calendar, émargement in/out per
+demi-journée, embedded courses, administrative documents, per-role archive/vault.
 
-- **First attempt** (superseded): built directly into `hbs-backend` on Supabase. Dead,
-  uncommitted code — see §1.
-- **Current plan** (approved by the user, not yet started): rebuild on
-  [Nile](https://www.thenile.dev), a Postgres platform built for multi-tenant SaaS
-  (native tenant virtualization + Nile Auth with built-in magic-link support), chosen
-  specifically because the user wants this sellable to other training orgs later, not
-  just HBS FORMATION. **Blocked on Phase 0**: the user has not created a Nile
-  project/account yet. The full phased plan (with checkable goals per phase) is saved at
-  `C:\Users\azerr\.claude\plans\wild-marinating-sparrow.md` on this machine — read that
-  before resuming this work, don't re-derive the architecture from scratch.
+**The current plan is [`hbs-backend/PLAN_V2.md`](../hbs-backend/PLAN_V2.md). Read that,
+not the two superseded documents below.**
+
+Decisions taken 2026-09-04:
+- **We are the SaaS vendor, not a SaaS customer.** No Digiforma/Dendreo/Edusign. HBS
+  FORMATION is **tenant #1 and design partner**; the product is sold to other OFs. This
+  makes an Art. 28 RGPD DPA a hard gate before a second tenant.
+- **Self-hosted Supabase on OVH + `tenant_id`, multi-tenant from row one.** **Nile is
+  dropped** — still public preview, and waiting on the account blocked this for ~2
+  months. Self-hosting costs managed backups/PITR, so pgBackRest plus a tested restore
+  drill is a Phase 0 deliverable.
+- **Qualiopi gap analysis done** — the plan covered 3 of ~22 applicable indicators. The
+  référentiel changes on **1 November 2026** (décret 2026-728); build to V10.
+- **6 roles**: `super_admin > admin > formateur > entreprise > auditeur > apprenant`,
+  with a second axis (`can_create_users`, `data_scope`, `is_read_only`) because a pure
+  level hierarchy would let a read-only `auditeur` create learners.
+- **Video: open source only** — self-hosted Jitsi (JWT auth + `event_sync` webhooks),
+  BigBlueButton as the eventual target on its own machine. Zoom dropped (needs a paid
+  plan HBS doesn't have).
+
+Superseded, kept only for history — do **not** resume either:
+- `C:\Users\azerr\.claude\plans\wild-marinating-sparrow.md` — the Nile plan.
+- The dead uncommitted Supabase v0.1 in `hbs-backend` (`app/routers/`,
+  `supabase/migrations/`, `HBS_LEARN.md`) — see §1. Its role-hierarchy trigger and
+  exam-scoring logic are worth reusing; nothing else is.
 
 ### OVH Hermes agent migration
 The user wants to migrate the existing Hermes agent ("Minizer" — see the
