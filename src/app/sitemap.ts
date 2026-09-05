@@ -19,6 +19,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     page("/entreprises", 0.8),
     page("/realisations", 0.7, "weekly"),
     page("/a-propos", 0.6),
+    page("/preinscription", 0.9, "weekly"),
     page("/contact", 0.9, "yearly"),
   ];
 }

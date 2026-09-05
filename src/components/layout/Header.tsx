@@ -71,12 +71,12 @@ export function Header() {
           >
             <Phone size={17} /> {site.phone}
           </a>
-          {/* "Se connecter" désactivé temporairement — remplacé par l'appel au quiz de positionnement. */}
+          {/* "Se connecter" désactivé temporairement — remplacé par l'entrée du tunnel d'inscription. */}
           <Link
-            href="/quiz"
+            href="/preinscription"
             className="inline-flex items-center gap-1.5 text-[15px] font-medium text-ink-soft hover:text-teal-600"
           >
-            <ClipboardList size={17} /> Passer le quiz
+            <ClipboardList size={17} /> Demander une place
           </Link>
         </div>
 
@@ -122,8 +122,8 @@ export function Header() {
                 >
                   <Phone size={17} /> {site.phone}
                 </a>
-                <Button href="/quiz" variant="outline" onClick={() => setOpen(false)}>
-                  Passer le quiz
+                <Button href="/preinscription" variant="outline" onClick={() => setOpen(false)}>
+                  Demander une place
                 </Button>
                 <Button href="/contact" onClick={() => setOpen(false)}>
                   Trouver ma formation
