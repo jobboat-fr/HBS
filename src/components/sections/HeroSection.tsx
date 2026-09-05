@@ -32,10 +32,10 @@ export function HeroSection() {
               <Star size={14} className="fill-sun text-sun" /> Organisme de formation · Rouen
             </span>
             <Link
-              href="/quiz"
+              href="/preinscription"
               className="inline-flex items-center gap-2 rounded-full bg-teal-500 px-4 py-1.5 text-xs font-semibold text-white shadow-soft transition-colors hover:bg-teal-600"
             >
-              <ClipboardList size={14} /> Testez votre niveau — quiz gratuit
+              <ClipboardList size={14} /> Demandez votre place — test de niveau inclus
             </Link>
           </div>
 
