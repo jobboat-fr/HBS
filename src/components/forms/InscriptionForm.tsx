@@ -5,15 +5,24 @@ import { useForm } from "react-hook-form";
 import { CheckCircle2, ArrowRight, Loader2, Mail } from "lucide-react";
 import Link from "next/link";
 import { Input, Textarea, Select, Label, FieldError } from "@/components/ui/Input";
+import { PositionnementQuiz } from "@/components/forms/PositionnementQuiz";
 import { Button } from "@/components/ui/Button";
 
 /**
  * L'entrée du tunnel d'inscription.
  *
  * Elle ne crée pas de compte, et le dit. Ce qu'elle produit est une **demande** : le
- * visiteur passe ensuite un test de positionnement, puis l'organisme décide. C'est l'ordre
+ * candidat passe le test de positionnement, puis l'organisme décide. C'est l'ordre
  * qu'impose l'indicateur 8 — établir le niveau avant d'inscrire — et c'est aussi ce qui
  * évite qu'un formulaire ouvert serve à poser des noms sur la liste que lit un auditeur.
+ *
+ * Le test s'enchaîne ici même. Il occupait auparavant une autre page, atteinte par un
+ * bouton : le candidat venait de remplir six champs, et on lui demandait de recommencer
+ * ailleurs. Un lien de plus entre l'intention et l'acte est un endroit de plus où
+ * l'abandonner — et l'indicateur 8 ne compte que les tests réellement passés.
+ *
+ * Le lien personnel reste affiché : il sert à reprendre plus tard, ou depuis un autre
+ * appareil. Il n'est plus le seul chemin.
  */
 
 type Programme = { id: string; title: string };
@@ -21,6 +30,26 @@ type Programme = { id: string; title: string };
 type Result =
   | { kind: "sent"; positionnement: string | null; next: string }
   | { kind: "known"; next: string };
+
+/** La copie, telle que LEARN la sert — sans les bonnes réponses, par construction. */
+type Paper = {
+  title: string;
+  duration_minutes: number;
+  questions: {
+    id: string;
+    kind: string;
+    prompt: string;
+    options: { key: string; label: string }[];
+    points: number;
+  }[];
+};
+
+/** `/positionnement/<jeton>` → le jeton seul. */
+function jetonDe(chemin: string | null): string | null {
+  if (!chemin) return null;
+  const m = chemin.match(/\/positionnement\/([^/?#]+)/);
+  return m ? m[1] : null;
+}
 
 export function InscriptionForm({
   programmes,
@@ -32,6 +61,8 @@ export function InscriptionForm({
   defaultProgramId?: string;
 }) {
   const [result, setResult] = useState<Result | null>(null);
+  const [paper, setPaper] = useState<Paper | null>(null);
+  const [paperError, setPaperError] = useState<string | null>(null);
   const [serverError, setServerError] = useState<string | null>(null);
   const renderedAt = useRef(Date.now());
 
@@ -72,6 +103,21 @@ export function InscriptionForm({
           ? { kind: "sent", positionnement: body.positionnement ?? null, next: body.next }
           : { kind: "known", next: body.next },
       );
+
+      // La copie est demandée tout de suite : le candidat vient de valider, c'est le seul
+      // moment où on est sûr de l'avoir. Un échec ici n'annule pas la demande — elle est
+      // déjà enregistrée — et le lien personnel reste affiché pour reprendre plus tard.
+      const jeton = jetonDe(body.positionnement ?? null);
+      if (body.created && jeton) {
+        try {
+          const r = await fetch(`/api/learn/positionnement/${encodeURIComponent(jeton)}`);
+          const p = await r.json().catch(() => ({}));
+          if (r.ok) setPaper(p as Paper);
+          else setPaperError(p.error || "Le test n'a pas pu être ouvert.");
+        } catch {
+          setPaperError("Le test n'a pas pu être ouvert.");
+        }
+      }
     } catch (e) {
       setServerError(e instanceof Error ? e.message : "Erreur inconnue.");
     }
@@ -91,11 +137,41 @@ export function InscriptionForm({
   }
 
   if (result?.kind === "sent") {
+    const jeton = jetonDe(result.positionnement);
+
+    // Le test, enchaîné. Le composant ne connaît aucune bonne réponse : les questions
+    // arrivent sans elles et la correction a lieu dans la base.
+    if (paper && jeton) {
+      return (
+        <div className="space-y-6">
+          <div className="flex items-start gap-3 rounded-xl border border-teal-200 bg-teal-50/60 p-4">
+            <CheckCircle2 size={20} className="mt-0.5 shrink-0 text-teal-600" />
+            <div className="space-y-1">
+              <p className="font-semibold text-ink">Demande enregistrée</p>
+              <p className="text-sm text-ink-soft">
+                Il reste une étape : ce court test situe votre niveau. Il adapte le contenu
+                de la formation et n&apos;écarte personne.
+              </p>
+            </div>
+          </div>
+          <PositionnementQuiz
+            token={jeton}
+            title={paper.title}
+            durationMinutes={paper.duration_minutes}
+            questions={paper.questions}
+          />
+        </div>
+      );
+    }
+
     return (
       <div className="flex flex-col items-center gap-4 py-12 text-center">
         <CheckCircle2 size={48} className="text-teal-500" />
         <h3 className="font-display text-2xl font-bold text-ink">Demande enregistrée</h3>
         <p className="max-w-md text-ink-soft">{result.next}</p>
+        {paperError && (
+          <p className="max-w-md text-sm text-ink-muted">{paperError}</p>
+        )}
         {result.positionnement ? (
           <>
             <Button href={result.positionnement} size="md">
