@@ -256,15 +256,15 @@ export const media = {
 };
 
 /**
- * Hub — la mascotte / persona IA de HBS FORMATION.
- * Histoire : Hub a porté toutes les casquettes (formateur en costume, créatif, terrain…)
+ * Vigil — la mascotte / persona IA de HBS FORMATION.
+ * Histoire : Vigil a porté toutes les casquettes (formateur en costume, créatif, terrain…)
  * avant de comprendre que la meilleure formation s'adapte à chacun. Il change donc de style
  * selon l'univers de la page — et vous accompagne dans le chat.
  */
 export const mascot = {
-  name: "Hub",
+  name: "Vigil",
   tagline: "votre copilote formation",
-  greeting: "Bonjour, moi c'est Hub, votre copilote formation. Comment puis-je vous aider ?",
+  greeting: "Bonjour, moi c'est Vigil, votre copilote formation. Comment puis-je vous aider ?",
 };
 
 /** Studio / agence ayant conçu le site. */

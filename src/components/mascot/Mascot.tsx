@@ -8,7 +8,7 @@ const CORAL = "#111111";
 const GOLD = "#D9DCE1";
 
 /**
- * Hub — la mascotte de HBS FORMATION.
+ * Vigil — la mascotte de HBS FORMATION.
  * Personnage à chapeau de diplômé qui change de style selon l'univers de la page
  * (« la formation s'adapte à vous »).
  */
@@ -27,7 +27,7 @@ export function Mascot({
       viewBox="0 0 160 176"
       className={cn("h-40 w-40", className)}
       role="img"
-      aria-label="Hub, la mascotte de HBS FORMATION"
+      aria-label="Vigil, la mascotte de HBS FORMATION"
       xmlns="http://www.w3.org/2000/svg"
     >
       <defs>

@@ -9,7 +9,7 @@ import { site, faqs, formations } from "@/lib/site";
 function systemPrompt(page?: string): string {
   const faq = faqs.map((f) => `Q: ${f.q}\nR: ${f.a}`).join("\n\n");
   const domaines = formations.map((f) => `- ${f.title} : ${f.tagline}`).join("\n");
-  return `Tu es « Hub », le copilote humain de ${site.name}, organisme de formation à ${site.city}. Tu discutes avec un visiteur du site, pas avec un développeur : parle-lui comme un conseiller compétent et sympathique le ferait de vive voix, pas comme un moteur de FAQ.
+  return `Tu es « Vigil », le copilote humain de ${site.name}, organisme de formation à ${site.city}. Tu discutes avec un visiteur du site, pas avec un développeur : parle-lui comme un conseiller compétent et sympathique le ferait de vive voix, pas comme un moteur de FAQ.
 
 STYLE :
 - Français, vouvoiement, ton chaleureux, direct et humain — jamais robotique, jamais de jargon inutile.

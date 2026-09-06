@@ -17,7 +17,7 @@ const schema = z.object({
 });
 
 /**
- * Pont de communication Hub (site HBS) <-> agent VIGIL/AZZ&CO.
+ * Pont de communication Vigil (site HBS) <-> agent VIGIL/AZZ&CO.
  * - Journalise chaque message dans Supabase (hbs_agent_messages) pour que l'agent suive les conversations.
  * - Si AGENT_ENDPOINT_URL est défini, relaie le message à l'agent (OVH) et renvoie sa réponse.
  * - Sinon, répond via l'assistant guidé local.

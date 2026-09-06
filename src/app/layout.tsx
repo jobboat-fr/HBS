@@ -6,7 +6,7 @@ import "./globals.css";
 import { site } from "@/lib/site";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { HubChat } from "@/components/mascot/HubChat";
+import { VigilChat } from "@/components/mascot/VigilChat";
 import { OrganizationJsonLd } from "@/components/seo/JsonLd";
 
 const poppins = Poppins({
@@ -72,7 +72,7 @@ export default function RootLayout({
         <Header />
         <main id="contenu">{children}</main>
         <Footer />
-        <HubChat />
+        <VigilChat />
         <Analytics />
         <SpeedInsights />
       </body>

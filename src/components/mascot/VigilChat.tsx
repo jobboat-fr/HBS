@@ -12,7 +12,7 @@ import { localAnswer } from "@/lib/assistant";
 type CLink = { label: string; href: string };
 type Msg = { from: "hub" | "user"; text: string; links?: CLink[] };
 
-/** Tenue + accroche de Hub selon l'univers de la page. */
+/** Tenue + accroche de Vigil selon l'univers de la page. */
 function contextFor(pathname: string): { outfit: MascotVariant; tip: string } {
   if (pathname.startsWith("/entreprises")) return { outfit: "suit", tip: "Former vos équipes ? Je vous oriente vers la bonne formule." };
   if (pathname.startsWith("/alternance")) return { outfit: "hiphop", tip: "L'alternance vous tente ? On en parle quand vous voulez !" };
@@ -39,7 +39,7 @@ function makeSessionId() {
   return id;
 }
 
-export function HubChat() {
+export function VigilChat() {
   const pathname = usePathname();
   const { outfit, tip } = useMemo(() => contextFor(pathname), [pathname]);
 
