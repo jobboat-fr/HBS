@@ -45,8 +45,10 @@ export function HeroSection() {
           </h1>
 
           <p className="mt-5 max-w-lg text-lg leading-relaxed text-ink-soft">
-            Formations certifiantes, bilans de compétences, VAE et alternance — en ligne, en
-            présentiel ou en mixte. Un accompagnement humain, du premier contact à la certification.
+            Formation à l&apos;intelligence artificielle, parcours certifiants, bilans de
+            compétences et VAE — en ligne, en présentiel ou en mixte. Pour les particuliers,
+            les indépendants et les entreprises, avec un accompagnement humain du premier
+            contact à la certification.
           </p>
 
           {/* Recherche de formation */}

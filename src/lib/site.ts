@@ -6,9 +6,12 @@
 export const site = {
   name: "HBS FORMATION",
   shortName: "HBS",
-  baseline: "Votre montée en compétences, 100 % en ligne et 100 % accompagnée",
+  baseline: "La montée en compétences des particuliers et des entreprises",
+  // Pas de canal de financement annoncé ici : CPF, OPCO, France Travail et Région supposent
+  // tous la certification Qualiopi, qui n'est pas encore obtenue. Une méta-description est
+  // ce que les moteurs citent — c'est le dernier endroit où laisser une éligibilité fausse.
   description:
-    "HBS FORMATION, organisme de formation à Rouen : formations certifiantes, bilan de compétences, VAE, alternance et e-learning. Éligible CPF, OPCO et France Travail. Un accompagnement 100 % humain, en ligne ou en présentiel.",
+    "HBS FORMATION, organisme de formation à Rouen : formation à l'intelligence artificielle, formations certifiantes, bilan de compétences, VAE et e-learning. Pour les particuliers comme pour les entreprises, en ligne ou en présentiel.",
   // Apex, pas www : www.hbs-formation.fr redirige (308) vers l'apex côté Vercel.
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://hbs-formation.fr",
   email: "contact@hbs-formation.fr",
@@ -39,23 +42,54 @@ export const legal = {
 
 export const navLinks = [
   { label: "Formations", href: "/formations" },
+  { label: "Formation IA", href: "/formations#ia-360" },
   { label: "Certifications", href: "/certifications" },
-  { label: "Alternance", href: "/alternance" },
   { label: "Financement", href: "/financement" },
   { label: "Entreprises", href: "/entreprises" },
   { label: "À propos", href: "/a-propos" },
   { label: "Contact", href: "/contact" },
 ] as const;
 
+/**
+ * L'annonce affichée en bandeau sur toutes les pages.
+ *
+ * `date` est la date réelle d'ouverture, pas un artifice commercial : elle est affichée au
+ * visiteur et elle engage l'organisme. `iso` sert au balisage et au tri ; il n'y a qu'une
+ * seule source pour les deux afin qu'elles ne puissent pas diverger.
+ */
+export const annonce = {
+  actif: true,
+  iso: "2026-10-26",
+  dateLisible: "26 octobre 2026",
+  titre: "Formation IA 360",
+  texte: "Première session le 26 octobre 2026 — inscriptions ouvertes.",
+  href: "/formations#ia-360",
+  lienLabel: "Voir le programme",
+} as const;
+
 /** Piliers de formation — affichés en page d'accueil (3) et détaillés sur /formations. */
 export const formations = [
+  {
+    slug: "ia-360",
+    icon: "Sparkles",
+    title: "Formation IA 360",
+    tagline: "Connaissance, conformité, déploiement — 21 heures",
+    description:
+      "Trois journées pour comprendre ce que fait réellement l'IA, produire un travail fiable sur ses propres documents, et repartir avec le dossier IA de son activité : registre des risques, règles d'usage, feuille de route chiffrée. Ouverte aux particuliers comme aux entreprises.",
+    features: [
+      "Première session le 26 octobre 2026",
+      "21 h — 3 journées de 7 h, 6 ateliers",
+      "Particuliers, indépendants et entreprises",
+      "Chaque journée produit un livrable daté",
+    ],
+  },
   {
     slug: "formations-certifiantes",
     icon: "GraduationCap",
     title: "Formations certifiantes & continues",
     tagline: "Montez en compétences, faites reconnaître votre expertise",
     description:
-      "Des parcours certifiants et de formation continue conçus pour les professionnels et les entreprises, en présentiel ou à distance.",
+      "Des parcours certifiants et de formation continue ouverts aux particuliers, aux indépendants et aux entreprises, en présentiel ou à distance.",
     features: [
       "Parcours certifiants reconnus",
       "Présentiel, distanciel ou mixte (FOAD)",
@@ -74,7 +108,10 @@ export const formations = [
       "Entretiens individuels confidentiels",
       "Analyse des compétences et aptitudes",
       "Définition d'un projet réaliste",
-      "Éligible au CPF",
+      // Le bilan est une prestation que le CPF peut financer, mais la prise en charge
+      // suppose un organisme certifié Qualiopi. Tant qu'elle n'est pas obtenue, écrire
+      // « éligible au CPF » sur une carte produit est une promesse que le dossier démentira.
+      "Particuliers, salariés et entreprises",
     ],
   },
   {
@@ -89,20 +126,6 @@ export const formations = [
       "Accompagnement à la rédaction du dossier",
       "Préparation au jury",
       "Suivi personnalisé",
-    ],
-  },
-  {
-    slug: "apprentissage-cfa",
-    icon: "Building2",
-    title: "Apprentissage & CFA",
-    tagline: "Se former en alternant théorie et entreprise",
-    description:
-      "Des formations par apprentissage articulant centre de formation et terrain, pour acquérir un métier tout en étant rémunéré.",
-    features: [
-      "Alternance centre / entreprise",
-      "Accompagnement administratif",
-      "Suivi pédagogique des apprentis",
-      "Lien renforcé écoles-entreprises",
     ],
   },
   {
@@ -137,9 +160,9 @@ export const formations = [
 
 /** Les 3 piliers mis en avant en page d'accueil. */
 export const featuredFormationSlugs = [
+  "ia-360",
   "formations-certifiantes",
   "bilan-de-competences",
-  "vae",
 ] as const;
 
 export const processSteps = [
@@ -153,7 +176,7 @@ export const processSteps = [
     step: "02",
     title: "Montage & financement",
     description:
-      "Nous construisons votre dossier et identifions le financement mobilisable : CPF, OPCO, France Travail, entreprise.",
+      "Nous construisons votre dossier et identifions ce qui est réellement mobilisable pour vous : financement par votre entreprise, ou à titre personnel.",
   },
   {
     step: "03",
@@ -210,8 +233,8 @@ export const faqs = [
     a: "Aujourd'hui, par votre entreprise sur ses fonds propres ou à titre personnel : ces deux voies ne demandent aucune certification et sont ouvertes dès maintenant. Les dispositifs mutualisés — CPF, OPCO, France Travail, aides de la Région — supposent la certification Qualiopi, que nous n'avons pas encore obtenue. Dites-nous votre situation et nous regarderons ensemble ce qui est réellement mobilisable.",
   },
   {
-    q: "Proposez-vous des formations en alternance ?",
-    a: "Oui, nous accompagnons les parcours en alternance et apprentissage : alternance entre le centre de formation et l'entreprise, avec un suivi administratif et pédagogique complet.",
+    q: "Quand démarre la formation à l'intelligence artificielle ?",
+    a: "La première session de la Formation IA 360 ouvre le 26 octobre 2026. Elle dure 21 heures réparties sur trois journées et s'adresse autant aux particuliers et aux indépendants qu'aux entreprises. Chaque journée produit un livrable daté que vous emportez : cartographie de vos usages, registre des risques, puis feuille de route chiffrée à 90 jours.",
   },
   {
     q: "Comment se déroule un bilan de compétences ?",
@@ -249,7 +272,7 @@ export const media = {
     "formations-certifiantes": U("1517245386807-bb43f82c33c4"),
     "bilan-de-competences": U("1454165804606-c3d57bc86b40"),
     vae: U("1434030216411-0b793f4b4173"),
-    "apprentissage-cfa": U("1556761175-5973dc0f32e7"),
+    "ia-360": U("1677442136019-21780ecad995"),
     "e-learning-foad": U("1516321318423-f06f85e504b3"),
     "conseil-ingenierie": U("1552664730-d307ca884978"),
   } as Record<string, string>,

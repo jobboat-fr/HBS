@@ -11,7 +11,7 @@ import { media, site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Entreprises & Organisations",
   description:
-    "HBS FORMATION accompagne les entreprises : montée en compétences des équipes, formations intra-entreprise sur mesure, ingénierie pédagogique et alternance.",
+    "HBS FORMATION accompagne les entreprises : montée en compétences des équipes, formations intra-entreprise sur mesure, ingénierie pédagogique — et la formation à l'intelligence artificielle.",
 };
 
 const offres = [

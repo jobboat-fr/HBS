@@ -9,9 +9,9 @@ import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 import { formations, media, site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Formations — Certifiantes, Bilan de compétences, VAE, Apprentissage",
+  title: "Formations — IA 360, Certifiantes, Bilan de compétences, VAE",
   description:
-    "Découvrez nos formations : parcours certifiants et continus, bilan de compétences, VAE, apprentissage/CFA, e-learning et conseil en ingénierie pédagogique.",
+    "Découvrez nos formations : formation IA 360, parcours certifiants et continus, bilan de compétences, VAE, e-learning et conseil en ingénierie pédagogique.",
 };
 
 export default function FormationsPage() {

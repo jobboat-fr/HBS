@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 };
 
 const values = [
-  { title: "Notre mission", text: "Concevoir et déployer des actions de formation professionnelle continue, certifiantes et par apprentissage qui transforment durablement les compétences." },
+  { title: "Notre mission", text: "Concevoir et déployer des actions de formation professionnelle continue et certifiantes qui transforment durablement les compétences." },
   { title: "Notre approche", text: "Une ingénierie pédagogique sur mesure, en présentiel, à distance ou en mixte (FOAD), portée par des formateurs experts de leur domaine." },
   { title: "Notre ambition", text: "Accompagner entreprises, organismes et particuliers vers la réussite, du premier échange jusqu'au suivi post-formation." },
 ];

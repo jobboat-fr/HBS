@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { site } from "@/lib/site";
+import { AnnonceBanner } from "@/components/layout/AnnonceBanner";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { VigilChat } from "@/components/mascot/VigilChat";
@@ -34,7 +35,7 @@ export const metadata: Metadata = {
     "organisme de formation Rouen",
     "bilan de compétences",
     "VAE",
-    "apprentissage CFA",
+    "formation intelligence artificielle",
     "e-learning",
     "formation certifiante",
     "CPF",
@@ -69,6 +70,7 @@ export default function RootLayout({
         >
           Aller au contenu
         </a>
+        <AnnonceBanner />
         <Header />
         <main id="contenu">{children}</main>
         <Footer />

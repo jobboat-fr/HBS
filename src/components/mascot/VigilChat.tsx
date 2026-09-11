@@ -15,7 +15,6 @@ type Msg = { from: "hub" | "user"; text: string; links?: CLink[] };
 /** Tenue + accroche de Vigil selon l'univers de la page. */
 function contextFor(pathname: string): { outfit: MascotVariant; tip: string } {
   if (pathname.startsWith("/entreprises")) return { outfit: "suit", tip: "Former vos équipes ? Je vous oriente vers la bonne formule." };
-  if (pathname.startsWith("/alternance")) return { outfit: "hiphop", tip: "L'alternance vous tente ? On en parle quand vous voulez !" };
   if (pathname.startsWith("/financement")) return { outfit: "casual", tip: "CPF, OPCO, France Travail… je démêle le financement avec vous." };
   if (pathname.startsWith("/formations")) return { outfit: "graduate", tip: "Une question sur un parcours ? Je suis là pour vous aider." };
   if (pathname.startsWith("/contact")) return { outfit: "casual", tip: "Un coup de pouce pour formuler votre demande ?" };

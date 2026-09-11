@@ -10,7 +10,7 @@ export function suggestLink(input: string): AssistantLink | undefined {
   const t = norm(input);
   const has = (...k: string[]) => k.some((w) => t.includes(w));
   if (has("financ", "cpf", "opco", "france travail", "prix", "cout", "tarif")) return { label: "Voir le financement", href: "/financement" };
-  if (has("altern", "apprentis", "cfa")) return { label: "Alternance", href: "/alternance" };
+  if (has("ia", "intelligence artificielle", "chatgpt")) return { label: "Formation IA 360", href: "/formations#ia-360" };
   if (has("entreprise", "equipe", "salarie", "intra")) return { label: "Offre entreprises", href: "/entreprises" };
   if (has("bilan")) return { label: "Bilan de compétences", href: "/formations#bilan-de-competences" };
   if (has("vae")) return { label: "La VAE", href: "/formations#vae" };
@@ -28,8 +28,8 @@ export function localAnswer(input: string): AssistantReply {
     return { text: faqs[2].a, links: [{ label: "Voir le financement", href: "/financement" }] };
   if (has("distance", "ligne", "foad", "e-learning", "elearning", "visio"))
     return { text: faqs[1].a, links: [{ label: "Découvrir les formations", href: "/formations" }] };
-  if (has("altern", "apprentis", "cfa"))
-    return { text: faqs[3].a, links: [{ label: "Tout sur l'alternance", href: "/alternance" }] };
+  if (has("ia 360", "intelligence artificielle", "chatgpt", "formation ia"))
+    return { text: faqs[3].a, links: [{ label: "Voir la Formation IA 360", href: "/formations#ia-360" }] };
   if (has("bilan"))
     return { text: faqs[4].a, links: [{ label: "Bilan de compétences", href: "/formations#bilan-de-competences" }] };
   if (has("vae", "acquis", "experience"))
@@ -53,7 +53,7 @@ export function localAnswer(input: string): AssistantReply {
     };
   if (has("formation", "cours", "parcours", "certifi", "diplome", "apprendre"))
     return {
-      text: "Nous proposons 6 domaines : formations certifiantes, bilan de compétences, VAE, alternance, e-learning et conseil. Dites-moi votre objectif et je vous oriente.",
+      text: "Nous proposons six domaines : la Formation IA 360 (première session le 26 octobre 2026), les parcours certifiants, le bilan de compétences, la VAE, le e-learning et le conseil en ingénierie. Particuliers comme entreprises. Dites-moi votre objectif et je vous oriente.",
       links: [{ label: "Voir les formations", href: "/formations" }],
     };
 

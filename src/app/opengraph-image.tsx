@@ -39,7 +39,7 @@ export default function Og() {
             à votre rythme.
           </div>
           <div style={{ display: "flex", marginTop: 28, fontSize: 30, color: "rgba(255,255,255,0.8)" }}>
-            Formations certifiantes · Bilan de compétences · VAE · Alternance
+            Formation IA 360 · Certifiantes · Bilan de compétences · VAE
           </div>
         </div>
 

@@ -36,7 +36,6 @@ export async function checkRateLimit(
 export const RATE_LIMITS = {
   agent: { windowSeconds: 300, limit: 15 }, // 15 messages / 5 min / IP
   contact: { windowSeconds: 3600, limit: 5 }, // 5 soumissions / heure / IP
-  alternance: { windowSeconds: 300, limit: 30 }, // 30 recherches / 5 min / IP
   // Aligné sur celui de LEARN (5/h/IP/organisme) : deux limites qui disent la même chose
   // évitent qu'un visiteur passe l'une et se fasse refuser par l'autre sans comprendre.
   inscription: { windowSeconds: 3600, limit: 5 },
