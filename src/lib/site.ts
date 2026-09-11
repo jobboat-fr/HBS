@@ -199,7 +199,7 @@ export const social = {
 export const faqs = [
   {
     q: "Les formations HBS FORMATION sont-elles éligibles au CPF ?",
-    a: "Oui, plusieurs de nos parcours sont éligibles au CPF (Compte Personnel de Formation). Nous vous aidons à vérifier votre éligibilité et à monter votre dossier de financement.",
+    a: "Pas à ce jour, et nous préférons le dire avant que vous construisiez votre projet dessus. Mobiliser le CPF suppose deux conditions réunies : un organisme certifié Qualiopi, et une formation conduisant à une certification enregistrée au RNCP ou au répertoire spécifique. Notre démarche de certification est engagée. En attendant, nos actions se financent par l'entreprise sur ses fonds propres ou à titre personnel.",
   },
   {
     q: "Peut-on suivre une formation à distance ?",
@@ -207,7 +207,7 @@ export const faqs = [
   },
   {
     q: "Comment financer ma formation ?",
-    a: "Selon votre situation, votre formation peut être prise en charge par le CPF, votre OPCO, France Travail, le plan de développement des compétences de votre entreprise, la Région ou un financement personnel. Nous vous orientons vers le bon dispositif.",
+    a: "Aujourd'hui, par votre entreprise sur ses fonds propres ou à titre personnel : ces deux voies ne demandent aucune certification et sont ouvertes dès maintenant. Les dispositifs mutualisés — CPF, OPCO, France Travail, aides de la Région — supposent la certification Qualiopi, que nous n'avons pas encore obtenue. Dites-nous votre situation et nous regarderons ensemble ce qui est réellement mobilisable.",
   },
   {
     q: "Proposez-vous des formations en alternance ?",
@@ -215,7 +215,7 @@ export const faqs = [
   },
   {
     q: "Comment se déroule un bilan de compétences ?",
-    a: "Le bilan de compétences se déroule en entretiens individuels et confidentiels : analyse de vos compétences et motivations, exploration des pistes, puis construction d'un projet professionnel réaliste. Il est éligible au CPF.",
+    a: "Le bilan de compétences se déroule en entretiens individuels et confidentiels : analyse de vos compétences et motivations, exploration des pistes, puis construction d'un projet professionnel réaliste. Le bilan est, par nature, une prestation que le CPF peut financer — mais la prise en charge suppose un organisme certifié Qualiopi, et notre certification est en cours. Chez nous, il se finance donc pour l'instant par l'entreprise ou à titre personnel.",
   },
   {
     q: "Où se situe HBS FORMATION ?",
