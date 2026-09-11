@@ -3,8 +3,7 @@ import { Poppins, Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
-import { site } from "@/lib/site";
-import { AnnonceBanner } from "@/components/layout/AnnonceBanner";
+import { site, annonce } from "@/lib/site";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { VigilChat } from "@/components/mascot/VigilChat";
@@ -62,7 +61,10 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="fr" className={`${poppins.variable} ${inter.variable}`}>
-      <body className="bg-white font-body text-ink-soft antialiased">
+      <body
+        className="bg-white font-body text-ink-soft antialiased"
+        style={{ "--entete": annonce.actif ? "112px" : "72px" } as React.CSSProperties}
+      >
         <OrganizationJsonLd />
         <a
           href="#contenu"
@@ -70,7 +72,6 @@ export default function RootLayout({
         >
           Aller au contenu
         </a>
-        <AnnonceBanner />
         <Header />
         <main id="contenu">{children}</main>
         <Footer />

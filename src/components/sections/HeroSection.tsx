@@ -19,7 +19,7 @@ export function HeroSection() {
   }
 
   return (
-    <section className="relative overflow-hidden bg-hero-soft pt-[72px]">
+    <section className="relative overflow-hidden bg-hero-soft pt-[var(--entete)]">
       <div className="container-page grid items-center gap-12 py-12 lg:grid-cols-2 lg:py-20">
         {/* Texte */}
         <motion.div
@@ -79,7 +79,7 @@ export function HeroSection() {
 
           <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-ink-soft">
             <span className="inline-flex items-center gap-1.5">
-              <BadgeCheck size={18} className="text-teal-500" /> Éligible CPF / OPCO
+              <BadgeCheck size={18} className="text-teal-500" /> Particuliers & entreprises
             </span>
             <span className="inline-flex items-center gap-1.5">
               <Clock size={18} className="text-teal-500" /> Réponse sous 48 h
@@ -108,19 +108,26 @@ export function HeroSection() {
               <BadgeCheck size={22} />
             </span>
             <div>
-              <p className="text-sm font-bold text-ink">Diplômes & certifications</p>
-              <p className="text-xs text-ink-muted">reconnus</p>
+              {/* « Diplômes & certifications reconnus » : l'organisme ne délivre aucun
+                  diplôme et ne détient aucune certification enregistrée au RNCP. Ce qu'il
+                  remet en fin d'action, et qui est vrai, c'est une attestation. */}
+              <p className="text-sm font-bold text-ink">Attestation de fin</p>
+              <p className="text-xs text-ink-muted">de formation</p>
             </div>
           </div>
         </motion.div>
       </div>
 
-      {/* Bandeau financeurs */}
+      {/* Bandeau modalités.
+          Il annonçait « Financements : CPF, OPCO, France Travail, Entreprise, Région ».
+          Trois de ces cinq supposent la certification Qualiopi, qui n'est pas obtenue, et le
+          CPF exige en plus une certification enregistrée au RNCP. Le bandeau le plus visible
+          de la page d'accueil promettait donc des prises en charge indisponibles. */}
       <div className="border-y border-mist bg-white/70">
         <div className="container-page flex flex-wrap items-center justify-center gap-x-8 gap-y-2 py-5 text-sm font-semibold text-ink-muted">
-          <span className="text-ink-soft">Financements&nbsp;:</span>
-          {["CPF", "OPCO", "France Travail", "Entreprise", "Région"].map((f) => (
-            <span key={f}>{f}</span>
+          <span className="text-ink-soft">Modalités&nbsp;:</span>
+          {["Présentiel", "À distance", "Mixte", "Inter-entreprise", "Intra-entreprise"].map((m) => (
+            <span key={m}>{m}</span>
           ))}
         </div>
       </div>

@@ -11,7 +11,7 @@ export function PageHeader({
   subtitle?: string;
 }) {
   return (
-    <header className="bg-hero-soft pt-[72px]">
+    <header className="bg-hero-soft pt-[var(--entete)]">
       <div className="container-page py-14 text-center md:py-20">
         <Reveal>
           {eyebrow ? <Badge>{eyebrow}</Badge> : null}

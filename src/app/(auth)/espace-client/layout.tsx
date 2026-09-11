@@ -14,7 +14,7 @@ export default async function EspaceClientLayout({
   if (!user) redirect("/connexion");
 
   return (
-    <div className="min-h-[100svh] bg-cloud pt-[72px]">
+    <div className="min-h-[100svh] bg-cloud pt-[var(--entete)]">
       <div className="container-page flex flex-col gap-8 py-8 lg:flex-row">
         <EspaceSidebar />
         <div className="min-w-0 flex-1">{children}</div>

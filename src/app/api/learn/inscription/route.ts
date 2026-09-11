@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { submitDemande, configured, LearnError } from "@/lib/learn";
 import { log, errMsg } from "@/lib/log";
+import { site } from "@/lib/site";
+import {
+  buildInscriptionNotification,
+  buildInscriptionConfirmation,
+} from "@/lib/email/templates";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/rateLimit";
 
 /**
@@ -78,6 +83,70 @@ export async function POST(request: NextRequest) {
     });
 
     log.info("inscription.submitted", { created: result.created, status: result.status });
+
+    // Les courriels de la demande d'inscription.
+    //
+    // La plateforme n'en envoie aucun, et c'est délibéré de sa part : elle rend le lien de
+    // positionnement à l'appelant plutôt que de l'expédier. Sans cet envoi-ci, le lien
+    // n'existait donc que dans l'onglet ouvert — un visiteur qui ferme la page avant la fin
+    // du test perdait son parcours sans aucun moyen d'y revenir, et l'organisme n'était
+    // prévenu de rien.
+    //
+    // L'envoi ne conditionne pas la réponse : la demande est déjà créée côté plateforme, et
+    // la faire échouer parce qu'un courriel n'est pas parti ferait recommencer le visiteur
+    // pour rien — la seconde tentative serait refusée par l'index d'unicité.
+    if (result.created && process.env.RESEND_API_KEY) {
+      const lienAbsolu = result.positionnement_path
+        ? new URL(result.positionnement_path, process.env.NEXT_PUBLIC_SITE_URL || site.url).toString()
+        : null;
+      const charge = {
+        full_name: data.full_name,
+        email: data.email,
+        phone: data.phone || null,
+        company: data.company || null,
+        message: data.message || null,
+        positionnement: lienAbsolu,
+      };
+
+      try {
+        const { Resend } = await import("resend");
+        const resend = new Resend(process.env.RESEND_API_KEY);
+        const from = process.env.CONTACT_FROM || "HBS FORMATION <contact@vtlvs.com>";
+        const notifyTo = process.env.CONTACT_NOTIFY_TO
+          ? process.env.CONTACT_NOTIFY_TO.split(",").map((a) => a.trim()).filter(Boolean)
+          : [];
+
+        const envois = await Promise.allSettled([
+          notifyTo.length
+            ? resend.emails.send({
+                from,
+                to: notifyTo,
+                subject: `Demande d'inscription — ${data.full_name}`,
+                replyTo: data.email,
+                html: buildInscriptionNotification(charge),
+              })
+            : Promise.resolve({ error: { message: "CONTACT_NOTIFY_TO absente" } }),
+          resend.emails.send({
+            from,
+            to: data.email,
+            subject: "Votre demande d'inscription — HBS FORMATION",
+            html: buildInscriptionConfirmation(charge),
+          }),
+        ]);
+
+        // Le SDK Resend *résout* en portant l'erreur d'API dans `{ error }` : une promesse
+        // tenue ne veut pas dire un courriel parti.
+        const echec = (r: PromiseSettledResult<{ error?: { message?: string } | null }>) =>
+          r.status === "rejected" ? errMsg(r.reason) : r.value?.error?.message ?? null;
+
+        const [notif, confirm] = envois.map(echec);
+        if (notif) log.error("inscription.email.notification_echec", { to: notifyTo, err: notif });
+        if (confirm) log.error("inscription.email.confirmation_echec", { err: confirm });
+        if (!notif && !confirm) log.info("inscription.email.ok", { lien: Boolean(lienAbsolu) });
+      } catch (e) {
+        log.error("inscription.email.exception", { err: errMsg(e) });
+      }
+    }
 
     return NextResponse.json({
       success: true,

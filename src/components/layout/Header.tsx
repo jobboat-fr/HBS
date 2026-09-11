@@ -4,11 +4,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useScroll, useMotionValueEvent } from "framer-motion";
-import { Menu, X, Phone, ClipboardList } from "lucide-react";
+import { Menu, X, ClipboardList } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { navLinks, site } from "@/lib/site";
+import { navLinks } from "@/lib/site";
 import { Button } from "@/components/ui/Button";
 import { LogoMark } from "@/components/ui/Logo";
+import { AnnonceBanner } from "@/components/layout/AnnonceBanner";
 
 function Logo({ onClick }: { onClick?: () => void }) {
   return (
@@ -45,6 +46,8 @@ export function Header() {
         scrolled ? "shadow-soft" : "border-b border-mist",
       )}
     >
+      <AnnonceBanner />
+
       <nav className="mx-auto flex h-[72px] w-full max-w-[1440px] items-center justify-between gap-4 px-5 sm:px-8 lg:px-12">
         <Logo />
 
@@ -65,12 +68,10 @@ export function Header() {
         </ul>
 
         <div className="hidden items-center gap-3 lg:flex">
-          <a
-            href={`tel:${site.phone.replace(/\s/g, "")}`}
-            className="inline-flex items-center gap-1.5 text-[15px] font-semibold text-teal-600 hover:text-teal-700"
-          >
-            <Phone size={17} /> {site.phone}
-          </a>
+          {/* Le numéro de téléphone a été retiré de l'en-tête. Il reste joignable dans le
+              pied de page, sur la page Contact et dans les mentions légales — un visiteur
+              qui cherche à appeler le trouve, sans que l'appel soit l'action mise en avant
+              sur chaque page. */}
           {/* "Se connecter" désactivé temporairement — remplacé par l'entrée du tunnel d'inscription. */}
           <Link
             href="/preinscription"
@@ -96,7 +97,7 @@ export function Header() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 top-[72px] z-40 overflow-y-auto overscroll-contain bg-white lg:hidden"
+            className="fixed inset-0 top-[var(--entete)] z-40 overflow-y-auto overscroll-contain bg-white lg:hidden"
           >
             <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-1 px-5 pb-10 pt-6 sm:px-8">
               {navLinks.map((link) => (
@@ -116,12 +117,6 @@ export function Header() {
                 <p className="text-center text-sm font-semibold text-ink-soft">
                   Prêt·e à passer à l&apos;étape suivante ?
                 </p>
-                <a
-                  href={`tel:${site.phone.replace(/\s/g, "")}`}
-                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-teal-200 bg-teal-50 py-3 text-[15px] font-semibold text-teal-700"
-                >
-                  <Phone size={17} /> {site.phone}
-                </a>
                 <Button href="/preinscription" variant="outline" onClick={() => setOpen(false)}>
                   Demander une place
                 </Button>

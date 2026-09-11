@@ -15,9 +15,13 @@ import { annonce } from "@/lib/site";
 export function AnnonceBanner() {
   if (!annonce.actif) return null;
 
+  // Hauteur fixe et une seule ligne. L'en-tête est en position fixe et les sections de
+  // contenu compensent sa hauteur avec la variable `--entete` : un bandeau qui passe à deux
+  // lignes sur mobile décalerait tout le site sans que rien ne le signale. D'où `h-10`,
+  // `whitespace-nowrap` et la troncature — le texte est court, il tient.
   return (
-    <div className="bg-ink text-white">
-      <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-3 gap-y-1 px-4 py-2.5 text-center text-sm">
+    <div className="h-10 bg-ink text-white">
+      <div className="mx-auto flex h-full max-w-7xl items-center justify-center gap-x-3 overflow-hidden whitespace-nowrap px-4 text-center text-[13px] sm:text-sm">
         {/* teal-200 (#96B6F7) et non coral : dans ce thème « coral » est du noir, invisible
             sur l'encre. Le bleu clair de la palette officielle porte sur fond #0B2239. */}
         <Sparkles aria-hidden className="h-4 w-4 shrink-0 text-teal-200" />
