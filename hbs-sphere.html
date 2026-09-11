@@ -1,0 +1,1580 @@
+<title>HBS LEARN Noyau</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --paper:#F1F6FC; --sheet:#FFFFFF; --tint:#E4EDF9;
+    --line:#D2E0F0; --line2:#B9CEE6;
+    --ink:#0B2239; --ink2:#4A657F; --ink3:#7C93AC;
+    --navy:#0F2159; --brand:#1D3FAE; --sky:#2E5FE0; --mist:#A8C6F5;
+    --auth:#B4740B; --read:#0E7C86; --write:#4B3FCF;
+    --evid:#1F7A4C; --agent:#B02A6B; --stop:#C0392B;
+    --sans:'IBM Plex Sans',system-ui,-apple-system,sans-serif;
+    --mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+    --sh:0 1px 2px rgba(15,33,89,.06),0 6px 20px rgba(15,33,89,.09);
+  }
+  *{box-sizing:border-box}
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);-webkit-text-size-adjust:100%}
+  #app{position:relative;width:100%;height:100vh;height:100dvh;min-height:340px;overflow:hidden;background:var(--paper)}
+  canvas{position:absolute;inset:0;display:block;touch-action:none}
+
+  #labels{position:absolute;inset:0;pointer-events:none;z-index:3;overflow:hidden}
+  .lb{position:absolute;transform:translate(-50%,-50%);pointer-events:auto;cursor:pointer;
+    display:flex;align-items:center;gap:8px;white-space:nowrap;
+    background:var(--sheet);border:1px solid var(--line);border-left-width:3px;
+    border-radius:6px;padding:8px 12px;min-height:40px;box-shadow:var(--sh);
+    transition:opacity .2s,border-color .15s,background .15s,box-shadow .15s}
+  .lb:hover,.lb:focus-visible{border-color:var(--brand);box-shadow:0 2px 4px rgba(15,33,89,.1),0 10px 26px rgba(15,33,89,.16);outline:none}
+  .lb{max-width:min(260px,46vw)}
+  .lb .lt{font-size:13px;font-weight:500;color:var(--ink);overflow:hidden;text-overflow:ellipsis;min-width:0}
+  .lb .ls{font-family:var(--mono);font-size:10.5px;color:var(--ink2);overflow:hidden;text-overflow:ellipsis;min-width:0}
+  .lb.mut{opacity:.35;pointer-events:none}
+  .lb.hot{border-color:var(--brand);background:var(--tint)}
+  .lb.beam{border-color:var(--navy);background:#fff;box-shadow:0 0 0 3px rgba(46,95,224,.22),var(--sh)}
+  .lb.tap::after{content:"›";font-size:16px;color:var(--ink3);margin-left:2px}
+
+  .hud{position:absolute;z-index:6;pointer-events:none}
+  .hud > *{pointer-events:auto}
+
+  #top{top:0;left:0;right:0;display:flex;align-items:center;gap:8px;flex-wrap:nowrap;
+    padding:8px 12px;padding-top:calc(8px + env(safe-area-inset-top,0px));min-height:52px;
+    border-bottom:1px solid var(--line);pointer-events:none;
+    background:linear-gradient(180deg,rgba(255,255,255,.97),rgba(241,246,252,.72));
+    opacity:0;transition:opacity .4s}
+  #top.on{opacity:1}
+  #top > *{pointer-events:auto}
+  .crumb{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink2);min-width:0;flex:1 1 auto}
+  .crumb b{color:var(--ink);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sp{flex:1}
+  .btn{font-family:var(--sans);font-size:12.5px;color:var(--ink2);background:var(--sheet);
+    border:1px solid var(--line);border-radius:6px;min-height:38px;padding:0 13px;cursor:pointer;
+    transition:.15s;white-space:nowrap}
+  .btn:hover{color:var(--ink);border-color:var(--line2)}
+  .btn:focus-visible{outline:2px solid var(--sky);outline-offset:2px}
+  .btn.pri{color:#fff;background:var(--navy);border-color:var(--navy);font-weight:500}
+  .btn.pri:hover{background:var(--brand);border-color:var(--brand);color:#fff}
+  .btn.sm{min-height:34px;padding:0 10px;font-size:12px}
+  .btn[hidden]{display:none}
+
+  .toggle{display:flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;flex:none;background:var(--sheet)}
+  .toggle button{font-family:var(--sans);font-size:11.5px;color:var(--ink2);background:none;border:0;
+    min-height:36px;padding:0 11px;cursor:pointer;transition:.15s}
+  .toggle button[aria-pressed="true"]{background:var(--navy);color:#fff;font-weight:500}
+
+  #spin{left:50%;bottom:0;transform:translateX(-50%);display:flex;align-items:center;gap:10px;
+    padding:10px 14px;opacity:0;transition:.4s;pointer-events:none}
+  #spin.on{opacity:1}
+  #spin > *{pointer-events:auto}
+  .rot{width:44px;height:44px;border:1px solid var(--line);border-radius:50%;background:var(--sheet);
+    color:var(--ink2);font-size:18px;cursor:pointer;transition:.15s;box-shadow:var(--sh)}
+  .rot:hover{color:var(--ink);border-color:var(--line2)}
+  .spinhint{font-family:var(--mono);font-size:10.5px;color:var(--ink3);white-space:nowrap}
+
+  #tour{left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));max-width:560px;margin:0 auto;
+    border:1px solid var(--line);border-radius:10px;background:var(--sheet);padding:15px 16px 13px;
+    opacity:0;transform:translateY(10px);visibility:hidden;transition:.35s;box-shadow:var(--sh);
+    max-height:min(52vh,420px);overflow-y:auto}
+  #tour.on{opacity:1;transform:none;visibility:visible}
+  .tstep{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--brand);margin-bottom:7px}
+  .ttitle{font-size:clamp(15px,1.4vw + 11px,17px);font-weight:600;margin-bottom:5px;line-height:1.3;color:var(--ink)}
+  .tbody{font-size:clamp(12.5px,1vw + 10px,13.5px);color:var(--ink2);line-height:1.6}
+  .tnav{display:flex;gap:8px;margin-top:14px;align-items:center}
+  .dots{display:flex;gap:5px;margin-left:auto}
+  .dt{width:6px;height:6px;border-radius:50%;background:var(--line2)}
+  .dt.on{background:var(--brand)}
+
+  #sheet{left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));max-width:560px;margin:0 auto;border:1px solid var(--line);
+    border-radius:10px;background:var(--sheet);overflow:hidden;opacity:0;transform:translateY(10px);
+    visibility:hidden;transition:.35s;max-height:min(62vh,560px);display:flex;flex-direction:column;box-shadow:var(--sh)}
+  #sheet.on{opacity:1;transform:none;visibility:visible}
+  .shd{display:flex;align-items:center;gap:9px;padding:13px 14px;border-bottom:1px solid var(--line);flex:none}
+  .dot{width:10px;height:10px;border-radius:3px;flex:none}
+  .snm{font-size:15px;font-weight:600;color:var(--ink)}
+  .ssc{font-size:12px;color:var(--ink3)}
+  .sbd{overflow-y:auto;padding:4px 0 8px}
+  .ssec{font-family:var(--mono);font-size:9.5px;letter-spacing:.15em;text-transform:uppercase;
+    color:var(--ink3);padding:11px 14px 5px}
+  .act{display:block;width:100%;text-align:left;background:none;border:0;border-left:3px solid transparent;
+    padding:11px 14px;cursor:pointer;transition:.15s;min-height:52px}
+  .act:hover,.act:focus-visible{background:var(--tint);border-left-color:var(--brand);outline:none}
+  .act.no:hover,.act.no:focus-visible{background:#FBECEA;border-left-color:var(--stop)}
+  .av{font-size:14px;color:var(--ink);font-weight:500;display:flex;align-items:flex-start;gap:8px;
+    flex-wrap:wrap;line-height:1.35}
+  .as{font-size:12.5px;color:var(--ink2);line-height:1.5;margin-top:4px}
+  .no-tag{font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:var(--stop);
+    border:1px solid var(--stop);border-radius:3px;padding:2px 5px;flex:none}
+
+  #chain{left:0;right:0;top:calc(56px + env(safe-area-inset-top,0px));display:flex;flex-direction:column;
+    align-items:center;gap:8px;padding:0 12px;pointer-events:none;max-height:38vh;overflow:hidden}
+  #chain > *{pointer-events:none}
+  #hops{display:flex;flex-wrap:wrap;justify-content:center;gap:5px;
+    max-width:min(720px,100%);opacity:0;visibility:hidden;transition:.3s}
+  #hops.on{opacity:1;visibility:visible}
+  .hop{font-size:clamp(10px,.8vw + 8px,11.5px);color:var(--ink2);border:1px solid var(--line);
+    border-radius:6px;padding:5px 9px;background:var(--sheet);box-shadow:var(--sh);transition:.25s;
+    max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .hop.lit{color:#fff;font-weight:500;border-color:transparent}
+
+  #story{max-width:min(560px,100%);
+    margin:0;text-align:center;font-size:clamp(12.5px,1.1vw + 10px,14px);line-height:1.55;color:var(--ink);
+    background:var(--sheet);border:1px solid var(--line);border-radius:8px;padding:11px 15px;
+    box-shadow:var(--sh);opacity:0;visibility:hidden;transition:.28s}
+  #story.on{opacity:1;visibility:visible}
+
+  #chat{left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));max-width:560px;margin:0 auto;border:1px solid var(--line);
+    border-radius:10px;background:var(--sheet);box-shadow:var(--sh);opacity:0;transform:translateY(10px);
+    visibility:hidden;transition:.35s;display:flex;flex-direction:column;max-height:min(66vh,600px)}
+  #chat.on{opacity:1;transform:none;visibility:visible}
+  .chead{font-family:var(--mono);font-size:9.5px;letter-spacing:.15em;text-transform:uppercase;
+    color:var(--ink3);padding:12px 14px 10px;border-bottom:1px solid var(--line);flex:none}
+  .cbody{overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+  .msg{max-width:min(84%,440px);font-size:clamp(12.5px,1vw + 10px,13.5px);line-height:1.55;
+    padding:10px 13px;border-radius:12px;overflow-wrap:anywhere;
+    opacity:0;transform:translateY(6px);animation:pop .32s forwards}
+  @keyframes pop{to{opacity:1;transform:none}}
+  .msg.u{align-self:flex-end;background:var(--navy);color:#fff;border-bottom-right-radius:4px}
+  .msg.a{align-self:flex-start;background:var(--tint);color:var(--ink);border-bottom-left-radius:4px}
+  .msg .who{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.12em;
+    text-transform:uppercase;opacity:.65;margin-bottom:4px}
+  .cfoot{border-top:1px solid var(--line);padding:11px 14px;flex:none}
+  #cgo{width:100%}
+
+  #screen{position:absolute;inset:0;z-index:14;display:flex;flex-direction:column;
+    padding:calc(12px + env(safe-area-inset-top,0px)) 12px calc(12px + env(safe-area-inset-bottom,0px));
+    background:var(--paper);opacity:0;visibility:hidden;transition:.3s}
+  #screen.on{opacity:1;visibility:visible}
+  .shead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:2px 2px 12px}
+  .skind{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;
+    border:1px solid currentColor;border-radius:4px;padding:3px 7px}
+  .stitle{font-size:16px;font-weight:600;color:var(--ink)}
+  .wire{flex:1;min-height:0;display:flex;gap:10px;border:1px solid var(--line);border-radius:8px;
+    background:var(--sheet);padding:10px;overflow:auto;box-shadow:var(--sh)}
+  .wside{width:128px;flex:none;display:flex;flex-direction:column;gap:6px}
+  .wmain{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px}
+  .blk{border:1px dashed var(--line2);border-radius:6px;padding:9px 10px;min-height:34px}
+  .blk .lbl{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)}
+  .blk.grow{flex:1;min-height:74px}
+  .blk.acc{border-style:solid;border-color:currentColor}
+  .sk{display:block;height:7px;border-radius:3px;background:var(--tint);margin-top:7px}
+  .cells{display:grid;gap:5px;margin-top:8px}
+  .cell{height:24px;border:1px solid var(--line);border-radius:3px;background:#FAFCFE}
+  .cell.acc{border-color:currentColor;background:var(--tint)}
+  .rows{display:flex;flex-direction:column;gap:5px;margin-top:8px}
+  .rw{height:20px;border-radius:3px;background:var(--tint)}
+  .reallines{display:flex;flex-direction:column;gap:1px;margin-top:9px}
+  .rl{font-size:clamp(12px,.9vw + 10px,13px);line-height:1.5;color:var(--ink);padding:6px 0 6px 14px;
+    position:relative;overflow-wrap:anywhere}
+  .rl+.rl{border-top:1px solid var(--line)}
+  .rl::before{content:"";position:absolute;left:2px;top:13px;width:5px;height:5px;border-radius:50%;
+    background:currentColor;opacity:.55}
+  .note{font-size:12.5px;color:var(--ink2);line-height:1.6;border-left:3px solid currentColor;
+    padding:7px 0 7px 11px;margin-top:10px}
+
+  #gate{position:absolute;inset:0;z-index:24;display:flex;align-items:center;justify-content:center;
+    padding:16px;overflow-y:auto;transition:.55s;
+    background:radial-gradient(ellipse at 50% 40%,#FFFFFF,#E4EDF9 72%)}
+  #gate.gone{opacity:0;visibility:hidden}
+  .card{width:min(440px,100%);border:1px solid var(--line);border-radius:12px;
+    background:var(--sheet);padding:26px 22px 20px;box-shadow:0 2px 6px rgba(15,33,89,.07),0 18px 50px rgba(15,33,89,.14)}
+  .gatelogo{display:block;width:56px;height:56px;border-radius:14px;margin-bottom:16px;
+    background:linear-gradient(135deg,#2E5FE0,#0F2159);position:relative}
+  .gatelogo span{position:absolute;inset:0;display:grid;place-items:center;color:#fff;
+    font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:20px;letter-spacing:-.5px;padding-top:5px}
+  .eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--brand);margin-bottom:12px}
+  h1{font-size:clamp(22px,5.4vw,27px);font-weight:600;letter-spacing:-.015em;margin:0 0 9px;line-height:1.2;
+    text-wrap:balance;color:var(--ink)}
+  .sub{font-size:13.5px;color:var(--ink2);line-height:1.65;margin:0 0 20px}
+  .fine{font-size:11.5px;color:var(--ink3);text-align:center;margin-top:13px;line-height:1.5}
+
+  .tight{display:none}
+  @media (max-width:860px){
+    #chain{top:calc(54px + env(safe-area-inset-top,0px))}
+  }
+  @media (max-width:700px){
+    #top{min-height:48px;padding:7px 10px;padding-top:calc(7px + env(safe-area-inset-top,0px));gap:6px}
+    #chain{top:calc(52px + env(safe-area-inset-top,0px));padding:0 8px;gap:6px}
+    .toggle button{padding:0 8px;font-size:11px}
+    .wide{display:none} .tight{display:inline}
+    .lb{padding:7px 10px;min-height:38px;gap:6px;max-width:min(200px,62vw)}
+    .lb .lt{font-size:12.5px} .lb .ls{display:none}
+    #spin{display:none}
+    #tour,#sheet,#chat{left:8px;right:8px;bottom:calc(8px + env(safe-area-inset-bottom,0px))}
+    #screen{padding:calc(8px + env(safe-area-inset-top,0px)) 8px calc(8px + env(safe-area-inset-bottom,0px))}
+    .btn{padding:0 10px}
+  }
+  @media (max-width:560px){
+    .wire{flex-direction:column;gap:8px}
+    .wside{width:auto;flex-direction:row;overflow-x:auto;gap:6px;padding-bottom:3px;flex:none}
+    .wside .blk{flex:0 0 auto;min-height:0;white-space:nowrap}
+    .blk.grow{min-height:60px}
+    .stitle{font-size:15px}
+    .shead{gap:8px;padding-bottom:9px}
+  }
+  @media (max-width:400px){
+    .lb .lt{font-size:12px}
+    .lb{max-width:min(170px,68vw);padding:6px 9px;min-height:36px}
+    .crumb{font-size:12px}
+  }
+  @media (max-height:620px){
+    #tour{max-height:64vh;padding:12px 14px 11px}
+    #sheet,#chat{max-height:70vh}
+    #chain{max-height:26vh}
+    .cbody{padding:11px;gap:8px}
+    .act{min-height:46px;padding:9px 13px}
+  }
+  @media (max-height:460px){
+    #chain{max-height:22vh}
+    #tour .tbody{display:none}
+    #tour{max-height:56vh}
+    .ssec{padding:8px 14px 4px}
+  }
+  #app.demo #top .btn,#app.demo #top .toggle{opacity:.18;pointer-events:none;transition:opacity .4s}
+  #app.demo #spin{opacity:0;pointer-events:none}
+  #app.demo .lb{transition:opacity .4s}
+  #top .btn,#top .toggle{transition:opacity .4s}
+  @media (prefers-reduced-motion:reduce){*{transition-duration:.01ms!important}}
+</style>
+
+<div id="app">
+  <canvas id="scene"></canvas>
+  <div id="labels"></div>
+
+  <div class="hud" id="top">
+    <button class="btn sm" id="up" hidden>‹<span class="wide"> Retour</span></button>
+    <span class="crumb"><b id="crumb">Vue d'ensemble</b></span>
+    <span class="sp"></span>
+    <div class="toggle" role="group" aria-label="Niveau de détail">
+      <button id="mSimple" aria-pressed="true">Simple</button>
+      <button id="mTech" aria-pressed="false"><span class="wide">Technique</span><span class="tight">Tech</span></button>
+    </div>
+    <button class="btn sm" id="restart"><span class="wide">Revoir la visite</span><span class="tight">Visite</span></button>
+  </div>
+
+  <div class="hud" id="chain">
+    <div id="hops" aria-live="polite"></div>
+    <p id="story"></p>
+  </div>
+
+  <div class="hud" id="chat">
+    <div class="chead">Discussion</div>
+    <div class="cbody" id="cbody"></div>
+    <div class="cfoot"><button class="btn pri sm" id="cgo">Voir ce qui se passe ensuite</button></div>
+  </div>
+
+  <div class="hud" id="spin">
+    <button class="rot" id="rotL" aria-label="Tourner à gauche">‹</button>
+    <span class="spinhint">faites glisser pour tourner</span>
+    <button class="rot" id="rotR" aria-label="Tourner à droite">›</button>
+  </div>
+
+  <section class="hud" id="tour" aria-live="polite">
+    <div class="tstep" id="tstep">Étape 1 sur 5</div>
+    <h2 class="ttitle" id="ttitle">—</h2>
+    <p class="tbody" id="tbody">—</p>
+    <div class="tnav">
+      <button class="btn sm" id="tprev">Précédent</button>
+      <button class="btn pri sm" id="tnext">Suivant</button>
+      <span class="dots" id="dots"></span>
+    </div>
+  </section>
+
+  <aside class="hud" id="sheet" aria-label="Actions du profil">
+    <div class="shd">
+      <span class="dot" id="sdot"></span>
+      <span><span class="snm" id="snm">—</span> <span class="ssc" id="ssc"></span></span>
+      <span class="sp"></span>
+      <button class="btn sm" id="sclose">Fermer</button>
+    </div>
+    <div class="sbd" id="sbd"></div>
+  </aside>
+
+  <div id="screen">
+    <div class="shead">
+      <span class="skind" id="skind">aperçu</span>
+      <span class="stitle" id="stitle">—</span>
+      <span class="sp"></span>
+      <button class="btn pri sm" id="sback">‹ Retour</button>
+    </div>
+    <div class="wire" id="wire"></div>
+  </div>
+
+  <div id="gate">
+    <div class="card">
+      <span class="gatelogo" aria-hidden="true"><span>HBS</span></span>
+      <div class="eyebrow">HBS LEARN · copie 2</div>
+      <h1>Votre future application</h1>
+      <p class="sub">Une visite guidée en six étapes. Vous verrez ce que chaque personne — visiteur, direction, formateur, stagiaire, auditeur, assistant — pourra faire, et à quoi ressemblera son écran.</p>
+      <button class="btn pri" id="enter" style="width:100%;min-height:48px;font-size:14px">Commencer la visite</button>
+      <p class="fine">Aucune donnée réelle. Les écrans sont des esquisses.</p>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+var RM=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function narrow(){return window.innerWidth<=700;}
+var C={auth:0xB4740B,read:0x0E7C86,write:0x4B3FCF,evid:0x1F7A4C,agent:0xB02A6B,stop:0xC0392B};
+var BRAND={navy:0x0F2159,blue:0x1D3FAE,sky:0x2E5FE0,mist:0xA8C6F5,paper:0xF1F6FC,ink:0x0B2239};
+function hex(c){var s=c.toString(16);while(s.length<6)s='0'+s;return '#'+s;}
+var MODE='simple';
+function pick(a,b){return MODE==='simple'?a:b;}
+
+var MODS=[
+ {id:'calendrier',t:'Calendrier',t2:'Calendrier',s:'créneaux',s2:'planning',k:'read',a:[2.35,1.25],b:'slab'},
+ {id:'formations',t:'Formations',t2:'Formations',s:'programmes',s2:'vos stages',k:'read',a:[2.05,.75],b:'stack'},
+ {id:'apprenants',t:'Apprenants',t2:'Apprenants',s:'profils',s2:'vos stagiaires',k:'read',a:[2.75,.72],b:'people'},
+ {id:'planif',t:'Planification',t2:'Planification',s:'écriture',s2:'créer, modifier',k:'write',a:[1.75,1.85],b:'stack'},
+ {id:'documents',t:'Documents',t2:'Documents',s:'gabarits',s2:'conventions, attestations',k:'write',a:[2.6,1.9],b:'folder'},
+ {id:'emargement',t:'Émargement',t2:'Émargement',s:'append-only',s2:'les présences',k:'evid',a:[3.3,1.55],b:'sheet'},
+ {id:'coffre',t:'Coffre',t2:'Coffre',s:'rétention',s2:'tout est conservé',k:'evid',a:[0,1.45],b:'vault'},
+ {id:'qualite',t:'Qualité',t2:'Qualité',s:'critère 7',s2:'avis et réclamations',k:'auth',a:[3.85,1.05],b:'gauge'},
+ {id:'facturation',t:'Facturation',t2:'Facturation',s:'abonnements',s2:'devis et factures',k:'auth',a:[4.35,1.75],b:'coins'},
+ {id:'agentm',t:'Assistant',t2:'Agent',s:'sous plafond',s2:'il aide, il ne décide pas',k:'agent',a:[5.05,1],b:'orb'},
+ {id:'cron',t:'Rappels',t2:'Tâches planifiées',s:'cron',s2:'chaque soir',k:'agent',a:[5.45,1.7],b:'clock'},
+ {id:'chat',t:'Discussion',t2:'Chat',s:'assistance',s2:'poser une question',k:'agent',a:[4.75,2.25],b:'bubble'},
+ {id:'quiz',t:'Positionnement',t2:'Positionnement',s:'indicateur 8',s2:'test d\'entrée',k:'read',a:[1.45,1.15],b:'score'}
+];
+
+var ACTORS=[
+{id:'super_admin',t:'Éditeur',t2:'Super admin',sc:'toute la plateforme',sc2:'platform',k:'write',
+ caps:[
+ {v:'Ouvrir la fiche de HBS FORMATION',s:'Un organisme parmi les autres clients de la plateforme.',
+  s2:'Lecture cross-tenant : le seul profil sans tenant_id.',mods:['formations'],vault:false,
+  story:['L’Éditeur ouvre la console plateforme.',
+         'Son jeton ne porte aucun organisme : la base lui ouvre les cinq.',
+         'Elle renvoie la fiche HBS FORMATION et ses quatre voisines.'],
+  w:{title:'Organismes clients',side:['Organismes','Facturation','Sécurité'],top:'5 organismes · 1 en essai',
+     blocks:[['lines','Clients',['HBS FORMATION — Qualiopi ✓ — 214 stagiaires/an',
+                                 'CFA Rhône Pro — Qualiopi ✓ — 890 stagiaires/an',
+                                 'Atelier Langues 31 — Qualiopi ✓ — 96 stagiaires/an',
+                                 'Novaform Ouest — essai — 0 stagiaire',
+                                 'IFCA Bordeaux — Qualiopi ✓ — 342 stagiaires/an']],
+             ['lines','Fiche sélectionnée',['SIRET 887 654 321 00019',
+                                            'NDA 28760809976',
+                                            'Certifiante : oui (RNCP37275, RNCP38575)']]],
+     n:'C’est le seul écran où plusieurs organismes coexistent.',
+     n2:'hbs_is_platform() court-circuite le plancher tenant ; partout ailleurs il s’applique.'}},
+ {v:'Ajouter Novaform Ouest',s:'On tape le SIRET, le reste se remplit tout seul.',
+  s2:'SIRET → API Entreprise → provisionnement du premier admin.',mods:['formations','facturation'],vault:false,
+  story:['L’Éditeur saisit le SIRET 903 221 764 00027.',
+         'La plateforme vérifie qu’il a le droit de créer un organisme.',
+         'Elle interroge l’API Entreprise : Qualiopi actif depuis le 04/2024.',
+         'Elle ouvre l’abonnement et crée le compte de direction.'],
+  w:{title:'Novaform Ouest — création',side:['Organismes'],top:'Étape 3 sur 3 · vérifié',
+     blocks:[['lines','Récupéré automatiquement',['Raison sociale : NOVAFORM OUEST SAS',
+                                                  'Adresse : 14 rue de la Monnaie, 44000 Nantes',
+                                                  'Qualiopi : actif — délivré le 09/04/2024',
+                                                  'NDA : 52440318744']],
+             ['lines','À créer',['Compte direction : c.marchetti@novaform-ouest.fr',
+                                 'Abonnement : Essai 30 jours puis 149 €/mois']]],
+     n:'Trois champs saisis, huit récupérés. Le Qualiopi est vérifié à la source, pas déclaré.',
+     n2:'API Entreprise Carif-Oref : qualification commerciale et contrôle d’éligibilité en un appel.'}},
+ {v:'Vérifier l’étanchéité',s:'La preuve qu’un organisme ne peut pas voir les données d’un autre.',
+  s2:'Rapport RLS : toute table hbs_% sans politique fait échouer la CI.',mods:[],vault:false,
+  story:['L’Éditeur lance le contrôle d’isolation.',
+         'La base rejoue chaque table et compte ses politiques.'],
+  w:{title:'Étanchéité entre organismes',side:['Sécurité'],top:'Contrôle du 04/09 à 06:12 — réussi',
+     blocks:[['lines','Résultat',['31 tables contrôlées',
+                                  '31 avec plancher tenant actif',
+                                  '0 table sans politique',
+                                  'Test croisé : HBS lisant CFA Rhône Pro → 0 ligne']]],
+     n:'Cet écran s’envoie tel quel au client qui demande « mes données sont-elles isolées ? »',
+     n2:'Le garde-fou CI devient un artefact commercial : la preuve, pas l’affirmation.'}}
+ ]},
+
+{id:'admin',t:'Direction',t2:'Admin',sc:'tout votre organisme',sc2:'tenant',k:'write',
+ caps:[
+ {v:'Créer la session Excel du 12 au 14 mai',s:'Trois jours, matin et après-midi. Les six demi-journées se créent seules.',
+  s2:'3 j × 2 demi-journées = 6 créneaux matérialisés ; conflit refusé en base.',
+  mods:['planif','calendrier'],vault:false,
+  story:['Marie Dubois remplit : Excel avancé, 12–14 mai, salle B.',
+         'La base vérifie qu’une direction peut créer une session ici.',
+         'Elle écrit 6 demi-journées et détecte que Karim est déjà pris le 13 au matin.',
+         'Le planning affiche les 6 créneaux, le 13 matin en alerte.'],
+  w:{title:'Excel avancé — 12 au 14 mai',side:['Calendrier','Formations','Apprenants','Coffre'],
+     top:'6 demi-journées · 21 h · salle B',
+     blocks:[['lines','Créneaux créés',['Mar. 12/05 · 09:00–12:30 · Karim Benali · salle B',
+                                        'Mar. 12/05 · 13:30–17:00 · Karim Benali · salle B',
+                                        'Mer. 13/05 · 09:00–12:30 · ⚠ Karim déjà pris (CFA Rhône)',
+                                        'Mer. 13/05 · 13:30–17:00 · Karim Benali · salle B',
+                                        'Jeu. 14/05 · 09:00–12:30 · Karim Benali · salle B',
+                                        'Jeu. 14/05 · 13:30–17:00 · Karim Benali · salle B']],
+             ['lines','Proposition',['Basculer le 13 matin sur Sophie Marchand',
+                                     'ou décaler la session au 19–21 mai']]],
+     n:'Le conflit est refusé avant l’enregistrement, pas signalé après coup.',
+     n2:'Contrainte EXCLUDE (btree_gist) sur formateur × plage : impossible à contourner par une course.'}},
+ {v:'Ajouter Karim Benali comme formateur',s:'Un compte formateur, créé par la direction. Jamais l’inverse.',
+  s2:'Rôle strictement inférieur, même tenant, vérifié deux fois.',mods:['apprenants'],vault:false,
+  story:['Marie saisit Karim Benali, k.benali@hbs-formation.fr.',
+         'La base lit son propre rôle : direction, niveau 1.',
+         'Formateur est dans sa liste blanche : le compte est créé.'],
+  w:{title:'Karim Benali — formateur',side:['Équipe','Apprenants'],top:'Compte créé · invitation envoyée',
+     blocks:[['lines','Le compte',['Karim Benali — formateur',
+                                   'k.benali@hbs-formation.fr',
+                                   'Rattaché à HBS FORMATION',
+                                   'Créé par Marie Dubois le 04/09']],
+             ['lines','Ce qu’il pourra faire',['Voir ses propres sessions uniquement',
+                                                  'Contresigner les présences de ses créneaux',
+                                                  'Déposer des supports',
+                                                  'Ne peut pas supprimer une session']]],
+     n:'Personne ne peut créer un compte plus puissant que le sien.',
+     n2:'Liste blanche creatable_roles + trigger hbs_enforce_role_hierarchy en seconde ligne.'}},
+ {v:'Inscrire les 8 salariés de Delta Logistique',s:'Huit stagiaires rattachés à leur entreprise, en une fois.',
+  s2:'Inscriptions liées à hbs_companies ; convention personne morale.',
+  mods:['apprenants','calendrier'],vault:false,
+  story:['Marie colle la liste envoyée par Delta Logistique.',
+         'La base contrôle qu’elle agit bien dans son organisme.',
+         'Elle crée 8 comptes stagiaires rattachés à Delta Logistique.',
+         'Chacun voit apparaître les 6 créneaux dans son planning.'],
+  w:{title:'Inscriptions — Delta Logistique',side:['Apprenants','Formations'],top:'8 inscrits · 4 places restantes',
+     blocks:[['lines','Stagiaires',['Nadia Cherif — n.cherif@delta-log.fr',
+                                    'Thomas Roy — t.roy@delta-log.fr',
+                                    'Léa Fontaine — l.fontaine@delta-log.fr',
+                                    'Malik Diallo — m.diallo@delta-log.fr',
+                                    'Julie Perez — j.perez@delta-log.fr',
+                                    'Antoine Girard — a.girard@delta-log.fr',
+                                    'Sarah Kaci — s.kaci@delta-log.fr',
+                                    'Bruno Weber — b.weber@delta-log.fr']],
+             ['lines','Conséquences',['8 convocations en attente d’envoi',
+                                      'Test de positionnement ouvert jusqu’au 09/05']]],
+     n:'Chaque stagiaire ne verra que son propre planning — jamais la liste ci-dessus.',
+     n2:'Portée self côté apprenant ; la liste n’est visible que pour direction et formateur assigné.'}},
+ {v:'Éditer la convention Delta Logistique',s:'Le document se remplit seul, part en signature, se range au coffre.',
+  s2:'Gabarit fusionné → PDF/A → signature → coffre avec horloge de rétention.',
+  mods:['documents','coffre'],vault:true,
+  story:['Marie choisit le gabarit « convention entreprise ».',
+         'La base vérifie ses droits sur les documents.',
+         'Le document se remplit avec la session, les 8 noms et le prix.',
+         'Il part en signature puis se dépose au coffre, conservation calculée.'],
+  w:{title:'Convention — Delta Logistique',side:['Documents','Coffre'],top:'PDF/A · en attente de signature',
+     blocks:[['lines','Contenu généré',['Intitulé : Excel avancé — tableaux croisés dynamiques',
+                                        'Nature : action de formation — 21 h',
+                                        'Dates : 12, 13 et 14 mai 2026',
+                                        'Bénéficiaires : 8 salariés',
+                                        'Prix : 8 × 990 € = 7 920 € net de TVA',
+                                        'NDA : 28760809976']],
+             ['lines','Après signature',['Dépôt au coffre le 04/09/2026',
+                                         'Conservation jusqu’au 31/12/2029',
+                                         'Suppression bloquée avant cette date']]],
+     n:'Convention avec une entreprise, contrat avec un particulier : ce ne sont pas les mêmes documents.',
+     n2:'Personne morale vs physique ; retention_until = fin d’année civile + 3 ans, extensible à 10 (FSE+).'}},
+ {v:'Préparer le dossier pour l’audit Certiveo',s:'Le dossier existe déjà. Il se télécharge, il ne se prépare pas.',
+  s2:'Export par session : convention, programme, émargements, évaluations, certificats.',
+  mods:['coffre'],vault:true,
+  story:['Marie sélectionne la session Excel du 12–14 mai.',
+         'La base rassemble toutes les pièces liées à cette session.',
+         'Le coffre renvoie l’archive et vérifie les scellés au passage.'],
+  w:{title:'Dossier d’audit — Excel 12–14 mai',side:['Coffre','Qualité'],top:'Archive · 24 pièces · 8,4 Mo',
+     blocks:[['lines','Contenu',['Convention Delta Logistique — signée le 06/05',
+                                 'Programme v3 — révisé le 12/02/2026',
+                                 '6 feuilles d’émargement — 96 signatures',
+                                 '8 évaluations à chaud — satisfaction 4,6/5',
+                                 '8 certificats de réalisation',
+                                 'Règlement intérieur — remis le 06/05']],
+             ['lines','Contrôle',['Chaîne de signatures : intacte',
+                                  '1 absence justifiée (Bruno Weber, 13/05 matin)']]],
+     n:'La veille de l’audit, il n’y a rien à assembler.',
+     n2:'L’export Qualiopi est une fonctionnalité, pas un travail manuel de dernière minute.'}}
+ ]},
+
+{id:'formateur',t:'Formateur',t2:'Formateur',sc:'ses sessions',sc2:'own_sessions',k:'read',
+ caps:[
+ {v:'Voir mes séances de la semaine',s:'Les siennes uniquement. Les autres n’existent pas pour lui.',
+  s2:'Sessions dont il porte au moins un créneau.',mods:['calendrier'],vault:false,
+  story:['Karim Benali ouvre le même calendrier que la direction.',
+         'La base ne lui renvoie que les créneaux dont il est le formateur.'],
+  w:{title:'Mes séances — semaine du 11 mai',side:['Calendrier','Mes stagiaires'],top:'4 séances · 14 h',
+     blocks:[['lines','Cette semaine',['Mar. 12/05 matin — Excel avancé — 8 stagiaires — salle B',
+                                       'Mar. 12/05 après-midi — Excel avancé — salle B',
+                                       'Mer. 13/05 après-midi — Excel avancé — salle B',
+                                       'Jeu. 14/05 matin — Excel avancé — salle B']],
+             ['lines','Non visible pour lui',['Mer. 13/05 matin — repris par Sophie Marchand',
+                                              'Les 3 autres sessions de HBS cette semaine']]],
+     n:'Exactement le même écran que la direction, rempli différemment.',
+     n2:'own_sessions : jointure sur les créneaux, résolue par une fonction STABLE (sinon RLS évalue par ligne).'}},
+ {v:'Contresigner le mardi matin',s:'Il signe après ses stagiaires. Ensuite, plus personne ne peut modifier.',
+  s2:'Contre-signature ; UPDATE et DELETE révoqués sur la table.',
+  mods:['emargement','coffre'],vault:true,
+  story:['Karim ouvre la feuille du mardi 12 mai, matin.',
+         'La base confirme qu’il est bien le formateur de ce créneau.',
+         'Sa signature scelle les 8 lignes et se chaîne à la précédente.',
+         'La feuille part au coffre en PDF/A.'],
+  w:{title:'Présence — mardi 12/05 matin',side:['Calendrier'],top:'8 inscrits · 8 présents',
+     blocks:[['lines','Signatures des stagiaires',['Nadia Cherif — arrivée 09:02 — départ 12:28',
+                                                   'Thomas Roy — arrivée 08:57 — départ 12:31',
+                                                   'Léa Fontaine — arrivée 09:05 — départ 12:30',
+                                                   'Malik Diallo — arrivée 08:54 — départ 12:29',
+                                                   'Julie Perez — arrivée 09:00 — départ 12:30',
+                                                   'Antoine Girard — arrivée 09:11 — départ 12:30',
+                                                   'Sarah Kaci — arrivée 08:59 — départ 12:27',
+                                                   'Bruno Weber — arrivée 09:03 — départ 12:30']],
+             ['lines','Ma contre-signature',['Karim Benali — 12/05 à 12:34',
+                                             'Scellé : identité, horodatage, adresse IP',
+                                             'Chaîné à la feuille du 12/05 après-midi']]],
+     n:'Une présence modifiable après coup ne prouve rien. Celle-ci ne peut plus bouger.',
+     n2:'UPDATE et DELETE révoqués en base ; le hachage chaîne chaque ligne à la précédente.'}},
+ {v:'Ouvrir la fiche de Nadia Cherif',s:'Ses coordonnées, sa présence, où elle en est dans le cours.',
+  s2:'Profil d’une inscrite de ses sessions. Écran PII.',mods:['apprenants'],vault:false,
+  story:['Karim clique sur Nadia dans sa liste.',
+         'La base vérifie qu’elle est bien inscrite à l’une de ses sessions.',
+         'Elle renvoie son profil, sa présence et sa progression.'],
+  w:{title:'Nadia Cherif',side:['Mes stagiaires'],top:'Delta Logistique · inscrite le 04/09',
+     blocks:[['lines','Profil',['n.cherif@delta-log.fr · 06 12 ** ** 41',
+                                'Test de positionnement : 14/20 — niveau intermédiaire',
+                                'Aménagement : aucun signalé']],
+             ['lines','Suivi',['Présence : 6 demi-journées sur 6',
+                               'Module 2 sur 5 — dernière connexion il y a 2 jours',
+                               'Évaluation à chaud : 5/5']]],
+     n:'Il voit ses stagiaires à lui. Ceux des autres formateurs ne remontent pas.',
+     n2:'Indicateur 19 : la progression alimente la détection de décrochage, exigée en V10.'}},
+ {v:'Supprimer la session',no:true,s:'Refusé. Ce n’est pas dans ses droits.',
+  s2:'Refusé : capacité session × delete absente pour ce rôle.',mods:['planif'],vault:false,
+  story:['Karim tente de supprimer la session Excel.',
+         'La base regarde ses capacités : supprimer une session n’y est pas. Refus.'],
+  w:{title:'Suppression refusée',side:['Calendrier'],top:'Erreur 403',
+     blocks:[['lines','Ce qui s’est passé',['Profil : formateur',
+                                               'Demandé : supprimer la session Excel 12–14 mai',
+                                               'Capacité session × supprimer : absente',
+                                               'Aucune ligne modifiée']],
+             ['lines','Ce qu’il peut faire à la place',['Signaler une erreur à la direction',
+                                                            'Demander l’annulation du créneau']]],
+     n:'« Lecture seule » ne le décrivait pas : il écrit des présences, mais ne supprime rien.',
+     n2:'Le troisième axe : capacité par ressource × action, distincte de la portée.'}}
+ ]},
+
+{id:'auditeur',t:'Auditeur',t2:'Auditeur',sc:'lecture seule',sc2:'tenant · RO',k:'evid',
+ caps:[
+ {v:'Vérifier les présences du 12 au 14 mai',s:'Il regarde tout, il ne touche à rien — et on garde trace.',
+  s2:'Lecture tenant ; chaque consultation écrite au journal d’accès.',
+  mods:['emargement'],vault:true,
+  story:['Cabinet Certiveo ouvre la session Excel du 12–14 mai.',
+         'La base note son profil : lecture seule, accès jusqu’au 30/09.',
+         'Elle renvoie les 6 feuilles et enregistre la consultation.',
+         'Le coffre fournit les PDF/A d’origine.'],
+  w:{title:'Présences — Excel 12–14 mai',side:['Coffre','Présences'],top:'6 feuilles · 96 signatures',
+     blocks:[['lines','Feuilles',['12/05 matin — 8/8 — contresignée 12:34',
+                                  '12/05 après-midi — 8/8 — contresignée 17:04',
+                                  '13/05 matin — 7/8 — contresignée 12:39 (Sophie Marchand)',
+                                  '13/05 après-midi — 8/8 — contresignée 17:02',
+                                  '14/05 matin — 8/8 — contresignée 12:31',
+                                  '14/05 après-midi — 8/8 — contresignée 16:58']],
+             ['lines','Ma consultation',['Cabinet Certiveo — 04/09 à 10:22',
+                                         'Enregistrée au journal d’accès',
+                                         'Absence justifiée : Bruno Weber, 13/05 matin (arrêt maladie)']]],
+     n:'Le journal de ses consultations est lui-même une pièce du dossier.',
+     n2:'hbs_access_log : qui a lu quoi et quand — artefact d’audit à part entière.'}},
+ {v:'Ouvrir le dossier Delta Logistique',s:'Conventions, factures, échanges. Tout, en lecture.',
+  s2:'Coffre en lecture ; compte à expiration.',mods:['coffre'],vault:true,
+  story:['Certiveo demande le dossier Delta Logistique.',
+         'La base confirme la portée : tout l’organisme, en lecture.',
+         'Le coffre renvoie les 11 pièces liées à ce client.'],
+  w:{title:'Dossier Delta Logistique',side:['Coffre'],top:'11 pièces · 2026',
+     blocks:[['lines','Pièces',['Convention signée — 06/05/2026',
+                                'Programme v3 — révisé 12/02/2026',
+                                '8 convocations — envoyées 06/05',
+                                'Facture F-2026-0184 — 7 920 € — payée 12/06',
+                                '6 feuilles d’émargement',
+                                '8 certificats de réalisation']],
+             ['lines','Mon accès',['Cabinet Certiveo — lecture seule',
+                                   'Expire le 30/09/2026',
+                                   'Aucune écriture possible, même par erreur']]],
+     n:'Son accès s’éteint tout seul : un audit est une période, pas un abonnement.',
+     n2:'expires_at sur le profil ; aucune intervention pour révoquer.'}},
+ {v:'Corriger une date',no:true,s:'Refusé — et pas seulement par l’application : la base elle-même refuse.',
+  s2:'Refusé au niveau base : rôle Postgres sans droit d’écriture.',mods:['planif'],vault:false,
+  story:['Certiveo tente de corriger une date de séance.',
+         'La base répond avant même de lire la demande : ce profil n’écrit pas.'],
+  w:{title:'Correction refusée',side:['Coffre'],top:'Erreur 403',
+     blocks:[['lines','Ce qui s’est passé',['Profil : auditeur — lecture seule',
+                                               'Demandé : modifier la date du 13/05',
+                                               'Refus prononcé par la base, pas par l’application',
+                                               'Tentative enregistrée au journal']]],
+     n:'Si seule l’application refusait, un bug suffirait à passer outre.',
+     n2:'Plancher restrictif not hbs_is_read_only() + SET LOCAL ROLE hbs_readonly.'}}
+ ]},
+
+{id:'apprenant',t:'Stagiaire',t2:'Apprenant',sc:'son parcours',sc2:'self',k:'read',
+ caps:[
+ {v:'Voir mon planning',s:'Ses dates, ses horaires, sa salle. Rien d’autre.',
+  s2:'Créneaux de ses inscriptions uniquement. Portée self.',mods:['calendrier'],vault:false,
+  story:['Nadia Cherif ouvre son espace depuis son téléphone.',
+         'La base filtre sur ses propres inscriptions.'],
+  w:{title:'Mon planning',side:['Planning','Mes cours','Mes documents'],top:'Excel avancé · 12–14 mai',
+     blocks:[['lines','Mes séances',['Mar. 12/05 · 09:00–12:30 · salle B · Karim Benali',
+                                     'Mar. 12/05 · 13:30–17:00 · salle B',
+                                     'Mer. 13/05 · 09:00–12:30 · salle B · Sophie Marchand',
+                                     'Mer. 13/05 · 13:30–17:00 · salle B',
+                                     'Jeu. 14/05 · 09:00–12:30 · salle B',
+                                     'Jeu. 14/05 · 13:30–17:00 · salle B']],
+             ['lines','Prochaine étape',['Test de positionnement à faire avant le 09/05']]],
+     n:'Elle voit ses six séances. Les autres groupes n’apparaissent nulle part.',
+     n2:'Portée self : filtre sur ses inscriptions, appliqué avant que la requête ne remonte.'}},
+ {v:'Signer mon arrivée à 09:02',s:'Elle signe en arrivant, puis en partant. Sur son téléphone.',
+  s2:'Entrée puis sortie par demi-journée ; scellée à l’écriture.',
+  mods:['emargement','coffre'],vault:true,
+  story:['Nadia arrive en salle B et signe sur son téléphone.',
+         'La base vérifie qu’elle est bien inscrite à ce créneau.',
+         'Elle écrit la ligne — et n’autorise ni modification ni suppression.',
+         'La ligne rejoint la feuille du jour au coffre.'],
+  w:{title:'Ma présence — mardi matin',side:['Planning'],top:'12/05 · 09:00–12:30',
+     blocks:[['lines','Ce qui est enregistré',['Nadia Cherif — arrivée 12/05 à 09:02',
+                                               'Horodatage serveur, pas celui du téléphone',
+                                               'Appareil et adresse IP conservés',
+                                               'Scellé au bloc précédent']],
+             ['lines','Ce qu’il reste à faire',['Signer le départ à la fin de la demi-journée',
+                                                   'Karim contresignera ensuite']]],
+     n:'C’est la seule chose qu’elle écrit dans le système — et c’est définitif.',
+     n2:'INSERT seul ; UPDATE et DELETE révoqués. L’horodatage vient du serveur.'}},
+ {v:'Ouvrir le module 2',s:'Les supports du cours, et sa progression qui se met à jour.',
+  s2:'Ressources de ses programmes ; progression tracée pour l’indicateur 19.',
+  mods:['formations','documents'],vault:false,
+  story:['Nadia reprend là où elle s’était arrêtée.',
+         'La base ouvre les ressources de sa formation, pas des autres.',
+         'La progression est enregistrée au fil de la lecture.'],
+  w:{title:'Module 2 — Tableaux croisés',side:['Mes cours'],top:'Module 2 sur 5 · 40 % terminé',
+     blocks:[['lines','Ressources',['Support PDF — Créer un TCD (18 pages)',
+                                    'Vidéo — Champs calculés (12 min)',
+                                    'Classeur d’exercices — 6 cas',
+                                    'Quiz de fin de module — 10 questions']],
+             ['lines','Ma progression',['Module 1 terminé le 06/05',
+                                        'Module 2 en cours — dernière connexion il y a 2 jours']]],
+     n:'Sa progression sert aussi au formateur, pour repérer un décrochage à temps.',
+     n2:'hbs_lesson_progress alimente la détection à risque exigée par l’indicateur 19 en V10.'}},
+ {v:'Télécharger mon attestation',s:'Dès la fin de la formation, depuis son espace.',
+  s2:'Certificat de réalisation en PDF/A, servi depuis le coffre.',
+  mods:['documents','coffre'],vault:true,
+  story:['Nadia ouvre ses documents après la dernière séance.',
+         'La base ne lui montre que les pièces à son nom.',
+         'Le coffre génère le certificat depuis les présences réelles.'],
+  w:{title:'Mes documents',side:['Mes documents'],top:'Formation terminée le 14/05',
+     blocks:[['lines','Disponibles',['Certificat de réalisation — 21 h suivies sur 21',
+                                     'Convocation du 06/05',
+                                     'Programme de la formation',
+                                     'Attestation de fin de formation']],
+             ['lines','Sur le certificat',['Excel avancé — tableaux croisés dynamiques',
+                                           'Du 12/05 au 14/05/2026 — 21 heures',
+                                           'HBS FORMATION — NDA 28760809976']]],
+     n:'Le certificat est calculé à partir de ses présences signées, pas saisi à la main.',
+     n2:'Certificat de réalisation remis obligatoirement en fin d’action.'}},
+ {v:'Voir les autres stagiaires',no:true,s:'Refusé. Elle ne voit qu’elle-même.',
+  s2:'Portée self : aucune ligne d’un autre profil n’est renvoyée.',mods:['apprenants'],vault:false,
+  story:['Nadia essaie d’ouvrir la liste du groupe.',
+         'La base applique son filtre : elle ne renvoie aucune ligne.'],
+  w:{title:'Le groupe',side:['Planning'],top:'0 résultat',
+     blocks:[['lines','Ce qui s’est passé',['Profil : stagiaire — portée « soi-même »',
+                                               'Demandé : les 8 inscrits du groupe',
+                                               'Renvoyé par la base : 0 ligne',
+                                               'L’application n’a rien eu à masquer']]],
+     n:'Même écran, aucune ligne : la base ne renvoie rien plutôt que l’écran ne cache quelque chose.',
+     n2:'Le filtre self s’applique dans la requête, avant tout affichage.'}}
+ ]},
+
+{id:'visiteur',t:'Visiteur',t2:'Prospect',sc:'pas encore client',sc2:'anonyme',k:'auth',
+ caps:[
+ {v:'Découvrir la formation sur le site',s:'Personne ne sait encore qui elle est. Elle lit une page publique.',
+  s2:'Non authentifiée. Aucune ligne à son nom n’existe.',
+  route:['vitrine'],
+  story:['Nadia cherche « formation Excel Nantes » et tombe sur hbs-formation.fr.',
+         'Elle ouvre la page de la formation. Aucun compte, aucune trace nominative.'],
+  w:{title:'hbs-formation.fr — Excel avancé',side:['Accueil','Formations','Résultats','Contact'],
+     top:'Page publique · aucun compte requis',
+     blocks:[['lines','Ce que la page affiche',['Excel avancé — tableaux croisés dynamiques',
+                                                '21 heures sur 3 jours — 12 stagiaires maximum',
+                                                'Prérequis : savoir créer un tableau simple',
+                                                'Tarif : 990 € par participant',
+                                                'Accessibilité : référent handicap joignable',
+                                                'Prochaine session : 12–14 mai 2026']],
+             ['lines','Indicateurs affichés',['Satisfaction 2025 : 4,6/5 sur 118 réponses',
+                                              'Taux d’assiduité : 97 %',
+                                              'Ces chiffres sont calculés, pas saisis à la main']]],
+     n:'Chaque chiffre affiché doit pouvoir être justifié — c’est ce que le référentiel exige depuis novembre.',
+     n2:'Indicateurs 1 et 2 : information vérifiable, résultats publiés et traçables jusqu’à la donnée.'}},
+
+ {v:'Demander une place → devenir stagiaire',s:'Le moment où une inconnue devient une inscrite. Voici tout ce qui se passe.',
+  s2:'Formulaire public → compte coquille → positionnement → inscription → convocation.',
+  route:['vitrine','core','quiz','apprenants','calendrier','documents','vault'],
+  story:['Nadia remplit le formulaire : nom, e-mail, entreprise Delta Logistique.',
+         'La demande traverse le tunnel : elle entre dans le système sans encore avoir de compte.',
+         'Le système ouvre un test de positionnement — 12 questions, 10 minutes.',
+         'Score 14/20 → niveau intermédiaire. Un compte est créé à son nom.',
+         'Elle est rattachée à la session Excel du 12–14 mai. Karim est prévenu.',
+         'La convocation se génère avec la date, le lieu et le règlement intérieur.',
+         'Tout part au coffre : demande, score, convention, convocation.'],
+  w:{title:'Nadia Cherif — inscrite',side:['Formations','Apprenants','Documents'],
+     top:'Parcours complet · 6 min 40 s',
+     blocks:[['lines','Ce qui a été créé',['Compte stagiaire — n.cherif@delta-log.fr',
+                                            'Rattachée à Delta Logistique',
+                                            'Positionnement : 14/20 — intermédiaire',
+                                            'Inscrite à Excel avancé 12–14 mai',
+                                            'Convocation générée — en attente d’envoi']],
+             ['lines','Ce qui a été notifié',['Karim Benali — nouvel inscrit de niveau intermédiaire',
+                                              'Marie Dubois — 8 places sur 12 pourvues']],
+             ['lines','Déposé au coffre',['Demande d’inscription — 04/09',
+                                          'Résultat du positionnement — 04/09',
+                                          'Convocation — à envoyer']]],
+     n:'Elle est passée d’anonyme à inscrite sans que personne ne ressaisisse quoi que ce soit.',
+     n2:'Compte coquille → quiz → score → magic link → enrolment ; chaque étape écrit sa preuve.'}},
+
+ {v:'Passer le test de positionnement',s:'Douze questions avant la formation, pour situer son niveau.',
+  s2:'Indicateur 8 — évaluation des acquis à l’entrée. Top-5 des non-conformités.',
+  route:['vitrine','core','quiz'],
+  story:['Nadia ouvre le test depuis le lien reçu par e-mail.',
+         'Le système vérifie que le lien est valide et n’a pas déjà servi.',
+         'Elle répond en 6 minutes. Le score décide de son groupe de niveau.'],
+  w:{title:'Test de positionnement',side:['Mon parcours'],top:'12 questions · 6 min 12 s · terminé',
+     blocks:[['lines','Résultat',['Score : 14/20 — niveau intermédiaire',
+                                  'Tableaux simples : 5/5',
+                                  'Formules : 4/6',
+                                  'Tableaux croisés : 3/6',
+                                  'Macros : 2/3']],
+             ['lines','Conséquence',['Groupe intermédiaire',
+                                     'Module 1 allégé, module 3 renforcé',
+                                     'Karim Benali prévenu avant la première séance']]],
+     n:'Évaluer le niveau à l’entrée est une obligation — et l’une des cinq causes d’écart les plus fréquentes en audit.',
+     n2:'Indicateur 8 : ~15 % des non-conformités. Le score pilote aussi l’adaptation du contenu (indicateur 6).'}}
+ ]},
+
+{id:'agent',t:'Assistant',t2:'Agent',sc:'aide, ne décide pas',sc2:'délégué · plafonné',k:'agent',
+ caps:[
+ {v:'« Crée-moi la session Excel de mai »',s:'On lui parle normalement. Il prépare, vous validez.',
+  s2:'Intention → proposition en file d’approbation. Aucune écriture directe.',
+  mods:['chat','planif','calendrier'],vault:false,
+  chat:[['u','Salut, il faut caler la formation Excel pour Delta Logistique. Trois jours en mai, plutôt en début de mois, avec Karim.'],
+        ['a','J’ai regardé le planning de Karim : il est libre les 12, 13 et 14 mai sauf le mercredi matin. Je pars sur 12–14 mai, 6 demi-journées, salle B, et je bascule le mercredi matin sur Sophie ?'],
+        ['u','oui parfait'],
+        ['a','C’est préparé. Je ne l’ai pas créée — elle vous attend en validation, avec les 8 convocations en brouillon.']],
+  story:['Marie écrit à l’assistant en langage courant.',
+         'L’assistant emprunte les droits de Marie — jamais plus.',
+         'Il lit le planning de Karim et repère le créneau occupé.',
+         'Il dépose une proposition. Rien n’est écrit tant que Marie n’a pas cliqué.'],
+  w:{title:'Proposition en attente',side:['Assistant','À valider','Discussion'],top:'Déposée à 14:22 · non appliquée',
+     blocks:[['lines','Ce qu’il propose',['Session Excel avancé — 12 au 14 mai — salle B',
+                                            '6 demi-journées, 21 h',
+                                            'Karim Benali sauf mercredi matin → Sophie Marchand',
+                                            '8 convocations en brouillon']],
+             ['lines','Ce qu’il n’a pas fait',['Aucune session créée',
+                                                    'Aucune convocation envoyée',
+                                                    'Aucun compte modifié']]],
+     n:'Il rédige, il ne décide pas. Tant que personne n’a cliqué, rien n’existe.',
+     n2:'Écriture plafonnée admin et portée bornée au délégant ; les actions sortantes passent par l’approbation.'}},
+ {v:'Les rappels du soir',s:'Chaque soir, il vérifie ce qui manque et le prépare pour le matin.',
+  s2:'Cron : créneaux non émargés, inactivité, programmes échus.',
+  mods:['cron','calendrier','emargement'],vault:false,
+  story:['21:00 — l’assistant lance ses vérifications au nom de Marie.',
+         'Il agit avec les droits de Marie, plafonnés au niveau direction.',
+         'Il repère 2 créneaux non contresignés cette semaine.',
+         'Et 1 stagiaire sans connexion depuis 9 jours.'],
+  w:{title:'Rappels du 03/09 · 21:00',side:['Assistant','Rappels'],top:'4 vérifications · 0 écriture',
+     blocks:[['lines','Ce qu’il a trouvé',['2 créneaux non contresignés — Karim, 28 et 29/08',
+                                              'Bruno Weber — aucune connexion depuis 9 jours',
+                                              'Programme « Excel avancé » — revue due le 12/02/2027',
+                                              'Facture F-2026-0184 — échéance dans 5 jours']],
+             ['lines','Préparé pour demain',['Relance à Karim (brouillon)',
+                                             'Message de suivi à Bruno (brouillon)',
+                                             'Rien envoyé sans validation']]],
+     n:'Trois choses vous attendent le matin. Aucune n’est partie sans vous.',
+     n2:'Le cron s’exécute au nom d’un humain nommé, avec sa portée, sous plafond admin.'}},
+ {v:'Karim demande : « combien d’absents ? »',s:'La même question donne une réponse différente selon qui la pose.',
+  s2:'Portée effective = min(portée du délégant, plafond de l’agent).',
+  mods:['chat','apprenants'],vault:false,
+  chat:[['u','Combien d’absents cette semaine ?'],
+        ['a','Sur vos séances : 1 absence — Bruno Weber, mercredi 13 matin, justifiée (arrêt maladie). Les 7 autres stagiaires étaient présents aux 6 demi-journées.'],
+        ['u','et sur les autres sessions de HBS ?'],
+        ['a','Je n’ai pas accès à ces sessions avec votre compte. Marie Dubois ou la direction peut vous le dire.']],
+  story:['Karim pose sa question dans la discussion.',
+         'L’assistant prend les droits de Karim, pas les siens.',
+         'Il ne compte que sur les sessions de Karim. Le reste n’existe pas pour lui.'],
+  w:{title:'Discussion — Karim Benali',side:['Assistant','Discussion'],top:'Répond avec les droits de Karim',
+     blocks:[['lines','Ce qu’il a pu compter',['Excel avancé 12–14 mai — 6 demi-journées',
+                                                  '1 absence justifiée sur 48 présences attendues']],
+             ['lines','Ce qu’il a refusé de compter',['Les 3 autres sessions HBS de la semaine',
+                                                        'Motif : hors de la portée de Karim']]],
+     n:'Le même assistant, posé à la direction, aurait répondu pour tout l’organisme.',
+     n2:'L’agent emprunte la portée du délégant ; le plafond borne, il n’accorde jamais.'}},
+ {v:'Signer à la place de Nadia',no:true,s:'Refusé définitivement. Une présence atteste qu’une personne était là.',
+  s2:'Refusé en base : principal = agent ⇒ INSERT rejeté.',mods:['emargement'],vault:false,
+  chat:[['u','Nadia a oublié de signer hier matin, elle était là. Tu peux signer pour elle ?'],
+        ['a','Non — et ce n’est pas un réglage que vous pouvez changer. Une présence atteste qu’une personne était physiquement là ; je ne peux pas l’attester à sa place. Je peux préparer une régularisation que Karim signera, avec le motif.']],
+  story:['On demande à l’assistant de signer à la place d’une stagiaire.',
+         'La base voit que l’auteur est un assistant, et refuse l’écriture.'],
+  w:{title:'Signature refusée',side:['Assistant'],top:'Refus définitif',
+     blocks:[['lines','Ce qui s’est passé',['Demandé : signer la présence de Nadia Cherif du 12/05',
+                                               'Auteur : assistant',
+                                               'Refusé par la base — pas par un réglage',
+                                               'Aucune ligne écrite']],
+             ['lines','Ce qu’il propose à la place',['Régularisation préparée avec motif',
+                                                        'À contresigner par Karim Benali',
+                                                        'Trace de la demande conservée']]],
+     n:'C’est la limite qui ne bougera jamais : un assistant ne fabrique pas un acte humain.',
+     n2:'Politique restrictive sur hbs_attendance_signatures ; le principal agent ne peut pas insérer.'}}
+ ]}
+];
+
+/* ---------------- scene ---------------- */
+var cv=document.getElementById('scene');
+var rend=new THREE.WebGLRenderer({canvas:cv,antialias:true});
+rend.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+var scene=new THREE.Scene();
+scene.background=new THREE.Color(0xF1F6FC);
+scene.fog=new THREE.FogExp2(0xF1F6FC,.0042);
+var cam=new THREE.PerspectiveCamera(48,1,.1,900);
+scene.add(new THREE.AmbientLight(0xDCE9F7,1.05));
+var keyL=new THREE.DirectionalLight(0xFFFFFF,.95);keyL.position.set(-40,60,70);scene.add(keyL);
+var rimL=new THREE.DirectionalLight(0x9FC0EA,.6);rimL.position.set(60,-30,-50);scene.add(rimL);
+var coreLight=new THREE.PointLight(0x2E5FE0,1.5,240);scene.add(coreLight);
+var vLight=new THREE.PointLight(0x1D3FAE,.9,170);vLight.position.set(78,0,0);scene.add(vLight);
+
+(function(){var g=new THREE.BufferGeometry(),n=1400,a=new Float32Array(n*3);
+ for(var i=0;i<n;i++){var r=150+Math.random()*300,t=Math.random()*6.283,p=Math.acos(2*Math.random()-1);
+  a[i*3]=r*Math.sin(p)*Math.cos(t);a[i*3+1]=r*Math.sin(p)*Math.sin(t)*.6;a[i*3+2]=r*Math.cos(p);}
+ g.setAttribute('position',new THREE.BufferAttribute(a,3));
+ scene.add(new THREE.Points(g,new THREE.PointsMaterial({color:0x8FB4E0,size:1.1,transparent:true,opacity:.45})));})();
+
+function mat(c,e){return new THREE.MeshPhongMaterial({color:c,emissive:e||0,shininess:46,specular:0x33465C});}
+function metal(c){return new THREE.MeshPhongMaterial({color:c,emissive:0x05090D,shininess:120,specular:0xDCE8F2});}
+function paper(){return new THREE.MeshPhongMaterial({color:0xE4EBF1,emissive:0x161E26,shininess:12,specular:0x333B44});}
+function glowMat(c,op){return new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:op,depthWrite:false});}
+function arc(a,b,lift){
+  var m=a.clone().add(b).multiplyScalar(.5);
+  m.y+=lift===undefined?a.distanceTo(b)*.1:lift;
+  return new THREE.QuadraticBezierCurve3(a.clone(),m,b.clone());
+}
+function tube(curve,c,r,op,seg){
+  var g=new THREE.TubeGeometry(curve,seg||24,r,7,false);
+  return new THREE.Mesh(g,glowMat(c,op));
+}
+var glowTex=(function(){
+  var cn=document.createElement('canvas');cn.width=cn.height=128;
+  var x=cn.getContext('2d'),gr=x.createRadialGradient(64,64,0,64,64,64);
+  gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(.32,'rgba(255,255,255,.75)');
+  gr.addColorStop(1,'rgba(255,255,255,0)');
+  x.fillStyle=gr;x.fillRect(0,0,128,128);
+  var t=new THREE.CanvasTexture(cn);return t;
+})();
+
+function hbsTex(){
+  var c=document.createElement('canvas');c.width=c.height=512;
+  var x=c.getContext('2d'),k=512/48;
+  x.fillStyle='#F1F6FC';x.fillRect(0,0,512,512);
+  var g=x.createLinearGradient(0,0,512,512);
+  g.addColorStop(0,'#2E5FE0');g.addColorStop(1,'#0F2159');
+  var r=12*k;
+  x.beginPath();x.moveTo(r,0);x.lineTo(512-r,0);x.quadraticCurveTo(512,0,512,r);
+  x.lineTo(512,512-r);x.quadraticCurveTo(512,512,512-r,512);x.lineTo(r,512);
+  x.quadraticCurveTo(0,512,0,512-r);x.lineTo(0,r);x.quadraticCurveTo(0,0,r,0);x.closePath();
+  x.fillStyle=g;x.fill();
+  x.strokeStyle='rgba(255,255,255,.9)';x.lineWidth=1.6*k;x.lineCap='round';
+  x.beginPath();x.moveTo(10*k,17*k);x.quadraticCurveTo(24*k,6*k,38*k,17*k);x.stroke();
+  x.fillStyle='#fff';x.font='700 '+(17*k)+'px Georgia,"Times New Roman",serif';
+  x.textAlign='center';x.fillText('HBS',24*k,32.5*k);
+  var t=new THREE.CanvasTexture(c);t.anisotropy=4;return t;
+}
+var core=new THREE.Group();
+var logoFace=new THREE.MeshBasicMaterial({map:hbsTex()});
+var logoEdge=new THREE.MeshPhongMaterial({color:0xE4EDF9,shininess:90,specular:0xFFFFFF});
+var badge=new THREE.Mesh(new THREE.BoxGeometry(8.6,8.6,1.7),
+  [logoEdge,logoEdge,logoEdge,logoEdge,logoFace,logoFace]);
+core.add(badge);
+var halo=new THREE.Sprite(new THREE.SpriteMaterial({map:glowTex,color:0x2E5FE0,transparent:true,opacity:.3,depthWrite:false}));
+halo.scale.set(26,26,1);core.add(halo);
+for(var d=0;d<3;d++){
+  var dk=new THREE.Mesh(new THREE.CylinderGeometry(7.4-d*.5,7.4-d*.5,.34,40),
+    new THREE.MeshPhongMaterial({color:0x1D3FAE,shininess:80,specular:0xCFE0F5,transparent:true,opacity:.5}));
+  dk.position.y=-7.6-d*1.1;core.add(dk);
+}
+core.userData.badge=badge;core.userData.halo=halo;
+scene.add(core);
+
+var ring=new THREE.Mesh(new THREE.TorusGeometry(13,.24,10,90),new THREE.MeshBasicMaterial({color:BRAND.sky,transparent:true,opacity:.75}));
+ring.rotation.x=Math.PI/2.35;scene.add(ring);
+var ring2=new THREE.Mesh(new THREE.TorusGeometry(13,.13,10,90),new THREE.MeshBasicMaterial({color:BRAND.blue,transparent:true,opacity:.4}));
+ring2.rotation.x=Math.PI/2.35;ring2.rotation.y=Math.PI/3;scene.add(ring2);
+var shell=new THREE.Mesh(new THREE.SphereGeometry(30,26,18),new THREE.MeshBasicMaterial({color:BRAND.mist,wireframe:true,transparent:true,opacity:.5}));scene.add(shell);
+
+function bSlab(c){ // wall calendar: block, page, spiral binding, marked days
+ var g=new THREE.Group();
+ var back=new THREE.Mesh(new THREE.BoxGeometry(5.4,4.2,.35),mat(0x0F2159));back.position.z=-.2;g.add(back);
+ var page=new THREE.Mesh(new THREE.BoxGeometry(5,3.6,.14),paper());page.position.y=-.2;g.add(page);
+ var hdr=new THREE.Mesh(new THREE.BoxGeometry(5,.7,.2),mat(c,c));hdr.position.set(0,1.6,.05);g.add(hdr);
+ for(var i=0;i<6;i++){var rng=new THREE.Mesh(new THREE.TorusGeometry(.24,.07,6,14),metal(0xC9D6E2));
+   rng.position.set(-2+i*.8,2.05,0);rng.rotation.y=Math.PI/2;g.add(rng);}
+ for(var r=0;r<3;r++)for(var q=0;q<5;q++){
+   var on=(r*5+q)%4===1;
+   var cell=new THREE.Mesh(new THREE.BoxGeometry(.72,.5,.08),on?mat(c,c):mat(0x7C93AC));
+   cell.position.set(-1.7+q*.85,.75-r*.85,.13);g.add(cell);}
+ return g;}
+
+function bStack(c){ // books upright on a shelf
+ var g=new THREE.Group();
+ var sh=new THREE.Mesh(new THREE.BoxGeometry(5.4,.3,2.4),mat(0x0F2159));sh.position.y=-1.7;g.add(sh);
+ var tint=[c,0x9FE1CB,c,0x7C8FA3,c];
+ for(var i=0;i<5;i++){
+   var h=2.4+((i*7)%5)*.22,w=.55+((i*3)%4)*.12;
+   var bk=new THREE.Mesh(new THREE.BoxGeometry(w,h,2),i%2?mat(tint[i]):mat(tint[i],tint[i]));
+   bk.position.set(-1.9+i*.95,-1.55+h/2,0);bk.rotation.z=(i===4)?.18:0;g.add(bk);
+   var bd=new THREE.Mesh(new THREE.BoxGeometry(w*.5,.1,2.02),metal(0xD7E2EC));
+   bd.position.set(bk.position.x,bk.position.y+h*.28,0);g.add(bd);}
+ return g;}
+
+function bPeople(c){ // three learners at a bench
+ var g=new THREE.Group();
+ var desk=new THREE.Mesh(new THREE.BoxGeometry(6,.28,1.9),mat(0x0F2159));desk.position.set(0,-1.15,.5);g.add(desk);
+ for(var i=0;i<3;i++){
+   var x=(i-1)*1.95;
+   var h=new THREE.Mesh(new THREE.SphereGeometry(.62,18,14),i===1?mat(c,c):mat(0xD8E6F5));
+   h.position.set(x,1.15,0);g.add(h);
+   var t=new THREE.Mesh(new THREE.CylinderGeometry(.42,.86,1.5,14),i===1?mat(c):mat(0x33538F));
+   t.position.set(x,.05,0);g.add(t);
+   var sc=new THREE.Mesh(new THREE.BoxGeometry(1.1,.7,.08),paper());
+   sc.position.set(x,-.95,.85);sc.rotation.x=-.5;g.add(sc);}
+ return g;}
+
+function bFolder(c){ // folder with papers fanned out
+ var g=new THREE.Group();
+ for(var i=0;i<3;i++){
+   var pg=new THREE.Mesh(new THREE.BoxGeometry(3.6,2.7,.07),paper());
+   pg.position.set(-.1+i*.28,.35+i*.14,.12+i*.1);pg.rotation.z=(i-1)*.09;g.add(pg);
+   var ln=new THREE.Mesh(new THREE.BoxGeometry(2.4,.09,.03),mat(0x5E7DA8));
+   ln.position.set(pg.position.x,pg.position.y+.5,pg.position.z+.06);ln.rotation.z=pg.rotation.z;g.add(ln);}
+ var front=new THREE.Mesh(new THREE.BoxGeometry(4.5,3.1,.3),mat(c));front.position.z=.72;g.add(front);
+ var back=new THREE.Mesh(new THREE.BoxGeometry(4.5,3.3,.3),mat(c,c));back.position.set(0,.1,-.35);g.add(back);
+ var tab=new THREE.Mesh(new THREE.BoxGeometry(1.7,.55,.3),mat(c,c));tab.position.set(-1.3,1.9,-.35);g.add(tab);
+ return g;}
+
+function bSheet(c){ // clipboard with signed sheet and a pen
+ var g=new THREE.Group();
+ var bd=new THREE.Mesh(new THREE.BoxGeometry(4.2,5.4,.3),mat(0x14265E));g.add(bd);
+ var sh=new THREE.Mesh(new THREE.BoxGeometry(3.7,4.7,.12),paper());sh.position.set(0,-.2,.22);g.add(sh);
+ var clip=new THREE.Mesh(new THREE.BoxGeometry(1.6,.55,.5),metal(0xC9D6E2));clip.position.set(0,2.5,.28);g.add(clip);
+ for(var i=0;i<5;i++){
+   var w=2.6-((i*5)%3)*.5;
+   var l=new THREE.Mesh(new THREE.BoxGeometry(w,.12,.05),mat(0x7C93AC));
+   l.position.set(-.4+(2.6-w)/2,1.3-i*.72,.3);g.add(l);}
+ var sg=new THREE.Mesh(new THREE.TorusGeometry(.5,.1,8,22,4.4),mat(c,c));
+ sg.position.set(.55,-1.75,.32);sg.rotation.z=.7;g.add(sg);
+ var pen=new THREE.Mesh(new THREE.CylinderGeometry(.1,.1,2.6,10),metal(0xD7E2EC));
+ pen.position.set(1.9,-1.1,.7);pen.rotation.set(0,0,-.7);g.add(pen);
+ var nib=new THREE.Mesh(new THREE.ConeGeometry(.11,.5,10),mat(c,c));
+ nib.position.set(1.05,-1.95,.7);nib.rotation.z=-.7;g.add(nib);
+ return g;}
+
+function bVault(c){ // safe: recessed door, spoked dial, hinges, handle
+ var g=new THREE.Group();
+ var body=new THREE.Mesh(new THREE.BoxGeometry(5.6,5.6,4.2),mat(0x14265E));g.add(body);
+ var door=new THREE.Mesh(new THREE.BoxGeometry(4.7,4.7,.5),mat(c));door.position.z=2.2;g.add(door);
+ var lip=new THREE.Mesh(new THREE.BoxGeometry(5.2,5.2,.25),metal(0x8FA3B8));lip.position.z=2.05;g.add(lip);
+ var dial=new THREE.Mesh(new THREE.CylinderGeometry(1.15,1.25,.45,30),metal(0xD7E2EC));
+ dial.rotation.x=Math.PI/2;dial.position.z=2.6;g.add(dial);
+ for(var i=0;i<4;i++){
+   var sp=new THREE.Mesh(new THREE.BoxGeometry(2.5,.16,.16),metal(0xEAF1F7));
+   sp.position.z=2.85;sp.rotation.z=i*Math.PI/4;g.add(sp);}
+ var hub=new THREE.Mesh(new THREE.SphereGeometry(.32,14,12),mat(c,c));hub.position.z=2.98;g.add(hub);
+ for(var h=0;h<2;h++){
+   var hg=new THREE.Mesh(new THREE.CylinderGeometry(.28,.28,1,12),metal(0x8FA3B8));
+   hg.position.set(-2.5,h?1.6:-1.6,2.1);g.add(hg);}
+ var hd=new THREE.Mesh(new THREE.BoxGeometry(.3,1.5,.3),metal(0xEAF1F7));
+ hd.position.set(1.9,0,2.55);g.add(hd);
+ g.userData.dial=dial;
+ return g;}
+
+function bGauge(c){ // dial with scale, ticks, needle
+ var g=new THREE.Group();
+ var face=new THREE.Mesh(new THREE.CylinderGeometry(2.7,2.7,.4,36),mat(0x0F2159));
+ face.rotation.x=Math.PI/2;g.add(face);
+ var band=new THREE.Mesh(new THREE.TorusGeometry(2.7,.2,10,44),metal(0x8FA3B8));g.add(band);
+ var scale=new THREE.Mesh(new THREE.TorusGeometry(2.1,.18,10,40,3.9),mat(c,c));
+ scale.rotation.z=-.6;scale.position.z=.25;g.add(scale);
+ for(var i=0;i<9;i++){
+   var a=-.6+i*.49;
+   var tk=new THREE.Mesh(new THREE.BoxGeometry(.42,.09,.08),mat(0xD8E6F5));
+   tk.position.set(Math.cos(a)*1.65,Math.sin(a)*1.65,.3);tk.rotation.z=a;g.add(tk);}
+ var nd=new THREE.Mesh(new THREE.BoxGeometry(1.9,.14,.14),mat(0xEAF1F7));
+ nd.position.set(.75,.62,.35);nd.rotation.z=.68;g.add(nd);
+ var pin=new THREE.Mesh(new THREE.SphereGeometry(.26,14,12),mat(c,c));pin.position.z=.42;g.add(pin);
+ g.userData.needle=nd;
+ return g;}
+
+function bCoins(c){ // invoice with a stack of coins on it
+ var g=new THREE.Group();
+ var inv=new THREE.Mesh(new THREE.BoxGeometry(3.4,4.4,.12),paper());
+ inv.position.set(-.9,0,-.4);inv.rotation.z=.14;g.add(inv);
+ for(var i=0;i<5;i++){
+   var l=new THREE.Mesh(new THREE.BoxGeometry(2.1-((i*3)%3)*.5,.11,.05),mat(0x7C93AC));
+   l.position.set(-1.05,1.3-i*.62,-.32);l.rotation.z=.14;g.add(l);}
+ for(var k=0;k<5;k++){
+   var cn=new THREE.Mesh(new THREE.CylinderGeometry(1.05,1.05,.3,26),k===4?mat(c,c):metal(0xE0B24A));
+   cn.position.set(1.35,-1.2+k*.34,.5);cn.rotation.x=Math.PI/2;cn.rotation.z=k*.3;g.add(cn);}
+ return g;}
+
+function bOrb(c){ // assistant: core, two rings, small satellites
+ var g=new THREE.Group();
+ g.add(new THREE.Mesh(new THREE.IcosahedronGeometry(1.9,1),mat(c,c)));
+ g.add(new THREE.Mesh(new THREE.SphereGeometry(2.5,20,16),glowMat(c,.16)));
+ var r1=new THREE.Mesh(new THREE.TorusGeometry(3.4,.11,8,50),mat(c,c));g.add(r1);
+ var r2=new THREE.Mesh(new THREE.TorusGeometry(3.9,.08,8,50),mat(0xC9D6E2,0x445566));
+ r2.rotation.x=1.15;r2.rotation.y=.6;g.add(r2);
+ var sats=[];
+ for(var i=0;i<3;i++){var st=new THREE.Mesh(new THREE.SphereGeometry(.26,12,10),mat(0xEAF1F7,0xEAF1F7));
+   st.position.set(Math.cos(i*2.1)*3.4,0,Math.sin(i*2.1)*3.4);g.add(st);sats.push(st);}
+ g.userData.spin=[r1,r2];g.userData.sats=sats;
+ return g;}
+
+function bClock(c){ // alarm clock: case, bells, feet, hands
+ var g=new THREE.Group();
+ var cs=new THREE.Mesh(new THREE.CylinderGeometry(2.4,2.4,.85,34),mat(c));
+ cs.rotation.x=Math.PI/2;g.add(cs);
+ var rim=new THREE.Mesh(new THREE.TorusGeometry(2.4,.18,10,40),metal(0xD7E2EC));rim.position.z=.42;g.add(rim);
+ var fc=new THREE.Mesh(new THREE.CylinderGeometry(2.05,2.05,.1,34),paper());
+ fc.rotation.x=Math.PI/2;fc.position.z=.46;g.add(fc);
+ for(var i=0;i<12;i++){var a=i*Math.PI/6;
+   var tk=new THREE.Mesh(new THREE.BoxGeometry(.1,.34,.05),mat(0x33538F));
+   tk.position.set(Math.cos(a)*1.7,Math.sin(a)*1.7,.53);tk.rotation.z=a;g.add(tk);}
+ for(var b=0;b<2;b++){var bl=new THREE.Mesh(new THREE.SphereGeometry(.7,16,12,0,6.283,0,1.6),metal(0xD7E2EC));
+   bl.position.set(b?1.7:-1.7,2.1,0);bl.rotation.z=b?-.5:.5;g.add(bl);}
+ for(var f=0;f<2;f++){var ft=new THREE.Mesh(new THREE.CylinderGeometry(.16,.22,.9,10),metal(0x8FA3B8));
+   ft.position.set(f?1.3:-1.3,-2.5,0);ft.rotation.z=f?-.35:.35;g.add(ft);}
+ var h1=new THREE.Mesh(new THREE.BoxGeometry(1.25,.16,.1),mat(0x14265E));h1.position.set(.6,0,.6);g.add(h1);
+ var h2=new THREE.Mesh(new THREE.BoxGeometry(.14,1.7,.1),mat(c,c));h2.position.set(0,.8,.6);g.add(h2);
+ g.userData.hands=[h1,h2];
+ return g;}
+
+function bBubble(c){ // two overlapping speech bubbles
+ var g=new THREE.Group();
+ var b1=new THREE.Mesh(new THREE.BoxGeometry(4.2,2.6,.6),mat(c));b1.position.set(-.5,.6,0);g.add(b1);
+ var t1=new THREE.Mesh(new THREE.ConeGeometry(.6,1.2,4),mat(c));
+ t1.position.set(-1.7,-.9,0);t1.rotation.z=.45;g.add(t1);
+ var b2=new THREE.Mesh(new THREE.BoxGeometry(3.2,2,.6),mat(0x14265E));b2.position.set(1.3,-1.5,.5);g.add(b2);
+ var t2=new THREE.Mesh(new THREE.ConeGeometry(.5,1,4),mat(0x14265E));
+ t2.position.set(2.3,-2.7,.5);t2.rotation.z=-.45;g.add(t2);
+ for(var i=0;i<3;i++){var d=new THREE.Mesh(new THREE.SphereGeometry(.24,12,10),mat(0xEAF1F7,0xEAF1F7));
+   d.position.set(-1.4+i*.9,.6,.36);g.add(d);}
+ for(var j=0;j<3;j++){var e=new THREE.Mesh(new THREE.BoxGeometry(1.7-j*.35,.13,.05),mat(0x5E7DA8));
+   e.position.set(1.05,-1+ -j*.5,.86);g.add(e);}
+ return g;}
+
+function bScore(c){ // scorecard: sheet, filled bar, ticks and a cross
+ var g=new THREE.Group();
+ g.add(new THREE.Mesh(new THREE.BoxGeometry(4.2,5,.18),paper()));
+ var hdr=new THREE.Mesh(new THREE.BoxGeometry(4.2,.8,.24),mat(c,c));hdr.position.set(0,2.1,.04);g.add(hdr);
+ var track=new THREE.Mesh(new THREE.BoxGeometry(3.2,.42,.1),mat(0xD8E6F5));track.position.set(0,1.15,.15);g.add(track);
+ var fill=new THREE.Mesh(new THREE.BoxGeometry(2.24,.42,.14),mat(c,c));fill.position.set(-.48,1.15,.17);g.add(fill);
+ for(var i=0;i<4;i++){
+   var ok=i<3;
+   var mk=new THREE.Mesh(ok?new THREE.TorusGeometry(.26,.08,6,14,4.4):new THREE.BoxGeometry(.42,.1,.08),
+     ok?mat(0x1F7A4C,0x1F7A4C):mat(0xC0392B,0xC0392B));
+   mk.position.set(-1.5,.25-i*.85,.2);if(ok)mk.rotation.z=.6;g.add(mk);
+   var ln=new THREE.Mesh(new THREE.BoxGeometry(1.9-((i*3)%2)*.5,.11,.05),mat(0x7C93AC));
+   ln.position.set(-.2,.25-i*.85,.2);g.add(ln);}
+ return g;}
+var B={score:bScore,slab:bSlab,stack:bStack,people:bPeople,folder:bFolder,sheet:bSheet,vault:bVault,gauge:bGauge,coins:bCoins,orb:bOrb,clock:bClock,bubble:bBubble};
+
+var modById={};
+MODS.forEach(function(m){
+  var c=C[m.k],R=30,th=m.a[0],ph=m.a[1];
+  var pos=new THREE.Vector3(R*Math.sin(ph)*Math.cos(th),R*Math.cos(ph),R*Math.sin(ph)*Math.sin(th));
+  var g=B[m.b](c);g.position.copy(pos);g.lookAt(0,0,0);scene.add(g);
+  var cv1=arc(pos.clone().multiplyScalar(.26),pos.clone().multiplyScalar(.84),1.4);
+  scene.add(tube(cv1,c,.085,.55));
+  scene.add(tube(cv1,BRAND.mist,.26,.3));
+  m.pos=pos;m.grp=g;m.col=c;modById[m.id]=m;
+});
+
+ACTORS.forEach(function(a,i){
+  var c=C[a.k],n=ACTORS.length,y=(i-(n-1)/2)*5.6;
+  var pos=new THREE.Vector3(-21,y,11);
+  var g=new THREE.Group();
+  g.add(new THREE.Mesh(new THREE.BoxGeometry(8.6,4,.5),new THREE.MeshPhongMaterial({color:0xFFFFFF,emissive:c,emissiveIntensity:.1,shininess:60,specular:0xCFE0F5})));
+  var e=new THREE.Mesh(new THREE.BoxGeometry(.35,4,.6),mat(c,c));e.position.x=-4.4;g.add(e);
+  g.position.copy(pos);g.lookAt(0,0,60);scene.add(g);
+  var cv2=arc(pos.clone(),new THREE.Vector3(-8,y*.25,3.5),1.2);
+  scene.add(tube(cv2,c,.085,.55));
+  scene.add(tube(cv2,BRAND.mist,.26,.3));
+  a.pos=pos;a.col=c;a.grp=g;
+});
+
+var VC=new THREE.Vector3(78,0,0);
+var vshell=new THREE.Mesh(new THREE.SphereGeometry(15,24,16),new THREE.MeshBasicMaterial({color:0x8FB4E0,wireframe:true,transparent:true,opacity:.5}));
+vshell.position.copy(VC);scene.add(vshell);
+var DK=[0x1F7A4C,0x1D3FAE,0x2E5FE0,0xB4740B,0xB02A6B],docs=[];
+for(var i=0;i<46;i++){
+  var m2=new THREE.Mesh(new THREE.BoxGeometry(1.7,2.3,.16),mat(DK[i%5],DK[i%5]));
+  var rr=3+Math.random()*10,tt=Math.random()*6.283,pp=Math.acos(2*Math.random()-1);
+  m2.position.set(VC.x+rr*Math.sin(pp)*Math.cos(tt),VC.y+rr*Math.cos(pp),VC.z+rr*Math.sin(pp)*Math.sin(tt));
+  m2.rotation.set(Math.random()*3,Math.random()*3,Math.random()*3);scene.add(m2);docs.push({m:m2,s:.1+Math.random()*.25});
+}
+for(var b2=0;b2<5;b2++){var yy=(b2-2)*1.5;
+  var cb=arc(new THREE.Vector3(modById.coffre.pos.x,modById.coffre.pos.y+yy*.4,modById.coffre.pos.z),
+             new THREE.Vector3(VC.x-14,yy,0),2.2);
+  scene.add(tube(cb,C.evid,.08,.5));
+  scene.add(tube(cb,BRAND.mist,.24,.28));}
+
+/* ---- site vitrine: where someone lands before they are anyone in the system ---- */
+var VITC=new THREE.Vector3(-92,16,-34);
+var vitshell=new THREE.Mesh(new THREE.SphereGeometry(13,22,15),
+  new THREE.MeshBasicMaterial({color:0x9FC0EA,wireframe:true,transparent:true,opacity:.45}));
+vitshell.position.copy(VITC);scene.add(vitshell);
+var PAGES=[['Accueil',0x2E5FE0],['Nos formations',0x1D3FAE],['Excel avancé',0x2E5FE0],
+           ['Demander une place',0x1F7A4C],['Résultats',0xB4740B],['Contact',0x33538F]];
+var pages=[];
+for(var pv=0;pv<12;pv++){
+  var kd=PAGES[pv%PAGES.length];
+  var pc=new THREE.Mesh(new THREE.BoxGeometry(3.1,2.1,.16),
+    new THREE.MeshPhongMaterial({color:0xFFFFFF,emissive:kd[1],emissiveIntensity:.14,shininess:70,specular:0xFFFFFF}));
+  var rv=3.5+Math.random()*7.5,tv=Math.random()*6.283,pw=Math.acos(2*Math.random()-1);
+  pc.position.set(VITC.x+rv*Math.sin(pw)*Math.cos(tv),VITC.y+rv*Math.cos(pw),VITC.z+rv*Math.sin(pw)*Math.sin(tv));
+  pc.rotation.set(Math.random()*3,Math.random()*3,Math.random()*3);
+  var bar=new THREE.Mesh(new THREE.BoxGeometry(3.1,.34,.2),new THREE.MeshBasicMaterial({color:kd[1]}));
+  bar.position.set(0,.88,.03);pc.add(bar);
+  scene.add(pc);pages.push({m:pc,s:.08+Math.random()*.18});
+}
+/* the tunnel: how a visitor crosses into the system */
+var tunCurve=arc(VITC.clone(),new THREE.Vector3(0,0,0),14);
+var tunnel=new THREE.Mesh(new THREE.TubeGeometry(tunCurve,46,3.1,16,false),
+  new THREE.MeshBasicMaterial({color:0x2E5FE0,transparent:true,opacity:.07,side:THREE.DoubleSide,depthWrite:false}));
+scene.add(tunnel);
+var tunRings=[];
+for(var tr=0;tr<11;tr++){
+  var u2=.06+tr*.086;
+  var rg=new THREE.Mesh(new THREE.TorusGeometry(3.1,.09,8,30),
+    new THREE.MeshBasicMaterial({color:0x2E5FE0,transparent:true,opacity:.3}));
+  rg.position.copy(tunCurve.getPoint(u2));
+  rg.lookAt(tunCurve.getPoint(Math.min(1,u2+.02)));
+  scene.add(rg);tunRings.push({m:rg,u:u2});
+}
+scene.add(tube(tunCurve,0x1D3FAE,.09,.5,46));
+
+/* ---------------- HTML labels: constant size, always readable ---------------- */
+var labelHost=document.getElementById('labels'),LABELS=[];
+function addLabel(id,kind,pos,col,off){
+  var el=document.createElement('button');
+  el.className='lb'+(kind==='actor'?' tap':'');
+  el.style.borderLeftColor=hex(col);
+  el.innerHTML='<span class="lt"></span><span class="ls"></span>';
+  el.addEventListener('click',function(ev){ev.stopPropagation();onLabel(id,kind);});
+  labelHost.appendChild(el);
+  var L={id:id,kind:kind,pos:pos.clone(),el:el,off:off||0,show:true};LABELS.push(L);return L;
+}
+MODS.forEach(function(m){m.lab=addLabel(m.id,'mod',m.pos,m.col,-6.5);});
+ACTORS.forEach(function(a){a.lab=addLabel(a.id,'actor',a.pos,a.col,0);});
+var coreLab=addLabel('core','core',new THREE.Vector3(0,0,0),BRAND.blue,-10.5);
+var vaultLab=addLabel('vault','vault',VC,C.evid,-19);
+var vitLab=addLabel('vitrine','vitrine',VITC,BRAND.sky,-16.5);
+
+function setLabelText(){
+  MODS.forEach(function(m){
+    m.lab.el.querySelector('.lt').textContent=pick(m.t,m.t2||m.t);
+    m.lab.el.querySelector('.ls').textContent=pick(m.s2,m.s);
+  });
+  ACTORS.forEach(function(a){
+    a.lab.el.querySelector('.lt').textContent=pick(a.t,a.t2);
+    a.lab.el.querySelector('.ls').textContent=pick(a.sc,a.sc2);
+  });
+  coreLab.el.querySelector('.lt').textContent=pick('HBS FORMATION','Noyau · Postgres');
+  coreLab.el.querySelector('.ls').textContent=pick('tout part d\'ici','RLS · plancher restrictif');
+  vaultLab.el.querySelector('.lt').textContent=pick('Le coffre','Coffre');
+  vaultLab.el.querySelector('.ls').textContent=pick('contrats, factures, preuves','rétention 3 à 10 ans');
+  vitLab.el.querySelector('.lt').textContent=pick('Site vitrine','hbs-formation.fr');
+  vitLab.el.querySelector('.ls').textContent=pick('avant d\'être client','public, non authentifié');
+}
+
+/* ---------------- camera: focus-based, one degree of freedom ---------------- */
+var FOCUS={core:{p:new THREE.Vector3(0,0,0),r:64},
+           shell:{p:new THREE.Vector3(0,0,0),r:104},
+           vault:{p:VC.clone(),r:46},
+           vitrine:{p:VITC.clone(),r:44},
+           funnel:{p:new THREE.Vector3(-46,9,-18),r:132},
+           roles:{p:new THREE.Vector3(-16,0,10),r:52},
+           all:{p:new THREE.Vector3(32,0,0),r:180},
+           wide:{p:new THREE.Vector3(26,0,0),r:140}};
+var foc={p:new THREE.Vector3(0,0,0),r:180},goalP=new THREE.Vector3(32,0,0),goalR=180;
+var yaw=.9,yawT=.9,pitch=1.2;
+function frame(key,extra){
+  var f=FOCUS[key];goalP.copy(f.p);goalR=f.r*(narrow()?1.42:1)*(extra||1);
+}
+function frameAt(pos,r){goalP.copy(pos);goalR=r*(narrow()?1.42:1);}
+function place(){
+  cam.position.set(foc.p.x+foc.r*Math.sin(pitch)*Math.cos(yaw),
+                   foc.p.y+foc.r*Math.cos(pitch),
+                   foc.p.z+foc.r*Math.sin(pitch)*Math.sin(yaw));
+  cam.lookAt(foc.p);
+}
+/* one axis of user control: horizontal spin. Nothing else can get you lost. */
+var dragging=false,lastX=0,moved=false;
+cv.addEventListener('pointerdown',function(e){dragging=true;lastX=e.clientX;moved=false;
+  try{cv.setPointerCapture(e.pointerId);}catch(x){}});
+cv.addEventListener('pointermove',function(e){if(!dragging)return;
+  var dx=e.clientX-lastX;if(Math.abs(dx)>2)moved=true;yawT-=dx*.006;lastX=e.clientX;});
+function endDrag(){dragging=false;}
+cv.addEventListener('pointerup',endDrag);cv.addEventListener('pointercancel',endDrag);
+window.addEventListener('pointerup',endDrag);
+document.getElementById('rotL').addEventListener('click',function(){yawT-=.7;});
+document.getElementById('rotR').addEventListener('click',function(){yawT+=.7;});
+
+/* ---------------- flow ---------------- */
+var topEl=document.getElementById('top'),tourEl=document.getElementById('tour'),
+    sheet=document.getElementById('sheet'),hopsEl=document.getElementById('hops'),
+    screenEl=document.getElementById('screen'),wire=document.getElementById('wire'),
+    spinEl=document.getElementById('spin'),crumb=document.getElementById('crumb'),
+    upBtn=document.getElementById('up');
+var cur=null,anim=null,where='overview';
+
+function actorById(id){for(var i=0;i<ACTORS.length;i++)if(ACTORS[i].id===id)return ACTORS[i];}
+function stopOf(id){
+  if(id==='core')   return {p:new THREE.Vector3(0,0,0),o:core,lab:coreLab,nm:pick('Contrôle d\'accès','Gateway + RLS')};
+  if(id==='vault')  return {p:VC.clone(),o:vshell,lab:vaultLab,nm:'Coffre'};
+  if(id==='vitrine')return {p:VITC.clone(),o:vitshell,lab:vitLab,nm:pick('Site vitrine','hbs-formation.fr')};
+  var m=modById[id];
+  return m?{p:m.pos.clone(),o:m.grp,lab:m.lab,nm:pick(m.t,m.t2||m.t)}:null;
+}
+
+var TOUR=[
+ {f:'wide',t:'Votre organisme, vu de haut',
+  b:'À gauche, les personnes. Au centre, vos données. À droite, le coffre où tout est archivé. Faites glisser pour tourner autour.'},
+ {f:'core',t:'Tout part du centre',
+  b:'Une seule base de données. Chaque écran de l\'application y puise — et n\'en voit que la part qui le concerne.'},
+ {f:'shell',t:'Ce que vous utiliserez',
+  b:'Calendrier, formations, présences, documents, facturation. Chacun est relié au centre : rien ne vit à côté.'},
+ {f:'funnel',t:'D’où viennent les stagiaires',
+  b:'À gauche, votre site public. Une personne y découvre une formation et demande une place. Le tunnel est le moment où elle entre dans le système — avant, elle n’existe nulle part.'},
+ {f:'vault',t:'Le coffre',
+  b:'Conventions, attestations, présences signées, factures, échanges. Conservés de 3 à 10 ans selon le financeur, sans que personne n\'ait à y penser.'},
+ {f:'roles',t:'À vous de choisir',
+  b:'Cinq profils. Touchez-en un pour voir ce qu\'il peut faire — puis une action pour voir l\'écran qu\'il obtiendrait.'}
+];
+var step=0;
+var dotsEl=document.getElementById('dots');
+TOUR.forEach(function(){var d=document.createElement('span');d.className='dt';dotsEl.appendChild(d);});
+
+function showTour(){
+  var s=TOUR[step];
+  document.getElementById('tstep').textContent='Étape '+(step+1)+' sur '+TOUR.length;
+  document.getElementById('ttitle').textContent=s.t;
+  document.getElementById('tbody').textContent=s.b;
+  document.getElementById('tprev').disabled=(step===0);
+  document.getElementById('tnext').textContent=(step===TOUR.length-1)?'Terminer':'Suivant';
+  Array.prototype.forEach.call(dotsEl.children,function(d,i){d.classList.toggle('on',i===step);});
+  frame(s.f);
+  crumb.textContent='Visite guidée';
+  LABELS.forEach(function(L){
+    var on;
+    if(s.f==='all'||s.f==='wide') on=(L.kind!=='mod');
+    else if(s.f==='core')on=(L.kind==='core');
+    else if(s.f==='shell')on=(L.kind==='mod');
+    else if(s.f==='vault')on=(L.kind==='vault');
+    else if(s.f==='funnel')on=(L.kind==='vitrine'||L.kind==='core');
+    else                 on=(L.kind==='actor');
+    L.show=on;L.el.classList.remove('mut');
+    L.el.classList.toggle('hot',on&&s.f==='roles');
+  });
+  tourEl.classList.add('on');
+}
+function endTour(){
+  tourEl.classList.remove('on');
+  LABELS.forEach(function(L){L.el.classList.remove('mut');
+    L.show=(L.kind==='actor');L.el.classList.toggle('hot',L.kind==='actor');});
+  frame('roles');crumb.textContent='Choisissez un profil';where='overview';
+}
+document.getElementById('tnext').addEventListener('click',function(){
+  if(step<TOUR.length-1){step++;showTour();}else endTour();});
+document.getElementById('tprev').addEventListener('click',function(){if(step>0){step--;showTour();}});
+document.getElementById('restart').addEventListener('click',function(){
+  closeAll();step=0;showTour();});
+
+function onLabel(id,kind){
+  if(kind==='actor'){openActor(id);}
+  else if(kind==='vault'){frame('vault');crumb.textContent='Le coffre';}
+  else if(kind==='vitrine'){frame('vitrine');crumb.textContent='Site vitrine';}
+  else if(kind==='core'){frame('core');crumb.textContent='HBS FORMATION';}
+  else{var m=modById[id];frameAt(m.pos,26);crumb.textContent=pick(m.t,m.t2||m.t);}
+  upBtn.hidden=false;where='detail';
+}
+
+function openActor(id){
+  cur=actorById(id);
+  tourEl.classList.remove('on');
+  document.getElementById('sdot').style.background=hex(cur.col);
+  document.getElementById('snm').textContent=pick(cur.t,cur.t2);
+  document.getElementById('ssc').textContent='· '+pick(cur.sc,cur.sc2);
+  var bd=document.getElementById('sbd');bd.innerHTML='';
+  var h=document.createElement('div');h.className='ssec';
+  h.textContent='Touchez une action pour voir son écran';bd.appendChild(h);
+  cur.caps.forEach(function(c,i){
+    var b=document.createElement('button');b.className='act'+(c.no?' no':'');
+    b.innerHTML='<span class="av">'+c.v+(c.no?'<span class="no-tag">refusé</span>':'')+'</span>'+
+                '<span class="as">'+pick(c.s,c.s2||c.s)+'</span>';
+    b.addEventListener('click',function(){runAction(i);});
+    bd.appendChild(b);
+  });
+  sheet.classList.add('on');
+  frameAt(cur.pos,narrow()?40:32);
+  crumb.textContent=pick(cur.t,cur.t2);upBtn.hidden=false;where='actor';
+  LABELS.forEach(function(L){L.show=(L.kind==='actor'&&L.id===id)||L.kind==='core';});
+}
+
+function clearAnim(){
+  if(!anim)return;
+  anim.segs.forEach(function(g){scene.remove(g.core);scene.remove(g.halo);});
+  scene.remove(anim.pulse);scene.remove(anim.glow);scene.remove(anim.light);
+  anim=null;
+}
+var chatEl=document.getElementById('chat'),cbody=document.getElementById('cbody'),
+    storyEl=document.getElementById('story'),pendingCap=null;
+
+function runChat(c,after){
+  cbody.innerHTML='';
+  chatEl.classList.add('on');
+  document.getElementById('app').classList.add('demo');
+  var k=0;
+  (function next(){
+    if(k>=c.chat.length)return;
+    var m=c.chat[k++];
+    var d=document.createElement('div');
+    d.className='msg '+(m[0]==='u'?'u':'a');
+    d.innerHTML='<span class="who">'+(m[0]==='u'?'Vous':'Assistant')+'</span>'+m[1];
+    cbody.appendChild(d);cbody.scrollTop=cbody.scrollHeight;
+    setTimeout(next,RM?10:Math.min(1500,420+m[1].length*9));
+  })();
+  pendingCap=after;
+}
+document.getElementById('cgo').addEventListener('click',function(){
+  chatEl.classList.remove('on');
+  if(pendingCap!=null){var f=pendingCap;pendingCap=null;f();}
+});
+
+function runAction(i){
+  var c=cur.caps[i];
+  sheet.classList.remove('on');
+  if(c.chat&&!c._seen){c._seen=1;runChat(c,function(){runAction(i);});return;}
+  document.getElementById('app').classList.add('demo');
+
+  var names=[pick(cur.t,cur.t2)];
+  var stops=[{p:cur.pos.clone(),o:cur.grp,lab:cur.lab}];
+  var chain=c.route||['core'].concat(c.mods||[]).concat(c.vault?['vault']:[]);
+  chain.forEach(function(id){var st=stopOf(id);if(st){stops.push(st);names.push(st.nm);}});
+  if(c.no)names.push('Refusé');
+
+  hopsEl.innerHTML='';
+  var els=names.map(function(x){var e=document.createElement('span');e.className='hop';e.textContent=x;hopsEl.appendChild(e);return e;});
+  hopsEl.classList.add('on');
+
+  clearAnim();
+  var col=c.no?C.stop:cur.col;
+
+  var segs=[];
+  for(var k=0;k<stops.length-1;k++){
+    var cvv=arc(stops[k].p,stops[k+1].p,stops[k].p.distanceTo(stops[k+1].p)*.13);
+    var coreT=tube(cvv,col,.15,.14,30);
+    var haloT=tube(cvv,col,.46,.05,30);
+    scene.add(coreT);scene.add(haloT);
+    segs.push({curve:cvv,core:coreT,halo:haloT,done:false});
+  }
+
+  var pulse=new THREE.Mesh(new THREE.SphereGeometry(1.05,18,14),new THREE.MeshBasicMaterial({color:col}));
+  scene.add(pulse);
+  var glow=new THREE.Sprite(new THREE.SpriteMaterial({map:glowTex,color:col,transparent:true,
+    opacity:.5,depthWrite:false}));
+  glow.scale.set(9,9,1);scene.add(glow);
+  var light=new THREE.PointLight(col,3.2,55);scene.add(light);
+
+  anim={segs:segs,stops:stops,i:0,u:0,els:els,cap:c,col:col,
+        pulse:pulse,glow:glow,light:light,
+        segDur:RM?.01:Math.max(.42,2.5/segs.length),hold:0};
+
+  var touched={};chain.forEach(function(x){touched[x]=1;});
+  LABELS.forEach(function(L){
+    L.show=(L.kind==='mod'&&touched[L.id])||(L.kind==='vault'&&touched.vault)||
+           (L.kind==='vitrine'&&touched.vitrine)||
+           L.kind==='core'||(L.kind==='actor'&&L.id===cur.id);
+    L.el.classList.remove('beam');});
+  frame(touched.vitrine?'funnel':(touched.vault?'all':'shell'),1.05);
+  crumb.textContent=c.v;
+}
+var pings=[];
+function ping(o){if(o)pings.push({o:o,t:0,s:o.scale.x});}
+function finish(){
+  var c=anim.cap;c._seen=0;clearAnim();
+  hopsEl.classList.remove('on');storyEl.classList.remove('on');
+  document.getElementById('app').classList.remove('demo');
+  LABELS.forEach(function(L){L.el.classList.remove('beam');});
+  draw(c);
+}
+
+function draw(c){
+  var w=c.w,col=c.no?hex(C.stop):hex(cur.col);
+  document.getElementById('stitle').textContent=w.title;
+  var k=document.getElementById('skind');k.textContent=c.no?'refus':'aperçu';k.style.color=col;
+  wire.innerHTML='';wire.style.color=col;
+  var side=document.createElement('div');side.className='wside';
+  (w.side||[]).forEach(function(x,i){var b=document.createElement('div');b.className='blk'+(i===0?' acc':'');
+    b.style.padding='7px 8px';b.innerHTML='<span class="lbl">'+x+'</span>';side.appendChild(b);});
+  wire.appendChild(side);
+  var main=document.createElement('div');main.className='wmain';
+  if(w.top){var t=document.createElement('div');t.className='blk';t.innerHTML='<span class="lbl">'+w.top+'</span>';main.appendChild(t);}
+  (w.blocks||[]).forEach(function(bl){
+    var d=document.createElement('div');d.className='blk grow';
+    d.innerHTML='<span class="lbl">'+bl[1]+'</span>';
+    if(bl[0]==='grid'){var g=document.createElement('div');g.className='cells';
+      g.style.gridTemplateColumns='repeat('+bl[2]+',1fr)';
+      for(var i=0;i<bl[2]*bl[3];i++){var cc=document.createElement('div');cc.className='cell'+(i%7===3?' acc':'');g.appendChild(cc);}
+      d.appendChild(g);}
+    else if(bl[0]==='table'||bl[0]==='list'||bl[0]==='rows'){var r=document.createElement('div');r.className='rows';
+      for(var j=0;j<(bl[2]||4);j++){var q=document.createElement('div');q.className='rw';q.style.width=(62+Math.random()*36)+'%';r.appendChild(q);}
+      d.appendChild(r);}
+    else if(bl[0]==='lines'){
+      var ul=document.createElement('div');ul.className='reallines';
+      (bl[2]||[]).forEach(function(txt){
+        var li=document.createElement('div');li.className='rl';li.textContent=txt;ul.appendChild(li);});
+      d.appendChild(ul);}
+    else if(bl[0]==='doc'){for(var z=0;z<5;z++){var s1=document.createElement('span');s1.className='sk';s1.style.width=(40+Math.random()*55)+'%';d.appendChild(s1);}}
+    else if(bl[0]==='form'){for(var f=0;f<2;f++){var s2=document.createElement('span');s2.className='sk';s2.style.height='20px';s2.style.width='70%';d.appendChild(s2);}}
+    else{var s3=document.createElement('span');s3.className='sk';s3.style.width='55%';d.appendChild(s3);}
+    main.appendChild(d);});
+  var n=document.createElement('div');n.className='note';n.textContent=pick(w.n,w.n2||w.n);main.appendChild(n);
+  wire.appendChild(main);
+  screenEl.classList.add('on');
+}
+
+function closeAll(){
+  screenEl.classList.remove('on');sheet.classList.remove('on');hopsEl.classList.remove('on');
+  chatEl.classList.remove('on');storyEl.classList.remove('on');pendingCap=null;
+  if(cur)cur.caps.forEach(function(x){x._seen=0;});
+  clearAnim();
+  document.getElementById('app').classList.remove('demo');
+  LABELS.forEach(function(L){L.el.classList.remove('beam');});
+}
+document.getElementById('sback').addEventListener('click',function(){
+  screenEl.classList.remove('on');sheet.classList.add('on');
+  frameAt(cur.pos,narrow()?40:32);crumb.textContent=pick(cur.t,cur.t2);where='actor';});
+document.getElementById('sclose').addEventListener('click',function(){goUp();});
+upBtn.addEventListener('click',goUp);
+function goUp(){
+  closeAll();cur=null;
+  LABELS.forEach(function(L){L.el.classList.remove('mut');
+    L.show=(L.kind==='actor');L.el.classList.toggle('hot',L.kind==='actor');});
+  frame('roles');crumb.textContent='Choisissez un profil';upBtn.hidden=true;where='overview';
+}
+
+function setMode(m){
+  MODE=m;
+  document.getElementById('mSimple').setAttribute('aria-pressed',String(m==='simple'));
+  document.getElementById('mTech').setAttribute('aria-pressed',String(m==='tech'));
+  setLabelText();
+  if(cur&&sheet.classList.contains('on'))openActor(cur.id);
+}
+document.getElementById('mSimple').addEventListener('click',function(){setMode('simple');});
+document.getElementById('mTech').addEventListener('click',function(){setMode('tech');});
+
+document.getElementById('enter').addEventListener('click',function(){
+  document.getElementById('gate').classList.add('gone');
+  topEl.classList.add('on');if(!narrow())spinEl.classList.add('on');
+  step=0;showTour();
+});
+
+/* ---------------- loop ---------------- */
+var lw=0,lh=0,host=document.getElementById('app'),proj=new THREE.Vector3();
+function resize(){var r=host.getBoundingClientRect(),w=r.width|0,h=r.height|0;
+  if(w===lw&&h===lh||!w||!h)return;lw=w;lh=h;rend.setSize(w,h,true);cam.aspect=w/h;cam.updateProjectionMatrix();}
+window.addEventListener('resize',resize);
+window.addEventListener('orientationchange',function(){setTimeout(resize,220);});
+if(window.ResizeObserver)new ResizeObserver(resize).observe(host);
+
+var clk=new THREE.Clock();
+function loop(){
+  requestAnimationFrame(loop);
+  var dt=Math.min(clk.getDelta(),.05);resize();
+  yaw+=(yawT-yaw)*.12;
+  foc.p.lerp(goalP,.075);foc.r+=(goalR-foc.r)*.075;
+  place();
+  core.userData.badge.quaternion.copy(cam.quaternion);
+  if(!RM){ring.rotation.z+=dt*.2;ring2.rotation.z-=dt*.15;
+    vshell.rotation.y-=dt*.03;
+    docs.forEach(function(d){d.m.rotation.y+=dt*d.s;});
+    pages.forEach(function(d){d.m.rotation.y+=dt*d.s;});
+    tunRings.forEach(function(r){r.u+=dt*.045;if(r.u>.97)r.u=.05;
+      r.m.position.copy(tunCurve.getPoint(r.u));
+      r.m.lookAt(tunCurve.getPoint(Math.min(1,r.u+.02)));});
+    MODS.forEach(function(m){var u=m.grp.userData;
+      if(u.spin)u.spin.forEach(function(r,i){r.rotation.z+=dt*(i?-.5:.7);});
+      if(u.hands){u.hands[0].rotation.z-=dt*.9;u.hands[1].rotation.z-=dt*.22;}});}
+  coreLight.intensity=1.35+Math.sin(clk.elapsedTime*1.5)*.2;
+  core.userData.halo.material.opacity=.26+Math.sin(clk.elapsedTime*1.5)*.07;
+
+  var cand=[];
+  for(var i=0;i<LABELS.length;i++){
+    var L=LABELS[i];
+    if(!L.show){L.el.style.display='none';continue;}
+    proj.copy(L.pos);proj.y+=L.off;proj.project(cam);
+    if(proj.z>1){L.el.style.display='none';continue;}
+    var x=(proj.x*.5+.5)*lw,y=(-proj.y*.5+.5)*lh;
+    var mx=lw<520?10:-120,my=lw<520?8:-50;
+    if(x<mx||x>lw-mx||y<my||y>lh-my){L.el.style.display='none';continue;}
+    cand.push({L:L,x:x,y:y,z:proj.z});
+  }
+  cand.sort(function(a,b){return a.z-b.z;});
+  var taken=[];
+  for(var q=0;q<cand.length;q++){
+    var it=cand[q],el=it.L.el;
+    el.style.display='flex';
+    var pad=lw<520?15:(lw<860?10:7);
+    var w2=(el.offsetWidth||150)/2+pad,h2=(el.offsetHeight||40)/2+pad*.7;
+    var clash=false;
+    for(var r2=0;r2<taken.length;r2++){var T=taken[r2];
+      if(Math.abs(it.x-T.x)<w2+T.w&&Math.abs(it.y-T.y)<h2+T.h){clash=true;break;}}
+    if(clash){el.style.display='none';continue;}
+    taken.push({x:it.x,y:it.y,w:w2,h:h2});
+    el.style.left=it.x+'px';el.style.top=it.y+'px';
+  }
+
+  for(var pi=pings.length-1;pi>=0;pi--){
+    var pg=pings[pi];pg.t+=dt*3.4;
+    var k2=1+Math.sin(Math.min(Math.PI,pg.t))*.16;
+    pg.o.scale.setScalar(pg.s*k2);
+    if(pg.t>=Math.PI){pg.o.scale.setScalar(pg.s);pings.splice(pi,1);}
+  }
+  if(anim){
+    if(anim.hold>0){
+      anim.hold-=dt;
+      if(anim.hold<=0&&anim.i>=anim.segs.length)finish();
+    }else{
+      anim.u+=dt/anim.segDur;
+      var seg=anim.segs[anim.i];
+      if(seg){
+        var uu=Math.min(1,anim.u);
+        var e=uu<.5?2*uu*uu:1-Math.pow(-2*uu+2,2)/2;
+        var pt=seg.curve.getPoint(e);
+        anim.pulse.position.copy(pt);anim.glow.position.copy(pt);anim.light.position.copy(pt);
+        var pulseK=1+Math.sin(clk.elapsedTime*9)*.12;
+        anim.glow.scale.set(11*pulseK,11*pulseK,1);
+        seg.core.material.opacity=.1+.85*e;
+        seg.halo.material.opacity=.03+.22*e;
+        if(anim.els[anim.i]){anim.els[anim.i].classList.add('lit');
+          anim.els[anim.i].style.background=hex(anim.col);}
+        var lb0=anim.stops[anim.i].lab;if(lb0)lb0.el.classList.add('beam');
+        if(anim.narr!==anim.i){anim.narr=anim.i;
+          var line=(anim.cap.story||[])[anim.i];
+          if(line){storyEl.textContent=line;storyEl.classList.add('on');}}
+        if(anim.u>=1){
+          seg.core.material.opacity=.95;seg.halo.material.opacity=.25;
+          var arrive=anim.stops[anim.i+1];
+          ping(arrive.o);if(arrive.lab)arrive.lab.el.classList.add('beam');
+          anim.i++;anim.u=0;anim.hold=RM?.01:.42;
+          var nl=(anim.cap.story||[])[anim.i];
+          if(nl){anim.narr=anim.i;storyEl.textContent=nl;storyEl.classList.add('on');}
+          if(anim.i>=anim.segs.length){
+            var last=anim.els[anim.els.length-1];
+            last.classList.add('lit');
+            last.style.background=hex(anim.cap.no?C.stop:anim.col);
+            anim.hold=RM?.01:.7;
+          }
+        }
+      }
+    }
+  }
+  rend.render(scene,cam);
+}
+setLabelText();resize();place();loop();
+})();
+</script>
