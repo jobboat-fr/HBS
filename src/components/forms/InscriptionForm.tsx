@@ -2,11 +2,12 @@
 
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { CheckCircle2, ArrowRight, Loader2, Mail } from "lucide-react";
+import { CheckCircle2, ArrowRight, Loader2, Mail, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { Input, Textarea, Select, Label, FieldError } from "@/components/ui/Input";
 import { PositionnementQuiz } from "@/components/forms/PositionnementQuiz";
 import { Button } from "@/components/ui/Button";
+import { annonce, certificat } from "@/lib/site";
 
 /**
  * L'entrée du tunnel d'inscription.
@@ -69,6 +70,7 @@ export function InscriptionForm({
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<{
     full_name: string;
@@ -79,6 +81,12 @@ export function InscriptionForm({
     message?: string;
     consent: boolean;
   }>({ defaultValues: { program_id: defaultProgramId ?? "" } });
+
+  // « Je ne sais pas encore » est la valeur vide, et c'est aujourd'hui le cas de presque
+  // tout le monde : le catalogue public ne publie encore aucun programme, donc la liste
+  // déroulante ne propose que cette option. Plutôt que de laisser partir une demande sans
+  // objet, on oriente vers la formation qui ouvre — celle sur laquelle l'organisme est prêt.
+  const sansChoix = !watch("program_id");
 
   const onSubmit = handleSubmit(async (values, event) => {
     setServerError(null);
@@ -247,6 +255,50 @@ export function InscriptionForm({
             </option>
           ))}
         </Select>
+
+        {sansChoix && (
+          <div className="cadre-neon mt-4">
+            <div className="p-5">
+              <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-red-600">
+                <Sparkles size={15} aria-hidden /> Notre recommandation
+              </p>
+              <h3 className="mt-2 font-display text-lg font-bold text-ink">
+                Commencez par la Formation IA&nbsp;360
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-ink-soft">
+                Vous hésitez encore — c&apos;est le cas le plus fréquent, et c&apos;est une
+                bonne raison de commencer par là. En trois journées, l&apos;IA&nbsp;360 part de
+                votre activité réelle : vous repartez avec vos propres usages cartographiés, de
+                quoi décider ensuite ce qu&apos;il vous faut vraiment.
+              </p>
+              <ul className="mt-3 space-y-1.5 text-sm text-ink-soft">
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-red-500" />
+                  {certificat.nom} à la clé, épreuve finale notée
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-red-500" />
+                  Première session le {annonce.dateLisible}
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-red-500" />
+                  Aucun prérequis technique — particuliers comme entreprises
+                </li>
+              </ul>
+              <Link
+                href="/formations#ia-360"
+                className="mt-4 inline-flex items-center gap-2 rounded-full bg-red-600 px-5 py-2.5 text-sm font-bold text-white transition-colors hover:bg-red-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+              >
+                Découvrir le programme
+                <ArrowRight size={16} aria-hidden />
+              </Link>
+              <p className="mt-3 text-xs leading-relaxed text-ink-muted">
+                Vous pouvez aussi envoyer votre demande telle quelle : un conseiller vous
+                rappellera pour en parler.
+              </p>
+            </div>
+          </div>
+        )}
       </div>
 
       <div>

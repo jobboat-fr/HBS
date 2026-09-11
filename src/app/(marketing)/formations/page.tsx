@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { Check } from "lucide-react";
+import Link from "next/link";
+import { Check, ArrowRight } from "lucide-react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Reveal } from "@/components/ui/Reveal";
 import { Button } from "@/components/ui/Button";
 import { CTASection } from "@/components/sections/CTASection";
 import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
-import { formations, media, site } from "@/lib/site";
+import { formations, media, site, annonce, certificat } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Formations — IA 360, Certifiantes, Bilan de compétences, VAE",
@@ -39,8 +40,13 @@ export default function FormationsPage() {
             <Reveal key={f.slug}>
               <article
                 id={f.slug}
-                className="grid scroll-mt-28 overflow-hidden rounded-3xl border border-mist bg-white shadow-card md:grid-cols-2"
+                className={
+                  f.slug === "ia-360"
+                    ? "cadre-neon scroll-mt-28"
+                    : "grid scroll-mt-28 overflow-hidden rounded-3xl border border-mist bg-white shadow-card md:grid-cols-2"
+                }
               >
+              <div className={f.slug === "ia-360" ? "grid overflow-hidden md:grid-cols-2" : "contents"}>
                 <div className={`relative min-h-[240px] ${i % 2 === 1 ? "md:order-2" : ""}`}>
                   <Image
                     src={media.formationImages[f.slug]}
@@ -64,12 +70,35 @@ export default function FormationsPage() {
                       </li>
                     ))}
                   </ul>
-                  <div className="mt-8">
-                    <Button href="/contact" size="sm">
-                      Demander des informations
-                    </Button>
+                  <div className="mt-8 flex flex-wrap items-center gap-3">
+                    {f.slug === "ia-360" ? (
+                      <>
+                        <Link
+                          href="/preinscription"
+                          className="inline-flex items-center gap-2 rounded-full bg-red-600 px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-red-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                        >
+                          Réserver ma place — session du {annonce.dateLisible}
+                          <ArrowRight size={17} aria-hidden />
+                        </Link>
+                        <Button href="/contact" size="sm" variant="outline">
+                          Poser une question
+                        </Button>
+                      </>
+                    ) : (
+                      <Button href="/contact" size="sm">
+                        Demander des informations
+                      </Button>
+                    )}
                   </div>
+
+                  {f.slug === "ia-360" && (
+                    <p className="mt-6 border-t border-mist pt-4 text-xs leading-relaxed text-ink-muted">
+                      <strong className="text-ink-soft">{certificat.nom}</strong> — {certificat.obtention}.{" "}
+                      {certificat.precision}
+                    </p>
+                  )}
                 </div>
+              </div>
               </article>
             </Reveal>
           ))}

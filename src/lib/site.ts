@@ -57,6 +57,33 @@ export const navLinks = [
  * visiteur et elle engage l'organisme. `iso` sert au balisage et au tri ; il n'y a qu'une
  * seule source pour les deux afin qu'elles ne puissent pas diverger.
  */
+/**
+ * Le titre remis à l'issue de la Formation IA 360.
+ *
+ * **Ce n'est pas un diplôme, et le mot ne doit pas être employé.** Un diplôme est délivré
+ * au nom de l'État par un établissement habilité. HBS FORMATION est un organisme de
+ * formation déclaré — l'enregistrement de sa déclaration d'activité « ne vaut pas agrément
+ * de l'État » — et ne détient aucune certification enregistrée au RNCP ou au répertoire
+ * spécifique.
+ *
+ * Ce que l'organisme peut délivrer, et qui a une valeur réelle : un **certificat qui lui est
+ * propre**, adossé à une épreuve notée et à des livrables datés. C'est licite, c'est
+ * vérifiable, et c'est défendable devant un auditeur. Le présenter comme un diplôme ne
+ * l'améliorerait pas — cela le rendrait attaquable, et un candidat qui découvre la nuance
+ * en entretien d'embauche se retourne contre l'organisme, pas contre le formateur.
+ */
+export const certificat = {
+  nom: "Certificat IA 360",
+  emetteur: "HBS FORMATION",
+  mention: "Certificat délivré par l'organisme",
+  // Ce qui rend le certificat sérieux, et qu'il faut dire à sa place.
+  obtention: "Épreuve finale de 1 h 30, notée sur 20, seuil de réussite à 12",
+  preuve: "Remis avec les livrables datés produits pendant la formation",
+  // La phrase qui accompagne le certificat partout où il est affiché.
+  precision:
+    "Certificat propre à HBS FORMATION. Il n'est pas enregistré au RNCP ni au répertoire spécifique, et ne constitue pas un diplôme d'État.",
+} as const;
+
 export const annonce = {
   actif: true,
   iso: "2026-10-26",
@@ -77,9 +104,11 @@ export const formations = [
     description:
       "Trois journées pour comprendre ce que fait réellement l'IA, produire un travail fiable sur ses propres documents, et repartir avec le dossier IA de son activité : registre des risques, règles d'usage, feuille de route chiffrée. Ouverte aux particuliers comme aux entreprises.",
     features: [
+      "Certificat IA 360 délivré par HBS FORMATION",
       "Première session le 26 octobre 2026",
       "21 h — 3 journées de 7 h, 6 ateliers",
       "Particuliers, indépendants et entreprises",
+      "Épreuve finale notée — seuil 12/20",
       "Chaque journée produit un livrable daté",
     ],
   },

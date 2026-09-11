@@ -84,3 +84,76 @@
     background-size: 100% 0.35em;
   }
 }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Le cadre néon de la Formation IA 360.
+   
+   Un dégradé conique tourne autour de la carte. L'angle est animé via
+   `@property` : sans lui, un navigateur ne sait pas interpoler un angle dans un
+   `conic-gradient` et l'animation ne démarre pas. Là où `@property` manque, le
+   dégradé s'affiche quand même — fixe plutôt qu'absent, ce qui est la bonne
+   dégradation.
+   
+   Le rouge domine la roue (il y revient deux fois) pour que la carte se lise
+   comme « rouge » au repos et non comme un arc-en-ciel.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+@property --angle-neon {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes tourne-neon {
+  to {
+    --angle-neon: 360deg;
+  }
+}
+
+@keyframes pulse-neon {
+  0%, 100% { box-shadow: 0 0 18px -4px rgba(255, 45, 45, 0.55); }
+  50%      { box-shadow: 0 0 32px -2px rgba(255, 45, 45, 0.85); }
+}
+
+@layer utilities {
+  .cadre-neon {
+    position: relative;
+    padding: 2.5px;
+    border-radius: 1.15rem;
+    background: conic-gradient(
+      from var(--angle-neon),
+      #FF1E1E, #FF6A00, #FF1E5A, #C026D3, #1D3FAE, #FF1E1E
+    );
+    animation: tourne-neon 6s linear infinite, pulse-neon 3.2s ease-in-out infinite;
+  }
+
+  /* Le halo diffus, posé derrière la carte. `filter: blur` sur une copie du
+     dégradé donne la lueur sans toucher au contenu, qui reste net. */
+  .cadre-neon::before {
+    content: "";
+    position: absolute;
+    inset: -5px;
+    z-index: -1;
+    border-radius: inherit;
+    background: inherit;
+    filter: blur(16px);
+    opacity: 0.5;
+  }
+
+  .cadre-neon > * {
+    border-radius: 1rem;
+    background: #fff;
+  }
+
+  /* Un cadre qui clignote en permanence derrière un texte est une gêne réelle
+     pour une partie des lecteurs. Sans mouvement : le rouge reste, la rotation
+     et la pulsation s'arrêtent. */
+  @media (prefers-reduced-motion: reduce) {
+    .cadre-neon {
+      animation: none;
+      background: linear-gradient(135deg, #FF1E1E, #C026D3);
+      box-shadow: 0 0 18px -6px rgba(255, 45, 45, 0.6);
+    }
+    .cadre-neon::before { display: none; }
+  }
+}
