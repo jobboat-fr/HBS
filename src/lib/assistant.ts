@@ -17,7 +17,7 @@ export function suggestLink(input: string): AssistantLink | undefined {
   if (has("programme", "atelier", "journee", "contenu")) return { label: "Voir le programme", href: "/formations#programme" };
   if (has("outil", "agent", "automatis", "emploi", "secretari", "reunion")) return { label: "Les outils inclus", href: "/formations" };
   if (has("entreprise", "equipe", "salarie", "intra")) return { label: "Offre entreprises", href: "/entreprises" };
-  if (has("inscri", "reserv", "place", "session")) return { label: "Réserver ma place", href: "/preinscription" };
+  if (has("inscri", "reserv", "place", "session")) return { label: "Réserver ma place", href: "/reserver" };
   if (has("contact", "conseiller", "rdv", "rendez", "parler")) return { label: "Nous contacter", href: "/contact" };
   return { label: "Formation IA 360", href: "/formations" };
 }
@@ -34,7 +34,7 @@ export function localAnswer(input: string): AssistantReply {
   if (has("outil", "agent", "automatis", "emploi", "secretari", "reunion", "inclus"))
     return { text: faq("outils"), links: [{ label: "Les outils inclus", href: "/formations" }] };
   if (has("quand", "date", "session", "octobre", "commence", "demarre"))
-    return { text: faq("prochaine-session"), links: [{ label: "Réserver ma place", href: "/preinscription" }] };
+    return { text: faq("prochaine-session"), links: [{ label: "Réserver ma place", href: "/reserver" }] };
   if (has("prerequis", "niveau", "technique", "debutant", "connaissance"))
     return { text: faq("prerequis"), links: [{ label: "Voir le programme", href: "/formations#programme" }] };
   if (has("distance", "ligne", "visio", "presentiel", "lieu"))

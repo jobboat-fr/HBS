@@ -56,7 +56,7 @@ export function ServicesSection() {
                 <p className="mt-4 text-xs text-white/50">{certificat.nom} délivré par HBS FORMATION.</p>
               </div>
               <div className="relative flex flex-col gap-3">
-                <Link href="/preinscription" className="bouton-neon inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 font-bold">
+                <Link href="/reserver" className="bouton-neon inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 font-bold">
                   Réserver ma place <ArrowRight size={18} aria-hidden />
                 </Link>
                 <Link href="/formations#programme" className="verre inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-semibold text-white hover:bg-white/10">

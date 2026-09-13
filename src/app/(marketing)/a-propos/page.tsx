@@ -8,9 +8,10 @@ import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 import { legal, site, media } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "À propos",
+  title: "À propos — organisme de formation IA à Rouen",
   description:
     "HBS FORMATION, organisme de formation à Rouen spécialisé dans l'intelligence artificielle : rendre l'IA utile, fiable et maîtrisée pour les entreprises et les particuliers.",
+  alternates: { canonical: "/a-propos" },
 };
 
 const values = [

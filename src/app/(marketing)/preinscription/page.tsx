@@ -22,6 +22,7 @@ export const metadata: Metadata = {
   title: "Demander une place",
   description:
     "Demandez une place en formation chez HBS FORMATION : un test de positionnement établit votre niveau, puis l'organisme confirme votre inscription.",
+  alternates: { canonical: "/preinscription" },
 };
 
 export const revalidate = 300;

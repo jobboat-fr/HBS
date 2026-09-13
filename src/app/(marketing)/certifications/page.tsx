@@ -16,6 +16,7 @@ export const metadata: Metadata = {
   title: "Parcours certifiants — bientôt disponibles",
   description: "Les parcours certifiants de HBS FORMATION arrivent bientôt. Aujourd'hui, découvrez la Formation IA 360.",
   robots: { index: false },
+  alternates: { canonical: "/certifications" },
 };
 
 export default function CertificationsPage() {

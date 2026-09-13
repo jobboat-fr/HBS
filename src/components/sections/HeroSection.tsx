@@ -49,7 +49,7 @@ export function HeroSection() {
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
             <Link
-              href="/preinscription"
+              href="/reserver"
               className="bouton-neon inline-flex items-center justify-center gap-2 rounded-full px-7 py-4 text-base font-bold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
               Réserver ma place · {tarif.montant}

@@ -82,7 +82,10 @@ export function Footer() {
               {legal.capital} · RCS {legal.rcs} · Déclaration d&apos;activité n°{" "}
               {legal.numeroDeclarationActivite}
             </p>
-            <div className="flex gap-6">
+            <div className="flex flex-wrap gap-x-6 gap-y-2">
+              <Link href="/faq" className="hover:text-teal-400">FAQ</Link>
+              <Link href="/cgv" className="hover:text-teal-400">CGV</Link>
+              <Link href="/cgu" className="hover:text-teal-400">CGU</Link>
               <Link href="/mentions-legales" className="hover:text-teal-400">Mentions légales</Link>
               <Link href="/confidentialite" className="hover:text-teal-400">Confidentialité</Link>
             </div>

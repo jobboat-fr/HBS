@@ -34,7 +34,7 @@ export function CTASection() {
               <p className="text-xs font-semibold uppercase tracking-widest text-white/55">Formation IA 360</p>
               <p className="mt-1 font-display text-5xl font-extrabold text-white">{tarif.montant}</p>
               <p className="text-sm text-white/65">{tarif.unite} · formation et outils IA inclus</p>
-              <Link href="/preinscription" className="bouton-neon mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 font-bold">
+              <Link href="/reserver" className="bouton-neon mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 font-bold">
                 Réserver ma place <ArrowRight size={18} aria-hidden />
               </Link>
               <Link href="/contact" className="mt-3 block text-center text-sm font-semibold text-white/75 hover:text-white">

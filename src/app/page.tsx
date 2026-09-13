@@ -13,6 +13,8 @@ import { getTestimonials } from "@/lib/sanity/queries";
 
 export const revalidate = 60;
 
+export const metadata = { alternates: { canonical: "/" } };
+
 export default async function HomePage() {
   const testimonials = await getTestimonials();
 

@@ -8,9 +8,10 @@ import { ChampNeuronal } from "@/components/visuel/ChampNeuronal";
 import { site, tarif, outilsInclus, certificat, annonce } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Tarif — Formation IA 360 à 1 300 € par place",
+  title: "Tarif Formation IA — 1 300 € la place, OPCO et France Travail",
   description:
-    "Formation IA 360 : 1 300 € par place, 21 heures de formation en direct et outils IA inclus. Réglée par votre entreprise ou à titre personnel.",
+    "Formation IA 360 : 1 300 € par place, 21 heures en direct et outils IA inclus. Paiement en ligne entreprise ou particulier, prise en charge OPCO ou France Travail possible (organisme certifié Qualiopi).",
+  alternates: { canonical: "/financement" },
 };
 
 const inclus = [
@@ -65,7 +66,7 @@ export default function TarifPage() {
                     </li>
                   ))}
                 </ul>
-                <Link href="/preinscription" className="bouton-neon mt-9 inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-4 text-base font-bold">
+                <Link href="/reserver" className="bouton-neon mt-9 inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-4 text-base font-bold">
                   Réserver ma place <ArrowRight size={18} aria-hidden />
                 </Link>
               </div>

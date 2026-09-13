@@ -5,6 +5,7 @@ import { legal, site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Mentions légales",
   robots: { index: false },
+  alternates: { canonical: "/mentions-legales" },
 };
 
 export default function MentionsLegalesPage() {
@@ -20,7 +21,7 @@ export default function MentionsLegalesPage() {
             <p>RCS {legal.rcs} — SIREN {legal.siren}</p>
             <p>SIRET : {legal.siret} — Code NAF : {legal.naf}</p>
             <p>Identifiant européen (EUID) : {legal.euid}</p>
-            <p>Président : {legal.president}</p>
+            <p>Président et directeur de la publication : {legal.president}</p>
             <p>Email : {site.email}</p>
           </Block>
           <Block title="Activité de formation">
@@ -28,6 +29,7 @@ export default function MentionsLegalesPage() {
               Organisme de formation professionnelle. Déclaration d&apos;activité enregistrée sous le
               numéro {legal.numeroDeclarationActivite} auprès du {legal.declarationAutorite} (le{" "}
               {legal.declarationDate}). Cet enregistrement ne vaut pas agrément de l&apos;État.
+              Certification Qualiopi délivrée au titre de la catégorie d&apos;action : {legal.qualiopiCategorie}.
             </p>
           </Block>
           <Block title="Hébergement">

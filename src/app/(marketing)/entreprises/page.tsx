@@ -9,9 +9,10 @@ import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 import { media, site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Entreprises & Organisations",
+  title: "Formation IA entreprise — former vos équipes à l'IA, AI Act compris",
   description:
     "Formation IA 360 pour les entreprises : vos collaborateurs formés à l'intelligence artificielle sur vos propres processus, outils IA inclus dans chaque place. 1 300 € par place, en intra-entreprise possible.",
+  alternates: { canonical: "/entreprises" },
 };
 
 const offres = [

@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: "Contact",
   description:
     "Contactez HBS FORMATION à Rouen : une question sur la Formation IA 360, une réservation pour votre entreprise ou pour vous-même. Réponse sous 48 heures ouvrées.",
+  alternates: { canonical: "/contact" },
 };
 
 export default function ContactPage() {

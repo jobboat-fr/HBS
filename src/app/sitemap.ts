@@ -1,6 +1,11 @@
 import { MetadataRoute } from "next";
 import { site } from "@/lib/site";
 
+/**
+ * Seules les pages indexables. `/certifications` est en `noindex` (offre à venir) : la mettre
+ * au sitemap envoie à Google un signal contradictoire. `/realisations` n'y figure pas tant
+ * qu'elle est vide.
+ */
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = site.url;
   const now = new Date();
@@ -12,13 +17,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [
     page("", 1, "weekly"),
-    page("/formations", 0.9),
-    page("/certifications", 0.9),
-    page("/financement", 0.8),
-    page("/entreprises", 0.8),
-    page("/realisations", 0.7, "weekly"),
+    page("/formations", 1, "weekly"),
+    page("/reserver", 0.95, "weekly"),
+    page("/financement", 0.9),
+    page("/entreprises", 0.85),
+    page("/formation-ia-ai-act", 0.8),
+    page("/formation-ia-rouen", 0.8),
+    page("/faq", 0.8),
+    page("/preinscription", 0.7, "weekly"),
     page("/a-propos", 0.6),
-    page("/preinscription", 0.9, "weekly"),
-    page("/contact", 0.9, "yearly"),
+    page("/contact", 0.6, "yearly"),
+    page("/cgv", 0.3, "yearly"),
+    page("/cgu", 0.2, "yearly"),
   ];
 }

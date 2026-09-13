@@ -54,13 +54,15 @@ export function Header() {
       <nav className="mx-auto flex h-[72px] w-full max-w-[1440px] items-center justify-between gap-4 px-5 sm:px-8 lg:px-12">
         <Logo />
 
-        <ul className="hidden items-center gap-7 lg:flex">
+        <ul className="hidden items-center gap-5 lg:flex xl:gap-7">
           {navLinks.map((link) => (
-            <li key={link.href}>
+            // « Programme » pointe dans la page Formation : on le retire entre lg et xl pour
+            // que le menu et le bouton de réservation tiennent sur une ligne.
+            <li key={link.href} className={link.href.includes("#") ? "hidden xl:block" : undefined}>
               <Link
                 href={link.href}
                 className={cn(
-                  "text-[15px] font-medium transition-colors",
+                  "whitespace-nowrap text-[15px] font-medium transition-colors",
                   isActive(link.href) ? "text-teal-600" : "text-ink-soft hover:text-teal-600",
                 )}
               >
@@ -77,10 +79,10 @@ export function Header() {
               sur chaque page. */}
           {/* "Se connecter" désactivé temporairement — remplacé par l'entrée du tunnel d'inscription. */}
           <Link
-            href="/preinscription"
-            className="inline-flex items-center gap-1.5 text-[15px] font-medium text-ink-soft hover:text-teal-600"
+            href="/reserver"
+            className="bouton-neon inline-flex min-h-[40px] items-center gap-1.5 whitespace-nowrap rounded-full px-4 text-[15px] font-bold"
           >
-            <ClipboardList size={17} /> Demander une place
+            <ClipboardList size={17} /> Réserver ma place
           </Link>
         </div>
 
@@ -121,11 +123,11 @@ export function Header() {
                 <p className="text-center text-sm font-semibold text-ink-soft">
                   Prêt·e à passer à l&apos;étape suivante ?
                 </p>
-                <Button href="/preinscription" variant="outline" onClick={() => setOpen(false)}>
-                  Demander une place
+                <Button href="/reserver" onClick={() => setOpen(false)}>
+                  Réserver ma place · 1 300 €
                 </Button>
-                <Button href="/contact" onClick={() => setOpen(false)}>
-                  Trouver ma formation
+                <Button href="/faq" variant="outline" onClick={() => setOpen(false)}>
+                  Questions fréquentes
                 </Button>
               </div>
             </div>

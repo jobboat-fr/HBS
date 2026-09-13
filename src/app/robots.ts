@@ -1,7 +1,7 @@
 import { MetadataRoute } from "next";
 import { site } from "@/lib/site";
 
-const PRIVATE_PATHS = ["/espace-client/", "/studio/", "/api/", "/connexion", "/inscription"];
+const PRIVATE_PATHS = ["/espace-client/", "/studio/", "/api/", "/connexion", "/inscription", "/reserver/merci", "/reserver/retractation", "/positionnement/"];
 
 // Crawlers derrière les moteurs de réponse IA (ChatGPT, Perplexity, Google AI Overviews,
 // Claude...) — explicitement autorisés en plus du user-agent générique, pour la visibilité

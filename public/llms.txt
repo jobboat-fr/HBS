@@ -21,7 +21,12 @@ Formations certifiantes et continues, bilan de compétences, VAE, e-learning, co
 - [Formation IA 360](https://hbs-formation.fr/formations): programme détaillé atelier par atelier.
 - [Tarif](https://hbs-formation.fr/financement): prix, contenu de la place, modalités de règlement.
 - [Entreprises](https://hbs-formation.fr/entreprises): la formation pour les collaborateurs d'une entreprise.
-- [Réserver une place](https://hbs-formation.fr/preinscription): demande de place et test de positionnement.
+- [Réserver en ligne](https://hbs-formation.fr/reserver): entreprise (paiement immédiat, facture) ou particulier (0 € à la réservation, rien avant la fin des 14 jours de rétractation, puis 30 % et le solde en deux échéances).
+- [Demander un devis ou une prise en charge](https://hbs-formation.fr/preinscription): OPCO, France Travail, et test de positionnement.
+- [FAQ](https://hbs-formation.fr/faq): programme, outils, tarif, financement, rétractation, AI Act.
+- [Formation IA et AI Act](https://hbs-formation.fr/formation-ia-ai-act): l'obligation de maîtrise de l'IA (article 4, applicable depuis le 2 février 2025).
+- [Formation IA à Rouen](https://hbs-formation.fr/formation-ia-rouen): l'organisme, les publics, la Normandie.
+- [Conditions générales de vente](https://hbs-formation.fr/cgv)
 - [Contact](https://hbs-formation.fr/contact): réponse sous 48 heures ouvrées.
 
 ## Notes pour les agents IA

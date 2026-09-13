@@ -5,14 +5,15 @@ import { Reveal } from "@/components/ui/Reveal";
 import { CTASection } from "@/components/sections/CTASection";
 import { OutilsSection } from "@/components/sections/OutilsSection";
 import { TEINTE_DC } from "@/lib/teintes";
-import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
+import { BreadcrumbJsonLd, CourseJsonLd } from "@/components/seo/JsonLd";
 import { ChampNeuronal } from "@/components/visuel/ChampNeuronal";
 import { formations, programme, tarif, annonce, certificat, site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Formation IA 360 — programme, ateliers et tarif",
+  title: "Formation IA 360 — formation intelligence artificielle en ligne, outils IA inclus",
   description:
     "Formation IA 360 : 21 heures, 6 ateliers pratiques, outils IA inclus (agents, automatisations, recherche d'emploi, secrétariat, assistant de réunion). 1 300 € par place. Programme détaillé atelier par atelier.",
+  alternates: { canonical: "/formations" },
 };
 
 export default function FormationsPage() {
@@ -21,6 +22,7 @@ export default function FormationsPage() {
 
   return (
     <>
+      <CourseJsonLd />
       <BreadcrumbJsonLd
         items={[
           { name: "Accueil", url: site.url },
@@ -50,7 +52,7 @@ export default function FormationsPage() {
                 <p className="text-xs font-semibold uppercase tracking-widest text-white/55">Votre place</p>
                 <p className="mt-1 font-display text-6xl font-extrabold text-white">{tarif.montant}</p>
                 <p className="text-sm text-white/65">{tarif.resume}</p>
-                <Link href="/preinscription" className="bouton-neon mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 font-bold">
+                <Link href="/reserver" className="bouton-neon mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 font-bold">
                   Réserver ma place <ArrowRight size={18} aria-hidden />
                 </Link>
                 <p className="mt-3 text-center text-xs text-white/50">Test de positionnement inclus · réponse sous 48 h</p>

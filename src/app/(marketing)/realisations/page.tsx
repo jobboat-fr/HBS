@@ -13,6 +13,7 @@ export const metadata: Metadata = {
   title: "Réalisations",
   description:
     "Découvrez les parcours de formation et dispositifs déployés par HBS FORMATION pour les entreprises et les apprenants.",
+  alternates: { canonical: "/realisations" },
 };
 
 export const revalidate = 60;

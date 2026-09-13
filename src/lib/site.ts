@@ -40,6 +40,9 @@ export const legal = {
   // compétences, pas la VAE, pas l'apprentissage. Toute mention doit citer la catégorie.
   qualiopi: true,
   qualiopiCategorie: "actions de formation",
+  // Médiateur de la consommation (L612-1 C. conso) — obligatoire pour vendre aux particuliers.
+  // À renseigner dès l'adhésion : « Nom — adresse — site ».
+  mediateur: null as string | null,
 };
 
 export const navLinks = [
@@ -85,7 +88,7 @@ export const annonce = {
   titre: "Formation IA 360",
   // « Prochaine » et jamais « première » : l'organisme ne se présente pas comme débutant.
   texte: "Prochaine session le 26 octobre 2026 — inscriptions ouvertes.",
-  href: "/formations",
+  href: "/reserver",
   lienLabel: "Réserver ma place",
 } as const;
 

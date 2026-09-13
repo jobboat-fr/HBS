@@ -33,11 +33,25 @@ export const metadata: Metadata = {
     "formation intelligence artificielle",
     "formation IA",
     "formation IA entreprise",
-    "agents IA",
-    "automatisation IA",
-    "IA générative formation",
+    "formation IA en ligne",
+    "formation IA à distance",
+    "formation IA Rouen",
+    "formation IA Normandie",
+    "formation IA générative",
+    "formation ChatGPT",
+    "formation agents IA",
+    "formation automatisation IA",
+    "formation prompt",
+    "formation AI Act",
+    "obligation formation IA article 4",
+    "maîtrise de l'IA salariés",
+    "formation IA OPCO",
+    "formation IA France Travail",
+    "formation IA demandeur d'emploi",
+    "formation IA Qualiopi",
+    "formation IA particulier",
     "organisme de formation Rouen",
-    "formation professionnelle",
+    "formation professionnelle IA",
     "CPF",
   ],
   openGraph: {
@@ -54,7 +68,18 @@ export const metadata: Metadata = {
     follow: true,
     googleBot: { index: true, follow: true, "max-image-preview": "large" },
   },
-  alternates: { canonical: site.url },
+  // Pas de `alternates.canonical` ici : hérité par toutes les pages, il désignait l'accueil
+  // comme version canonique de chacune — Google les traitait comme des doublons de « / ».
+  // Chaque page déclare la sienne.
+  ...(process.env.GOOGLE_SITE_VERIFICATION || process.env.BING_SITE_VERIFICATION
+    ? {
+        verification: {
+          google: process.env.GOOGLE_SITE_VERIFICATION,
+          other: process.env.BING_SITE_VERIFICATION ? { "msvalidate.01": process.env.BING_SITE_VERIFICATION } : undefined,
+        },
+      }
+    : {}),
+  category: "education",
 };
 
 export default function RootLayout({

@@ -38,7 +38,7 @@ export type InscriptionPayload = {
 };
 
 /** Neutralise le HTML d'une valeur saisie par un visiteur. */
-function esc(v: unknown): string {
+export function esc(v: unknown): string {
   return String(v ?? "")
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
@@ -175,4 +175,90 @@ export function buildInscriptionConfirmation(d: InscriptionPayload) {
     }
     ${para("À très bientôt,<br />L'équipe " + esc(site.name))}
   `);
+}
+
+// ─────────────────────────────────────────────────────────── commandes en ligne
+
+export type CommandeMail = {
+  profil: "entreprise" | "particulier";
+  nom?: string | null;
+  email?: string | null;
+  raisonSociale?: string | null;
+  telephone?: string | null;
+  quantite: number;
+  montant: string;
+  session: string;
+  positionnement?: string | null;
+  retractation?: { lien: string; fin: string } | null;
+  echeances?: { date: string; montant: string }[];
+  facture?: string | null;
+};
+
+export function buildCommandeClient(d: CommandeMail) {
+  const etapes = d.profil === "entreprise"
+    ? `${para(`Votre paiement de <strong>${esc(d.montant)}</strong> pour ${d.quantite} place${d.quantite > 1 ? "s" : ""} à la Formation IA 360 (${esc(d.session)}) est confirmé.`)}
+       ${d.facture ? bouton(d.facture, "Télécharger la facture") : para("Votre facture vous parvient par un courriel séparé.")}
+       ${para("<strong>Prochaines étapes :</strong> nous vous adressons la convention de formation à signer, puis vous nous communiquez le nom des participants au plus tard 7 jours avant la session. Chaque participant passe un court test de positionnement.")}`
+    : `${para(`Votre place à la Formation IA 360 (${esc(d.session)}) est réservée. Votre carte est enregistrée : <strong>rien n'a été prélevé</strong>.`)}
+       ${d.echeances?.length ? `<p style="margin:16px 0 6px;color:${ENCRE}"><strong style="color:${MARINE}">Votre échéancier (${esc(d.montant)} au total)</strong></p>
+         ${d.echeances.map((e) => `<p style="margin:4px 0;color:${DOUX}">${esc(e.date)} — ${esc(e.montant)}</p>`).join("")}
+         ${para("Vous recevez un rappel quelques jours avant chaque prélèvement.")}` : ""}
+       ${d.retractation ? para(`Vous pouvez vous rétracter sans motif ni frais jusqu'au <strong>${esc(d.retractation.fin)}</strong> :`) + bouton(d.retractation.lien, "Me rétracter") : ""}
+       ${para("Votre contrat de formation vous est adressé avant le début de la session.")}`;
+  return wrap(`
+    ${titre("Votre réservation est confirmée")}
+    ${para(`Bonjour${d.nom ? " " + esc(d.nom) : ""},`)}
+    ${etapes}
+    ${d.positionnement ? para("Dernière étape avant la session : le test de positionnement, environ 20 minutes. Il nous permet d'adapter les ateliers à votre niveau et à votre cas réel.") + bouton(d.positionnement, "Faire le test de positionnement") : ""}
+    ${para(`Une question ? Répondez simplement à ce courriel.<br />L'équipe ${esc(site.name)}`)}
+  `);
+}
+
+export function buildCommandeOrganisme(d: CommandeMail) {
+  return wrap(`
+    ${titre(`Nouvelle commande en ligne — ${d.profil === "entreprise" ? "entreprise" : "particulier"}`)}
+    ${ligne("Client", d.raisonSociale ? `${d.raisonSociale} (${d.nom ?? ""})` : d.nom)}
+    ${ligne("Email", d.email)}
+    ${ligne("Téléphone", d.telephone)}
+    ${ligne("Places", String(d.quantite))}
+    ${ligne("Montant", d.montant)}
+    ${ligne("Session", d.session)}
+    ${d.profil === "particulier"
+      ? para(`Carte enregistrée, aucun prélèvement avant la fin de la rétractation (${esc(d.retractation?.fin ?? "")}). Échéances : ${esc((d.echeances ?? []).map((e) => `${e.date} ${e.montant}`).join(" · "))}.`) +
+        para("À faire : adresser le contrat de formation (L6353-3).")
+      : para("Paiement encaissé. À faire : adresser la convention de formation et demander le nom des participants.")}
+    ${para(d.positionnement ? "Un test de positionnement a été créé et envoyé." : "Aucun test de positionnement n'a pu être créé : à envoyer depuis la plateforme.")}
+  `);
+}
+
+export function buildRappelEcheance(d: { nom?: string | null; montant: string; date: string; rang: number }) {
+  return wrap(`
+    ${titre("Rappel : prochaine échéance")}
+    ${para(`Bonjour${d.nom ? " " + esc(d.nom) : ""},`)}
+    ${para(`L'échéance n° ${d.rang} de votre Formation IA 360, d'un montant de <strong>${esc(d.montant)}</strong>, sera prélevée le <strong>${esc(d.date)}</strong> sur la carte enregistrée lors de votre réservation.`)}
+    ${para("Rien à faire de votre côté. Si votre carte a changé, répondez à ce courriel avant cette date.")}
+  `);
+}
+
+export function buildEcheanceEchec(d: { nom?: string | null; montant: string; rang: number; lien: string }) {
+  return wrap(`
+    ${titre("Votre échéance n'a pas pu être prélevée")}
+    ${para(`Bonjour${d.nom ? " " + esc(d.nom) : ""},`)}
+    ${para(`Le prélèvement de l'échéance n° ${d.rang} (${esc(d.montant)}) de votre Formation IA 360 n'a pas abouti — votre banque a peut-être demandé une confirmation. Vous pouvez la régler en ligne en une minute :`)}
+    ${bouton(d.lien, "Régler l'échéance")}
+    ${para("Sans régularisation sous 8 jours, l'accès à la formation peut être suspendu, conformément à nos conditions générales de vente.")}
+  `);
+}
+
+export function buildRetractationConfirmee(d: { nom?: string | null }) {
+  return wrap(`
+    ${titre("Votre rétractation est enregistrée")}
+    ${para(`Bonjour${d.nom ? " " + esc(d.nom) : ""},`)}
+    ${para("Votre rétractation à la Formation IA 360 est bien prise en compte. Aucune somme n'a été prélevée et aucun prélèvement ne le sera. Votre carte n'est plus utilisée pour cette commande.")}
+    ${para(`Si vous changez d'avis, vous pouvez réserver à nouveau à tout moment.<br />L'équipe ${esc(site.name)}`)}
+  `);
+}
+
+export function buildAlerteOrganisme(titreTexte: string, lignes: (string | null | undefined)[]) {
+  return wrap(`${titre(titreTexte)}${lignes.filter(Boolean).map((l) => para(esc(l))).join("")}`);
 }
