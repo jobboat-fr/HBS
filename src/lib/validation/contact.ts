@@ -7,7 +7,7 @@ export const contactSchema = z.object({
   company: z.string().max(120).optional().or(z.literal("")),
   formation: z.string().max(120).optional().or(z.literal("")),
   financement: z
-    .enum(["entreprise", "personnel", "autre"])
+    .enum(["entreprise", "opco", "france_travail", "personnel", "autre"])
     .optional()
     .or(z.literal("")),
   message: z

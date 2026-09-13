@@ -88,6 +88,7 @@ export function Footer() {
             </div>
           </div>
           <p className="mt-3 text-[11px] text-white/35">
+            Certification Qualiopi délivrée au titre de la catégorie d&apos;action : {legal.qualiopiCategorie}.{" "}
             Enregistré sous le n° {legal.numeroDeclarationActivite} auprès du {legal.declarationAutorite}.
             Cet enregistrement ne vaut pas agrément de l&apos;État.
           </p>

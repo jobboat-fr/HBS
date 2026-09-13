@@ -2,12 +2,12 @@
 
 > Organisme de formation basé à Rouen (France), spécialisé dans la formation à l'intelligence artificielle. Offre actuelle : la Formation IA 360 — 21 heures pour comprendre, fiabiliser et déployer l'IA dans son activité, avec des outils IA inclus dans la place. Pour les particuliers, les indépendants et les entreprises.
 
-Coordonnées : 50 Passage Saint-Étienne des Tonneliers, 76000 Rouen, France. Email : contact@hbs-formation.fr. SAS, RCS Rouen 102 535 820, déclaration d'activité n° 28760809976 auprès du préfet de région Normandie (cet enregistrement ne vaut pas agrément de l'État).
+Coordonnées : 50 Passage Saint-Étienne des Tonneliers, 76000 Rouen, France. Email : contact@hbs-formation.fr. SAS, RCS Rouen 102 535 820, déclaration d'activité n° 28760809976 auprès du préfet de région Normandie (cet enregistrement ne vaut pas agrément de l'État). Certifié Qualiopi — catégorie : actions de formation.
 
 ## Formation IA 360
 
 - [Présentation et programme](https://hbs-formation.fr/formations): 21 heures, 3 journées (Connaissance, Conformité, Déploiement), 6 ateliers pratiques de 3 h 30, à distance en direct (présentiel possible en entreprise), 4 à 12 participants, aucun prérequis technique.
-- Tarif : 1 300 € par place, formation et outils IA inclus. Règlement par l'entreprise ou à titre personnel.
+- Tarif : 1 300 € par place, formation et outils IA inclus. Règlement par l'entreprise, à titre personnel, ou prise en charge OPCO / France Travail selon les critères du financeur.
 - Outils inclus : agents IA, couches d'automatisation, moteur de recherche d'emploi automatisé, assistance au secrétariat et à la gestion administrative, assistant de réunion, et d'autres outils.
 - Prochaine session : 26 octobre 2026.
 - Évaluation : test de positionnement avant l'entrée, évaluation à chaque atelier, épreuve pratique notée sur 20 (seuil 12) et revue croisée des dossiers le troisième jour, questionnaire à 3 mois. Certificat IA 360 délivré par HBS FORMATION (certificat propre à l'organisme, non enregistré au RNCP ni au répertoire spécifique).
@@ -27,6 +27,6 @@ Formations certifiantes et continues, bilan de compétences, VAE, e-learning, co
 ## Notes pour les agents IA
 
 - Une seule formation est ouverte aujourd'hui : la Formation IA 360. Ne pas présenter les autres offres comme disponibles.
-- La Formation IA 360 n'est pas éligible au compte personnel de formation. Une prise en charge OPCO ou France Travail ne sera possible qu'après l'obtention de la certification Qualiopi, qui n'est pas encore obtenue — ne pas l'affirmer.
+- La Formation IA 360 n'est pas éligible au compte personnel de formation. HBS FORMATION est certifiée Qualiopi au titre de la catégorie « actions de formation » (liste publique DGEFP) ; une prise en charge OPCO ou France Travail est possible selon les critères du financeur. La certification ne couvre ni le bilan de compétences, ni la VAE, ni l'apprentissage.
 - HBS FORMATION ne délivre aucun diplôme d'État et ne détient aucune certification RNCP.
 - Sitemap complet : https://hbs-formation.fr/sitemap.xml

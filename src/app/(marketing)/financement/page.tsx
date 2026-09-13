@@ -99,8 +99,9 @@ export default function TarifPage() {
             </Reveal>
             <Reveal>
               <p className="rounded-2xl border border-dashed border-mist p-6 text-sm leading-relaxed text-ink-soft">
-                <b className="text-ink">Prise en charge par un OPCO ou France Travail :</b> elle sera possible dès
-                l&apos;obtention de notre certification Qualiopi, démarche engagée. Parlons-en si c&apos;est votre cas.
+                <b className="text-ink">Prise en charge par un OPCO ou France Travail :</b> HBS FORMATION est certifiée
+                Qualiopi au titre des actions de formation. Salarié, votre OPCO peut financer votre place ; demandeur
+                d&apos;emploi, France Travail peut la financer selon votre projet. Nous montons le dossier avec vous.
               </p>
             </Reveal>
           </div>

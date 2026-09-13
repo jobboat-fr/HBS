@@ -35,7 +35,11 @@ export const legal = {
   numeroDeclarationActivite: "28760809976",
   declarationAutorite: "préfet de la région Normandie",
   declarationDate: "16 avril 2026",
-  qualiopi: false, // passer à true une fois la certification Qualiopi obtenue
+  // Vérifié sur la liste publique des organismes de formation (DGEFP), 14/09/2026 :
+  // certifié pour la seule catégorie « actions de formation » — pas le bilan de
+  // compétences, pas la VAE, pas l'apprentissage. Toute mention doit citer la catégorie.
+  qualiopi: true,
+  qualiopiCategorie: "actions de formation",
 };
 
 export const navLinks = [
@@ -263,6 +267,8 @@ export const stats = [
 /** Modes de financement mobilisables (formulaire de contact). */
 export const financements = [
   { value: "entreprise", label: "Mon entreprise finance ma place" },
+  { value: "opco", label: "OPCO (via mon employeur)" },
+  { value: "france_travail", label: "France Travail (demandeur d'emploi)" },
   { value: "personnel", label: "Je finance ma place" },
   { value: "autre", label: "Autre / je ne sais pas encore" },
 ] as const;
@@ -290,7 +296,7 @@ export const faqs = [
   {
     id: "tarif",
     q: "Combien coûte la formation ?",
-    a: "1 300 € par place, formation de 21 heures et outils IA inclus. La place peut être réglée par votre entreprise ou à titre personnel.",
+    a: "1 300 € par place, formation de 21 heures et outils IA inclus. La place peut être réglée par votre entreprise, à titre personnel, ou prise en charge par un OPCO ou France Travail selon les critères du financeur : HBS FORMATION est certifiée Qualiopi au titre des actions de formation.",
   },
   {
     id: "prochaine-session",

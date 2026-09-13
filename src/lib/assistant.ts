@@ -28,7 +28,7 @@ export function localAnswer(input: string): AssistantReply {
   const has = (...k: string[]) => k.some((w) => t.includes(w));
 
   if (has("cpf", "compte personnel"))
-    return { text: "La Formation IA 360 n'est pas finançable par ce dispositif. Elle se règle par votre entreprise ou à titre personnel : 1 300 € par place, outils IA inclus.", links: [{ label: "Voir le tarif", href: "/financement" }] };
+    return { text: "La Formation IA 360 n'est pas finançable par ce dispositif. Elle se règle par votre entreprise, à titre personnel, ou via un OPCO ou France Travail : 1 300 € par place, outils IA inclus.", links: [{ label: "Voir le tarif", href: "/financement" }] };
   if (has("prix", "cout", "tarif", "combien", "financ", "payer", "opco", "france travail"))
     return { text: faq("tarif"), links: [{ label: "Voir le tarif", href: "/financement" }] };
   if (has("outil", "agent", "automatis", "emploi", "secretari", "reunion", "inclus"))
