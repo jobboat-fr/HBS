@@ -5,6 +5,8 @@ import { contactSchema } from "@/lib/validation/contact";
 import { buildNotificationEmail, buildConfirmationEmail } from "@/lib/email/templates";
 import { log, errMsg } from "@/lib/log";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/rateLimit";
+import { site } from "@/lib/site";
+import { domaineRecoitDuCourrier } from "@/lib/email/mx";
 
 // En dessous de ce délai entre le rendu du formulaire et sa soumission, on considère que
 // c'est un script (un humain ne remplit jamais un formulaire de contact en < 2s).
@@ -29,6 +31,13 @@ export async function POST(request: NextRequest) {
     }
 
     const data = contactSchema.parse(body);
+
+    if (!(await domaineRecoitDuCourrier(data.email))) {
+      return NextResponse.json(
+        { error: "Cette adresse e-mail ne peut pas recevoir de courrier. Vérifiez-la." },
+        { status: 400 },
+      );
+    }
 
     const financement = data.financement ? data.financement : null;
     const ip =
@@ -75,9 +84,10 @@ export async function POST(request: NextRequest) {
       const { Resend } = await import("resend");
       const resend = new Resend(resendKey);
       const from = process.env.CONTACT_FROM || "HBS FORMATION <contact@vtlvs.com>";
-      const notifyTo = process.env.CONTACT_NOTIFY_TO
-        ? process.env.CONTACT_NOTIFY_TO.split(",").map((addr) => addr.trim()).filter(Boolean)
-        : [data.email];
+      // Sans destinataire configuré, la notification *interne* — avec le message et les
+      // coordonnées — partait au visiteur lui-même. Adresse de repli : celle du site.
+      const notifyTo = (process.env.CONTACT_NOTIFY_TO || site.email)
+        .split(",").map((addr) => addr.trim()).filter(Boolean);
 
       const [notification, confirmation] = await Promise.allSettled([
         resend.emails.send({

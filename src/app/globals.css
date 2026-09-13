@@ -257,3 +257,6 @@
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
+/* Menu mobile ouvert : le chat se retire pour libérer le bas de l'écran. */
+body[data-menu-ouvert] .vigil-widget { display: none; }

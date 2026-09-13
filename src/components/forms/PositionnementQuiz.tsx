@@ -54,7 +54,8 @@ export function PositionnementQuiz({
 
   const q = questions[index];
   const isLast = index === questions.length - 1;
-  const answered = Object.keys(given).length;
+  const answered = Object.values(given).filter((g) => g.some((v) => v.trim())).length;
+  const ouverte = q?.kind === "open";
 
   function choose(key: string) {
     setGiven((prev) => {
@@ -107,7 +108,7 @@ export function PositionnementQuiz({
         <p className="mt-6 leading-relaxed text-ink-soft">{graded.next}</p>
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <Button href="/formations" size="md">
-            Découvrir les formations
+            Revoir le programme
           </Button>
           <Button href="/contact" variant="outline" size="md">
             Parler à un conseiller
@@ -137,6 +138,20 @@ export function PositionnementQuiz({
         Question {index + 1} sur {questions.length}
       </p>
       <p className="mt-2 font-display text-lg font-semibold leading-snug text-ink">{q.prompt}</p>
+
+      {/* Question ouverte. Avant le 14/09/2026 ce composant ne rendait que des options :
+          une question `open` s'affichait sans aucun moyen d'y répondre. */}
+      {ouverte ? (
+        <textarea
+          key={q.id}
+          rows={4}
+          maxLength={2000}
+          value={given[q.id]?.[0] ?? ""}
+          onChange={(e) => setGiven((prev) => ({ ...prev, [q.id]: [e.target.value] }))}
+          placeholder="Votre réponse (facultatif) — quelques mots suffisent."
+          className="mt-6 w-full rounded-xl border border-mist bg-cloud px-4 py-3 text-base text-ink placeholder:text-ink-muted focus:border-teal-400 focus:bg-white focus:outline-none sm:text-sm"
+        />
+      ) : null}
 
       <div className="mt-6 space-y-3">
         {q.options.map((opt) => {

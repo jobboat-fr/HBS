@@ -32,7 +32,7 @@ export function HeroSection() {
             className="verre inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold text-white/90 transition hover:text-white"
           >
             <CalendarDays size={14} className="text-cyan-300" aria-hidden />
-            Prochaine session · <time dateTime={annonce.iso}>{annonce.dateLisible}</time>
+            <span>Prochaine session · <time dateTime={annonce.iso}>{annonce.dateLisible}</time></span>
           </Link>
 
           <h1 className="mt-6 font-display text-[2.6rem] font-extrabold leading-[1.02] tracking-tight text-white sm:text-6xl lg:text-7xl">

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { paper, gradePaper, configured, LearnError } from "@/lib/learn";
+import { paper, gradePaper, configured, LearnError, type Paper } from "@/lib/learn";
+import { buildPositionnementNotification } from "@/lib/email/templates";
 import { log, errMsg } from "@/lib/log";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/rateLimit";
 
@@ -29,7 +30,8 @@ const answersSchema = z.object({
     .array(
       z.object({
         question_id: z.string().min(1).max(64),
-        given: z.array(z.string().max(40)).max(20),
+        // 2 000 : la réponse à une question ouverte voyage dans `given[0]`.
+        given: z.array(z.string().max(2000)).max(20),
       }),
     )
     .max(200),
@@ -51,6 +53,43 @@ function refuse(error: unknown, where: string) {
   }
   log.error(`${where}.error`, { err: errMsg(error) });
   return NextResponse.json({ error: "Erreur interne." }, { status: 500 });
+}
+
+/**
+ * Le résultat part chez l'organisme. Sans ce courriel, un test terminé ne se voyait que
+ * dans la plateforme — et le fil rouge du candidat (son vrai problème, ses documents, ses
+ * besoins d'aménagement) attendait qu'on pense à aller le chercher. Les réponses sont aussi
+ * conservées côté LEARN (`learn_leads.positioning_answers`) : ceci est la notification,
+ * pas la preuve.
+ */
+async function prevenirOrganisme(
+  copie: Paper | null,
+  answers: { question_id: string; given: string[] }[],
+  graded: { lead_id: string; score: number; max_score: number; level: string | null },
+) {
+  const cle = process.env.RESEND_API_KEY;
+  const to = (process.env.CONTACT_NOTIFY_TO ?? "").split(",").map((a) => a.trim()).filter(Boolean);
+  if (!cle || !to.length) return;
+  const parId = new Map(answers.map((a) => [a.question_id, a.given]));
+  const lignes = (copie?.questions ?? []).map((q) => {
+    const g = parId.get(q.id) ?? [];
+    const reponse = q.kind === "open"
+      ? (g[0] ?? "").trim()
+      : q.options.filter((o) => g.includes(o.key)).map((o) => o.label).join(", ");
+    return { question: q.prompt, reponse };
+  });
+  try {
+    const { Resend } = await import("resend");
+    const r = await new Resend(cle).emails.send({
+      from: process.env.CONTACT_FROM || "HBS FORMATION <contact@vtlvs.com>",
+      to,
+      subject: `Test de positionnement terminé — niveau ${graded.level ?? "à préciser"}`,
+      html: buildPositionnementNotification({ ...graded, titre: copie?.title ?? "Test de positionnement", lignes }),
+    });
+    if (r.error) log.error("positionnement.email.echec", { err: r.error.message });
+  } catch (e) {
+    log.error("positionnement.email.exception", { err: errMsg(e) });
+  }
 }
 
 function unavailable() {
@@ -88,8 +127,12 @@ export async function POST(request: NextRequest, ctx: { params: Promise<{ token:
     }
 
     const { answers } = answersSchema.parse(await request.json());
+    // La copie est relue *avant* la correction : le jeton est brûlé par `gradePaper`, et
+    // sans les énoncés le courriel à l'organisme ne contiendrait que des identifiants.
+    const copie = await paper(token).catch(() => null);
     const graded = await gradePaper(token, answers);
     log.info("positionnement.graded", { level: graded.level });
+    await prevenirOrganisme(copie, answers, graded);
     // `lead_id` ne sort pas d'ici : le candidat n'a aucun usage de l'identifiant interne de
     // sa demande, et le lui donner l'expose sans rien apporter.
     const { lead_id: _leadId, ...visible } = graded;

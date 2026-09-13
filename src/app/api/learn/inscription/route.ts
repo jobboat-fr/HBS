@@ -8,6 +8,7 @@ import {
   buildInscriptionConfirmation,
 } from "@/lib/email/templates";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/rateLimit";
+import { domaineRecoitDuCourrier } from "@/lib/email/mx";
 
 /**
  * L'entrée du tunnel : une demande de place, transmise à LEARN.
@@ -71,6 +72,16 @@ export async function POST(request: NextRequest) {
     }
 
     const data = demandeSchema.parse(body);
+
+    // Avant LEARN : une demande à une adresse sans boîte crée un prospect injoignable, et
+    // le courriel de confirmation revient en rebond — c'est arrivé le 11/09, et chaque
+    // rebond abîme la réputation du domaine expéditeur pour tous les autres envois.
+    if (!(await domaineRecoitDuCourrier(data.email))) {
+      return NextResponse.json(
+        { error: "Cette adresse e-mail ne peut pas recevoir de courrier. Vérifiez-la." },
+        { status: 400 },
+      );
+    }
 
     const result = await submitDemande({
       full_name: data.full_name,

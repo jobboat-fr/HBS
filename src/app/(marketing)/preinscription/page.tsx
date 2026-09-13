@@ -140,6 +140,7 @@ export default async function InscriptionPage() {
               <InscriptionForm
                 programmes={data.programmes.map((p) => ({ id: p.id, title: p.title }))}
                 consentText={data.consent_text}
+                defaultProgramId={data.programmes.find((p) => /IA\s*360/i.test(p.title))?.id}
               />
             ) : (
               <div className="py-8 text-center">

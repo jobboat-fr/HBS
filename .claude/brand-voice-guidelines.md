@@ -33,8 +33,8 @@ chaleureux·se sur la forme.
 ## Piliers de message
 1. **100 % humain** — un accompagnement individuel du premier contact au suivi.
 2. **Sur-mesure** — des parcours construits sur vos objectifs réels.
-3. **Financements maîtrisés** — CPF, OPCO, France Travail, entreprise.
-4. **Reconnaissance** — certifications et diplômes reconnus.
+3. **Un prix, tout compris** — 1 300 € la place, outils IA inclus ; entreprise, particulier, OPCO ou France Travail selon les critères du financeur.
+4. **Reconnaissance** — organisme certifié Qualiopi (actions de formation) ; Certificat IA 360 délivré par HBS FORMATION (ni diplôme d'État, ni RNCP).
 
 ## Couleurs / identité
 - Bleu marine `#1D3FAE` (principal, clé Tailwind `teal` — couleur du logo officiel), noir `#111111` (accent, clé `coral`), blanc, encre navy `#0B2239` (texte).
@@ -42,4 +42,5 @@ chaleureux·se sur la forme.
 
 ## Open questions (à trancher par le propriétaire)
 - Forme juridique : **SAS** (Kbis) vs **SARL** (récépissé DREETS). On affiche SAS par défaut.
-- Qualiopi : non obtenu → ne pas l'afficher tant qu'il n'est pas certifié.
+- ~~Qualiopi : non obtenu~~ → **certifié** au titre de la catégorie « actions de formation » (liste publique DGEFP, vérifiée le 14/09/2026). Toujours citer la catégorie ; jamais bilan de compétences, VAE ni apprentissage.
+- CPF : la Formation IA 360 n'y est pas éligible — mot-clé SEO seulement, jamais une promesse.

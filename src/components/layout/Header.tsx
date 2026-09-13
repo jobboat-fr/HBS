@@ -32,8 +32,11 @@ export function Header() {
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
+    // Le lanceur du chat (z-80) passait par-dessus le bas du menu plein écran.
+    document.body.toggleAttribute("data-menu-ouvert", open);
     return () => {
       document.body.style.overflow = "";
+      document.body.removeAttribute("data-menu-ouvert");
     };
   }, [open]);
 
@@ -84,7 +87,8 @@ export function Header() {
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
-          className="text-ink lg:hidden"
+          className="-mr-2 flex h-11 w-11 items-center justify-center rounded-full text-ink lg:hidden"
+          aria-expanded={open}
           aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
         >
           {open ? <X size={26} /> : <Menu size={26} />}

@@ -37,8 +37,10 @@ export function AnnonceBanner() {
       >
         <Sparkles aria-hidden className="h-3.5 w-3.5 shrink-0 text-teal-200" />
         <span className="truncate">
-          <span className="font-semibold">{annonce.titre}</span>
-          <span className="text-white/85"> · prochaine session le </span>
+          {/* Texte court : « Formation IA 360 · prochaine session le 26 octobre » mesurait
+              plus que la bande à 375 px et finissait en « 26 oct… », la date coupée. */}
+          <span className="font-semibold"><span className="max-[359px]:hidden">Formation </span>IA 360</span>
+          <span className="text-white/85"> · session du </span>
           <time dateTime={annonce.iso} className="font-semibold">
             26 octobre
           </time>

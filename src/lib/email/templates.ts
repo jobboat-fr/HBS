@@ -132,6 +132,30 @@ export function buildInscriptionNotification(d: InscriptionPayload) {
   `);
 }
 
+export function buildPositionnementNotification(d: {
+  titre: string;
+  lead_id: string;
+  score: number;
+  max_score: number;
+  level: string | null;
+  lignes: { question: string; reponse: string }[];
+}) {
+  const rep = d.lignes
+    .map(
+      (l) => `<p style="margin:14px 0 2px;color:${MARINE};font-weight:600">${esc(l.question)}</p>
+              <p style="margin:0;white-space:pre-wrap;line-height:1.6;color:${l.reponse ? DOUX : "#9AA6B8"}">${l.reponse ? esc(l.reponse) : "— sans réponse"}</p>`,
+    )
+    .join("");
+  return wrap(`
+    ${titre(d.titre)}
+    ${ligne("Niveau", d.level ?? "à préciser")}
+    ${ligne("Aisance numérique", `${d.score} / ${d.max_score}`)}
+    ${ligne("Demande", d.lead_id)}
+    ${rep}
+    ${para("Les réponses sont conservées dans la plateforme avec la demande (indicateur 8).")}
+  `);
+}
+
 export function buildInscriptionConfirmation(d: InscriptionPayload) {
   return wrap(`
     ${titre("Votre demande d'inscription est enregistrée")}
