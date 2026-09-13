@@ -1,5 +1,9 @@
 import { faqs } from "@/lib/site";
 
+/** Réponse de FAQ par identifiant, jamais par position : insérer une question ne doit pas
+ *  décaler toutes les réponses suivantes, comme cela s'est déjà produit. */
+const faq = (id: (typeof faqs)[number]["id"]) => faqs.find((f) => f.id === id)!.a;
+
 export type AssistantLink = { label: string; href: string };
 export type AssistantReply = { text: string; links?: AssistantLink[] };
 
@@ -9,56 +13,45 @@ const norm = (s: string) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,
 export function suggestLink(input: string): AssistantLink | undefined {
   const t = norm(input);
   const has = (...k: string[]) => k.some((w) => t.includes(w));
-  if (has("financ", "cpf", "opco", "france travail", "prix", "cout", "tarif")) return { label: "Voir le financement", href: "/financement" };
-  if (has("ia", "intelligence artificielle", "chatgpt")) return { label: "Formation IA 360", href: "/formations#ia-360" };
+  if (has("prix", "cout", "tarif", "combien", "financ", "payer", "opco")) return { label: "Voir le tarif", href: "/financement" };
+  if (has("programme", "atelier", "journee", "contenu")) return { label: "Voir le programme", href: "/formations#programme" };
+  if (has("outil", "agent", "automatis", "emploi", "secretari", "reunion")) return { label: "Les outils inclus", href: "/formations" };
   if (has("entreprise", "equipe", "salarie", "intra")) return { label: "Offre entreprises", href: "/entreprises" };
-  if (has("bilan")) return { label: "Bilan de compétences", href: "/formations#bilan-de-competences" };
-  if (has("vae")) return { label: "La VAE", href: "/formations#vae" };
-  if (has("formation", "cours", "parcours", "certif", "diplome")) return { label: "Voir les formations", href: "/formations" };
-  if (has("contact", "conseiller", "devis", "rdv", "rendez", "parler", "inscri")) return { label: "Nous contacter", href: "/contact" };
-  return undefined;
+  if (has("inscri", "reserv", "place", "session")) return { label: "Réserver ma place", href: "/preinscription" };
+  if (has("contact", "conseiller", "rdv", "rendez", "parler")) return { label: "Nous contacter", href: "/contact" };
+  return { label: "Formation IA 360", href: "/formations" };
 }
 
-/** Assistant guidé local (repli quand l'agent VIGIL n'est pas joignable). */
+/** Assistant guidé local (repli quand l'IA n'est pas joignable). */
 export function localAnswer(input: string): AssistantReply {
   const t = norm(input);
   const has = (...k: string[]) => k.some((w) => t.includes(w));
 
-  if (has("financ", "cpf", "opco", "prix", "cout", "tarif", "payer", "france travail"))
-    return { text: faqs[2].a, links: [{ label: "Voir le financement", href: "/financement" }] };
-  if (has("distance", "ligne", "foad", "e-learning", "elearning", "visio"))
-    return { text: faqs[1].a, links: [{ label: "Découvrir les formations", href: "/formations" }] };
-  if (has("ia 360", "intelligence artificielle", "chatgpt", "formation ia"))
-    return { text: faqs[3].a, links: [{ label: "Voir la Formation IA 360", href: "/formations#ia-360" }] };
-  if (has("bilan"))
-    return { text: faqs[4].a, links: [{ label: "Bilan de compétences", href: "/formations#bilan-de-competences" }] };
-  if (has("vae", "acquis", "experience"))
-    return {
-      text: "La VAE permet de faire reconnaître officiellement les compétences acquises par votre expérience. Nous vous accompagnons de la recevabilité au jury.",
-      links: [{ label: "En savoir plus sur la VAE", href: "/formations#vae" }],
-    };
+  if (has("cpf", "compte personnel"))
+    return { text: "La Formation IA 360 n'est pas finançable par ce dispositif. Elle se règle par votre entreprise ou à titre personnel : 1 300 € par place, outils IA inclus.", links: [{ label: "Voir le tarif", href: "/financement" }] };
+  if (has("prix", "cout", "tarif", "combien", "financ", "payer", "opco", "france travail"))
+    return { text: faq("tarif"), links: [{ label: "Voir le tarif", href: "/financement" }] };
+  if (has("outil", "agent", "automatis", "emploi", "secretari", "reunion", "inclus"))
+    return { text: faq("outils"), links: [{ label: "Les outils inclus", href: "/formations" }] };
+  if (has("quand", "date", "session", "octobre", "commence", "demarre"))
+    return { text: faq("prochaine-session"), links: [{ label: "Réserver ma place", href: "/preinscription" }] };
+  if (has("prerequis", "niveau", "technique", "debutant", "connaissance"))
+    return { text: faq("prerequis"), links: [{ label: "Voir le programme", href: "/formations#programme" }] };
+  if (has("distance", "ligne", "visio", "presentiel", "lieu"))
+    return { text: faq("distance"), links: [{ label: "Voir le programme", href: "/formations#programme" }] };
+  if (has("bilan", "vae", "certifi", "e-learning", "elearning", "foad", "autre formation"))
+    return { text: faq("autres"), links: [{ label: "Formation IA 360", href: "/formations" }] };
   if (has("entreprise", "equipe", "salarie", "intra", "collaborateur"))
-    return {
-      text: "Nous concevons des formations intra-entreprise sur mesure pour faire monter vos équipes en compétences, du diagnostic au suivi.",
-      links: [{ label: "Offre entreprises", href: "/entreprises" }],
-    };
-  if (has("adresse", "rouen", "situe", "localisation"))
-    return { text: faqs[5].a, links: [{ label: "Nous contacter", href: "/contact" }] };
+    return { text: "La Formation IA 360 peut être organisée pour vos collaborateurs, sur vos propres processus, avec les outils IA inclus dans chaque place.", links: [{ label: "Offre entreprises", href: "/entreprises" }] };
   if (has("delai", "combien de temps", "reponse", "recontact", "rappel"))
-    return { text: faqs[6].a, links: [{ label: "Faire une demande", href: "/contact" }] };
+    return { text: faq("delai"), links: [{ label: "Faire une demande", href: "/contact" }] };
   if (has("conseiller", "contact", "devis", "rdv", "rendez", "parler", "telephone", "appeler", "humain"))
-    return {
-      text: "Avec plaisir ! Laissez-nous vos coordonnées et un conseiller vous recontacte sous 48 heures pour étudier votre projet.",
-      links: [{ label: "Demander un devis", href: "/contact" }],
-    };
-  if (has("formation", "cours", "parcours", "certifi", "diplome", "apprendre"))
-    return {
-      text: "Nous proposons six domaines : la Formation IA 360 (première session le 26 octobre 2026), les parcours certifiants, le bilan de compétences, la VAE, le e-learning et le conseil en ingénierie. Particuliers comme entreprises. Dites-moi votre objectif et je vous oriente.",
-      links: [{ label: "Voir les formations", href: "/formations" }],
-    };
+    return { text: "Avec plaisir. Laissez vos coordonnées : un conseiller vous recontacte sous 48 heures ouvrées.", links: [{ label: "Nous contacter", href: "/contact" }] };
+  if (has("ia", "intelligence artificielle", "chatgpt", "formation", "programme", "atelier"))
+    return { text: faq("ia-360"), links: [{ label: "Voir la Formation IA 360", href: "/formations" }] };
 
   return {
-    text: "Bonne question ! Le plus simple est d'en parler avec un conseiller : il étudiera votre projet et vos financements sous 48 heures.",
-    links: [{ label: "Parler à un conseiller", href: "/contact" }],
+    text: "Je peux vous parler du programme de la Formation IA 360, des outils inclus, du tarif ou de la prochaine session. Que souhaitez-vous savoir ?",
+    links: [{ label: "Formation IA 360", href: "/formations" }],
   };
 }

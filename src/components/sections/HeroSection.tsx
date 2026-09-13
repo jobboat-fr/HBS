@@ -1,135 +1,90 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Search, Star, BadgeCheck, Clock, ClipboardList } from "lucide-react";
-import { Button } from "@/components/ui/Button";
-import { VideoPlayer } from "@/components/media/VideoPlayer";
-import { formations, media } from "@/lib/site";
+import { ArrowRight, CalendarDays } from "lucide-react";
+import { annonce, tarif } from "@/lib/site";
+import { ChampNeuronal } from "@/components/visuel/ChampNeuronal";
+import { ConsoleAgent } from "@/components/visuel/ConsoleAgent";
 
+/**
+ * Le héros : la page elle-même doit montrer qu'on sait faire travailler l'IA.
+ *
+ * Trois choses le portent, dans cet ordre de lecture : une promesse courte, une console où
+ * l'on voit un agent à l'œuvre, et un prix affiché d'emblée. Un prix caché derrière
+ * « demander un devis » fait fuir exactement les indépendants et les particuliers qu'on
+ * veut ; un prix clair qualifie la demande avant même le premier échange.
+ */
 export function HeroSection() {
-  const router = useRouter();
-  const [slug, setSlug] = useState("");
-
-  function find(e: React.FormEvent) {
-    e.preventDefault();
-    router.push(slug ? `/formations#${slug}` : "/formations");
-  }
-
   return (
-    <section className="relative overflow-hidden bg-hero-soft pt-[var(--entete)]">
-      <div className="container-page grid items-center gap-12 py-12 lg:grid-cols-2 lg:py-20">
-        {/* Texte */}
+    <section className="fond-espace relative overflow-hidden pt-[var(--entete)]">
+      <div aria-hidden className="grille-tech pointer-events-none absolute inset-0" />
+      <ChampNeuronal className="pointer-events-none absolute inset-0 h-full w-full opacity-80" />
+
+      <div className="container-page relative grid items-center gap-12 py-14 lg:grid-cols-[1.08fr_0.92fr] lg:py-24">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          initial={{ y: 14 }}
+          animate={{ y: 0 }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
         >
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-1.5 text-xs font-semibold text-teal-700 shadow-soft">
-              <Star size={14} className="fill-sun text-sun" /> Organisme de formation · Rouen
-            </span>
+          <Link
+            href={annonce.href}
+            className="verre inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold text-white/90 transition hover:text-white"
+          >
+            <CalendarDays size={14} className="text-cyan-300" aria-hidden />
+            Prochaine session · <time dateTime={annonce.iso}>{annonce.dateLisible}</time>
+          </Link>
+
+          <h1 className="mt-6 font-display text-[2.6rem] font-extrabold leading-[1.02] tracking-tight text-white sm:text-6xl lg:text-7xl">
+            Mettez l&apos;IA
+            <br />
+            <span className="texte-lumiere">au travail.</span>
+          </h1>
+
+          <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/75">
+            21 heures pour comprendre, fiabiliser et déployer l&apos;intelligence artificielle
+            dans votre activité — et repartir avec vos agents, vos automatisations et votre
+            dossier IA.
+          </p>
+
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
             <Link
               href="/preinscription"
-              className="inline-flex items-center gap-2 rounded-full bg-teal-500 px-4 py-1.5 text-xs font-semibold text-white shadow-soft transition-colors hover:bg-teal-600"
+              className="bouton-neon inline-flex items-center justify-center gap-2 rounded-full px-7 py-4 text-base font-bold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
-              <ClipboardList size={14} /> Demandez votre place — test de niveau inclus
+              Réserver ma place · {tarif.montant}
+              <ArrowRight size={18} aria-hidden />
+            </Link>
+            <Link
+              href="/formations#programme"
+              className="verre inline-flex items-center justify-center gap-2 rounded-full px-7 py-4 text-base font-semibold text-white transition hover:bg-white/10"
+            >
+              Voir le programme
             </Link>
           </div>
 
-          <h1 className="mt-6 font-display text-display-xl font-extrabold text-ink">
-            Montez en compétences,{" "}
-            <span className="underline-brush text-teal-600">à votre rythme</span>
-          </h1>
-
-          <p className="mt-5 max-w-lg text-lg leading-relaxed text-ink-soft">
-            Formation à l&apos;intelligence artificielle, parcours certifiants, bilans de
-            compétences et VAE — en ligne, en présentiel ou en mixte. Pour les particuliers,
-            les indépendants et les entreprises, avec un accompagnement humain du premier
-            contact à la certification.
-          </p>
-
-          {/* Recherche de formation */}
-          <form
-            onSubmit={find}
-            className="mt-8 flex flex-col gap-3 rounded-2xl bg-white p-3 shadow-soft sm:flex-row sm:items-center"
-          >
-            <div className="flex flex-1 items-center gap-2 px-3">
-              <Search size={20} className="shrink-0 text-teal-500" />
-              <select
-                value={slug}
-                onChange={(e) => setSlug(e.target.value)}
-                className="w-full bg-transparent py-2 text-sm text-ink focus:outline-none"
-                aria-label="Choisir un domaine de formation"
-              >
-                <option value="">Quelle formation recherchez-vous ?</option>
-                {formations.map((f) => (
-                  <option key={f.slug} value={f.slug}>
-                    {f.title}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <Button type="submit" size="md" className="sm:shrink-0">
-              Trouver ma formation
-            </Button>
-          </form>
-
-          <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-ink-soft">
-            <span className="inline-flex items-center gap-1.5">
-              <BadgeCheck size={18} className="text-teal-500" /> Particuliers & entreprises
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <Clock size={18} className="text-teal-500" /> Réponse sous 48 h
-            </span>
-          </div>
+          <ul className="mt-9 flex flex-wrap gap-x-6 gap-y-2 text-sm text-white/65">
+            <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-cyan-300" />21 h en direct</li>
+            <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-cyan-300" />6 ateliers pratiques</li>
+            <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-cyan-300" />Outils IA inclus</li>
+            <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-cyan-300" />Certificat IA 360</li>
+          </ul>
         </motion.div>
 
-        {/* Visuel */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.96 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="relative mx-auto w-full max-w-lg"
+          initial={{ y: 16 }}
+          animate={{ y: 0 }}
+          transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+          className="relative"
         >
-          <div className="relative aspect-[4/5] overflow-hidden rounded-3xl shadow-card">
-            <VideoPlayer src={media.heroVideo} poster={media.heroVideoPoster} rounded={false} />
-          </div>
-
-          {/* Cartes flottantes */}
-          <div className="absolute -left-4 top-10 hidden rounded-2xl bg-white p-4 shadow-card sm:block">
-            <p className="text-2xl font-extrabold text-ink">100%</p>
-            <p className="text-xs text-ink-muted">parcours personnalisés</p>
-          </div>
-          <div className="absolute -bottom-5 -right-2 hidden items-center gap-3 rounded-2xl bg-white p-4 shadow-card sm:flex">
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-50 text-teal-600">
-              <BadgeCheck size={22} />
-            </span>
-            <div>
-              {/* « Diplômes & certifications reconnus » : l'organisme ne délivre aucun
-                  diplôme et ne détient aucune certification enregistrée au RNCP. Ce qu'il
-                  remet en fin d'action, et qui est vrai, c'est une attestation. */}
-              <p className="text-sm font-bold text-ink">Attestation de fin</p>
-              <p className="text-xs text-ink-muted">de formation</p>
-            </div>
+          <div aria-hidden className="absolute -inset-6 rounded-[2rem] bg-[radial-gradient(closest-side,rgba(46,95,224,0.45),transparent)] blur-2xl" />
+          <div className="relative">
+            <ConsoleAgent />
+            <p className="mt-3 text-center text-xs text-white/45">
+              Les outils inclus dans votre place, à l&apos;œuvre — toujours sous votre validation.
+            </p>
           </div>
         </motion.div>
-      </div>
-
-      {/* Bandeau modalités.
-          Il annonçait « Financements : CPF, OPCO, France Travail, Entreprise, Région ».
-          Trois de ces cinq supposent la certification Qualiopi, qui n'est pas obtenue, et le
-          CPF exige en plus une certification enregistrée au RNCP. Le bandeau le plus visible
-          de la page d'accueil promettait donc des prises en charge indisponibles. */}
-      <div className="border-y border-mist bg-white/70">
-        <div className="container-page flex flex-wrap items-center justify-center gap-x-8 gap-y-2 py-5 text-sm font-semibold text-ink-muted">
-          <span className="text-ink-soft">Modalités&nbsp;:</span>
-          {["Présentiel", "À distance", "Mixte", "Inter-entreprise", "Intra-entreprise"].map((m) => (
-            <span key={m}>{m}</span>
-          ))}
-        </div>
       </div>
     </section>
   );

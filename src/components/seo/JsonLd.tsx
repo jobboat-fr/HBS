@@ -52,7 +52,9 @@ export function CoursesJsonLd() {
   const data = {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    itemListElement: formations.map((f, i) => ({
+    // Seules les formations ouvertes sont déclarées : annoncer aux moteurs un cours qui
+    // n'existe pas encore serait une offre fantôme.
+    itemListElement: formations.filter((f) => f.disponible).map((f, i) => ({
       "@type": "ListItem",
       position: i + 1,
       item: {
@@ -65,6 +67,7 @@ export function CoursesJsonLd() {
           name: legal.raisonSociale,
           sameAs: site.url,
         },
+        offers: { "@type": "Offer", price: "1300", priceCurrency: "EUR", availability: "https://schema.org/InStock", category: "Place de formation" },
       },
     })),
   };

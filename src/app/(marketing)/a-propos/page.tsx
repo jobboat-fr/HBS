@@ -10,13 +10,13 @@ import { legal, site, media } from "@/lib/site";
 export const metadata: Metadata = {
   title: "À propos",
   description:
-    "HBS FORMATION, organisme de formation à Rouen. Notre mission : rendre la formation professionnelle exigeante, accessible et tournée vers la réussite.",
+    "HBS FORMATION, organisme de formation à Rouen spécialisé dans l'intelligence artificielle : rendre l'IA utile, fiable et maîtrisée pour les entreprises et les particuliers.",
 };
 
 const values = [
-  { title: "Notre mission", text: "Concevoir et déployer des actions de formation professionnelle continue et certifiantes qui transforment durablement les compétences." },
-  { title: "Notre approche", text: "Une ingénierie pédagogique sur mesure, en présentiel, à distance ou en mixte (FOAD), portée par des formateurs experts de leur domaine." },
-  { title: "Notre ambition", text: "Accompagner entreprises, organismes et particuliers vers la réussite, du premier échange jusqu'au suivi post-formation." },
+  { title: "Notre mission", text: "Rendre l'intelligence artificielle utile, fiable et maîtrisée — dans les entreprises comme pour les particuliers." },
+  { title: "Notre approche", text: "Des ateliers pratiques sur vos cas réels, des démonstrations sur des systèmes en exploitation, et des outils qui continuent de travailler après la formation." },
+  { title: "Notre ambition", text: "Que chaque participant reparte équipé, et que l'IA soit au travail dans son activité dès la semaine suivante." },
 ];
 
 export default function AProposPage() {
@@ -32,10 +32,10 @@ export default function AProposPage() {
         eyebrow="À propos"
         title={
           <>
-            L&apos;exigence au service de <span className="text-teal-600">vos compétences</span>
+            Rendre l&apos;IA <span className="text-teal-600">utile, fiable et maîtrisée</span>
           </>
         }
-        subtitle={`${site.name} est un organisme de formation basé à ${site.city}, dédié à la réussite professionnelle des apprenants et des entreprises.`}
+        subtitle={`${site.name} est un organisme de formation basé à ${site.city}, spécialisé dans la formation à l'intelligence artificielle.`}
       />
 
       <section className="py-16 lg:py-24">

@@ -33,18 +33,18 @@ export default function Og() {
 
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div style={{ display: "flex", fontSize: 72, fontWeight: 800, color: "#fff", lineHeight: 1.05 }}>
-            Montez en compétences,
+            Mettez l'IA
           </div>
           <div style={{ display: "flex", fontSize: 72, fontWeight: 800, color: "#D9DCE1", lineHeight: 1.05 }}>
-            à votre rythme.
+            au travail.
           </div>
           <div style={{ display: "flex", marginTop: 28, fontSize: 30, color: "rgba(255,255,255,0.8)" }}>
-            Formation IA 360 · Certifiantes · Bilan de compétences · VAE
+            Formation IA 360 · 21 h · outils IA inclus
           </div>
         </div>
 
         <div style={{ display: "flex", gap: 16, fontSize: 26, color: "#D9DCE1", fontWeight: 600 }}>
-          <span>Éligible CPF · OPCO · France Travail</span>
+          <span>1 300 € par place · agents, automatisations, assistant de réunion</span>
           <span style={{ color: "rgba(255,255,255,0.5)" }}>· Rouen & à distance</span>
         </div>
       </div>

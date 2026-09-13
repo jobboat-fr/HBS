@@ -53,7 +53,7 @@ export function ContactCentre({ name, email }: { name: string; email: string }) 
     <form onSubmit={submit} className="space-y-5">
       <div>
         <Label htmlFor="subject">Sujet</Label>
-        <Input id="subject" value={subject} onChange={(e) => setSubject(e.target.value)} placeholder="Ex. Financement CPF, planning…" />
+        <Input id="subject" value={subject} onChange={(e) => setSubject(e.target.value)} placeholder="Ex. programme, outils inclus, planning…" />
       </div>
       <div>
         <Label htmlFor="message">Votre message *</Label>

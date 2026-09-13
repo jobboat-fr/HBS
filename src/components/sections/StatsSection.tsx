@@ -41,7 +41,7 @@ export function StatsSection() {
           viewport={viewportOnce}
           className="text-center font-display text-display-md font-extrabold text-ink"
         >
-          Pourquoi choisir HBS FORMATION ?
+          La Formation IA 360 en chiffres
         </motion.h2>
 
         <motion.div
@@ -55,7 +55,7 @@ export function StatsSection() {
             <motion.div
               key={s.label}
               variants={fadeUp}
-              className="rounded-2xl bg-cloud p-8 text-center"
+              className="verre-clair rounded-2xl p-8 text-center"
             >
               <div className="font-display text-5xl font-extrabold text-teal-gradient">
                 <Counter value={s.value} suffix={s.suffix} />

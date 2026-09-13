@@ -1,88 +1,86 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
-import { Badge } from "@/components/ui/Badge";
+import { ArrowRight, Check, Clock } from "lucide-react";
 import { fadeUp, staggerContainer, viewportOnce } from "@/lib/animations";
-import { formations, media, annonce } from "@/lib/site";
+import { formations, tarif, annonce, certificat } from "@/lib/site";
 
+/**
+ * L'offre : une formation disponible, les autres annoncées.
+ *
+ * La Formation IA 360 occupe toute la largeur, dans son cadre néon. Les autres produits
+ * restent visibles — un visiteur qui cherchait un bilan de compétences doit comprendre
+ * qu'il arrive, pas conclure qu'il s'est trompé de site — mais en verre dépoli, sans lien
+ * ni promesse de date.
+ */
 export function ServicesSection() {
+  const ia = formations.find((f) => f.disponible)!;
+  const bientot = formations.filter((f) => !f.disponible);
+
   return (
     <section id="formations" className="bg-cloud py-20 lg:py-28">
       <div className="container-page">
-        <motion.div
-          variants={fadeUp}
-          initial="initial"
-          whileInView="animate"
-          viewport={viewportOnce}
-          className="mx-auto max-w-2xl text-center"
-        >
-          <Badge>Nos domaines</Badge>
+        <motion.div variants={fadeUp} initial="initial" whileInView="animate" viewport={viewportOnce} className="mx-auto max-w-2xl text-center">
+          <span className="inline-flex items-center rounded-full bg-teal-50 px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-teal-700">
+            Notre formation
+          </span>
           <h2 className="mt-5 font-display text-display-lg font-extrabold text-ink text-balance">
-            Décrochez une certification <span className="text-teal-600">reconnue</span>
+            Une formation, <span className="text-teal-600">faite pour agir</span>
           </h2>
-          <p className="mt-4 text-ink-soft">
-            Des parcours pour chaque objectif : se reconvertir, se perfectionner ou faire reconnaître
-            son expérience.
-          </p>
         </motion.div>
 
-        <motion.div
-          variants={staggerContainer}
-          initial="initial"
-          whileInView="animate"
-          viewport={viewportOnce}
-          className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
-        >
-          {formations.map((f) => (
-            <motion.div key={f.slug} variants={fadeUp} className={f.slug === "ia-360" ? "cadre-neon" : undefined}>
-              <Link
-                href={`/formations#${f.slug}`}
-                className={
-                  f.slug === "ia-360"
-                    ? "group block h-full overflow-hidden rounded-2xl bg-white transition-all duration-300 hover:-translate-y-1"
-                    : "group block h-full overflow-hidden rounded-2xl border border-mist bg-white shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover"
-                }
-              >
-                <div className="relative aspect-[16/10] overflow-hidden">
-                  <Image
-                    src={media.formationImages[f.slug]}
-                    alt={f.title}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <span
-                    className={
-                      f.slug === "ia-360"
-                        ? "absolute left-3 top-3 rounded-full bg-red-600 px-3 py-1 text-xs font-bold text-white"
-                        : "absolute left-3 top-3 rounded-full bg-white/95 px-3 py-1 text-xs font-semibold text-teal-700"
-                    }
-                  >
-                    {f.slug === "ia-360" ? `Session du ${annonce.dateLisible}` : f.tagline}
-                  </span>
-                </div>
-                <div className="p-6">
-                  <h3 className="font-display text-xl font-bold text-ink">{f.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-ink-soft">{f.description}</p>
-                  {f.slug === "ia-360" ? (
-                    <span className="mt-4 inline-flex items-center gap-2 rounded-full bg-red-600 px-4 py-2 text-sm font-bold text-white transition-colors group-hover:bg-red-700">
-                      Réserver ma place
-                      <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
-                    </span>
-                  ) : (
-                    <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-teal-600">
-                      En savoir plus
-                      <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
-                    </span>
-                  )}
-                </div>
-              </Link>
-            </motion.div>
-          ))}
+        <motion.div variants={fadeUp} initial="initial" whileInView="animate" viewport={viewportOnce} className="cadre-neon mt-12">
+          <div className="grid overflow-hidden rounded-2xl lg:grid-cols-[1.3fr_1fr]">
+            <div className="p-8 md:p-10">
+              <p className="text-xs font-bold uppercase tracking-widest text-red-600">Disponible · session du {annonce.dateLisible}</p>
+              <h3 className="mt-3 font-display text-3xl font-extrabold text-ink md:text-4xl">{ia.title}</h3>
+              <p className="mt-2 font-semibold text-teal-700">{ia.tagline}</p>
+              <p className="mt-5 max-w-2xl leading-relaxed text-ink-soft">{ia.description}</p>
+              <ul className="mt-6 grid gap-3 sm:grid-cols-2">
+                {ia.features.map((f) => (
+                  <li key={f} className="flex items-start gap-2.5 text-sm text-ink-soft">
+                    <Check size={18} className="mt-0.5 shrink-0 text-red-500" aria-hidden />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="fond-espace relative flex flex-col justify-between gap-8 p-8 md:p-10">
+              <div aria-hidden className="grille-tech pointer-events-none absolute inset-0" />
+              <div className="relative">
+                <p className="text-xs font-semibold uppercase tracking-widest text-white/55">Votre place</p>
+                <p className="mt-2 font-display text-6xl font-extrabold text-white">{tarif.montant}</p>
+                <p className="mt-1 text-sm text-white/70">{tarif.resume}</p>
+                <p className="mt-4 text-xs text-white/50">{certificat.nom} délivré par HBS FORMATION.</p>
+              </div>
+              <div className="relative flex flex-col gap-3">
+                <Link href="/preinscription" className="bouton-neon inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 font-bold">
+                  Réserver ma place <ArrowRight size={18} aria-hidden />
+                </Link>
+                <Link href="/formations#programme" className="verre inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-semibold text-white hover:bg-white/10">
+                  Découvrir le programme
+                </Link>
+              </div>
+            </div>
+          </div>
         </motion.div>
+
+        <div className="mt-16">
+          <p className="text-center text-sm font-semibold uppercase tracking-widest text-ink-muted">Bientôt disponible</p>
+          <motion.ul variants={staggerContainer} initial="initial" whileInView="animate" viewport={viewportOnce} className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+            {bientot.map((f) => (
+              <motion.li key={f.slug} variants={fadeUp} className="verre-clair rounded-2xl p-5">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/80 px-2.5 py-1 text-[11px] font-semibold text-ink-muted ring-1 ring-mist">
+                  <Clock size={12} aria-hidden /> Bientôt
+                </span>
+                <h3 className="mt-3 font-display text-base font-bold leading-snug text-ink">{f.title}</h3>
+                <p className="mt-1.5 text-xs leading-relaxed text-ink-soft">{f.description}</p>
+              </motion.li>
+            ))}
+          </motion.ul>
+        </div>
       </div>
     </section>
   );

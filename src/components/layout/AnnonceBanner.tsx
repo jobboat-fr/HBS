@@ -38,7 +38,7 @@ export function AnnonceBanner() {
         <Sparkles aria-hidden className="h-3.5 w-3.5 shrink-0 text-teal-200" />
         <span className="truncate">
           <span className="font-semibold">{annonce.titre}</span>
-          <span className="text-white/85"> · session du </span>
+          <span className="text-white/85"> · prochaine session le </span>
           <time dateTime={annonce.iso} className="font-semibold">
             26 octobre
           </time>
@@ -54,8 +54,8 @@ export function AnnonceBanner() {
         <span className="font-semibold">{annonce.titre}</span>
         <span className="truncate text-white/85">
           {/* La date machine sert aux lecteurs d'écran et aux moteurs ; le texte reste lisible. */}
-          <span className="hidden md:inline">Première session le </span>
-          <span className="md:hidden">Session du </span>
+          <span className="hidden md:inline">Prochaine session le </span>
+          <span className="md:hidden">Prochaine session le </span>
           <time dateTime={annonce.iso} className="font-semibold text-white">
             {annonce.dateLisible}
           </time>

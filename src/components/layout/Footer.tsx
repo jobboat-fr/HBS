@@ -23,11 +23,17 @@ export function Footer() {
           <div>
             <h3 className="text-sm font-semibold text-white">Formations</h3>
             <ul className="mt-5 space-y-3 text-sm">
-              {formations.slice(0, 5).map((f) => (
+              {formations.map((f) => (
                 <li key={f.slug}>
-                  <Link href={`/formations#${f.slug}`} className="text-white/60 hover:text-teal-400">
-                    {f.title}
-                  </Link>
+                  {f.disponible ? (
+                    <Link href="/formations" className="font-semibold text-white hover:text-teal-400">
+                      {f.title}
+                    </Link>
+                  ) : (
+                    <span className="text-white/40">
+                      {f.title} <span className="text-[11px] uppercase tracking-wide text-white/30">· bientôt</span>
+                    </span>
+                  )}
                 </li>
               ))}
             </ul>

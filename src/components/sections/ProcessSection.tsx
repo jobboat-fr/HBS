@@ -16,9 +16,9 @@ export function ProcessSection() {
           viewport={viewportOnce}
           className="mx-auto max-w-2xl text-center"
         >
-          <Badge color="coral">Votre parcours</Badge>
+          <Badge>Votre parcours</Badge>
           <h2 className="mt-5 font-display text-display-lg font-extrabold text-ink text-balance">
-            Un accompagnement <span className="text-teal-600">de bout en bout</span>
+            De la réservation <span className="text-teal-600">à vos outils en place</span>
           </h2>
         </motion.div>
 
@@ -33,7 +33,7 @@ export function ProcessSection() {
             <motion.div
               key={s.step}
               variants={fadeUp}
-              className="relative rounded-2xl border border-mist bg-white p-7 shadow-card"
+              className="verre-clair relative rounded-2xl p-7"
             >
               <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-teal-gradient font-display text-lg font-bold text-white">
                 {s.step}

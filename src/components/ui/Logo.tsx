@@ -77,9 +77,6 @@ export function HbsBadge({
       {/* Arche */}
       <path d="M55 138 C 95 48 265 48 305 138" fill="none" stroke={ink} strokeWidth="5" strokeLinecap="round" />
 
-      {/* Ruban diagonal derrière le monogramme */}
-      <rect x="55" y="188" width="250" height="16" rx="8" fill={ink} opacity="0.85" transform="rotate(-14 180 196)" />
-
       {/* Monogramme HBS */}
       <text
         x="180"

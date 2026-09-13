@@ -1,5 +1,3 @@
-import { Badge } from "@/components/ui/Badge";
-import { Reveal } from "@/components/ui/Reveal";
 
 export function PageHeader({
   eyebrow,
@@ -11,17 +9,22 @@ export function PageHeader({
   subtitle?: string;
 }) {
   return (
-    <header className="bg-hero-soft pt-[var(--entete)]">
-      <div className="container-page py-14 text-center md:py-20">
-        <Reveal>
-          {eyebrow ? <Badge>{eyebrow}</Badge> : null}
-          <h1 className="mt-5 font-display text-display-lg font-extrabold text-ink text-balance">
+    <header className="entete-sombre fond-espace relative overflow-hidden pt-[var(--entete)]">
+      <div aria-hidden className="grille-tech pointer-events-none absolute inset-0" />
+      <div className="container-page relative py-14 text-center md:py-20">
+        <div>
+          {eyebrow ? (
+            <span className="verre inline-flex rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-white/85">
+              {eyebrow}
+            </span>
+          ) : null}
+          <h1 className="mt-5 font-display text-display-lg font-extrabold text-white text-balance">
             {title}
           </h1>
           {subtitle ? (
-            <p className="mx-auto mt-4 max-w-2xl text-lg text-ink-soft">{subtitle}</p>
+            <p className="mx-auto mt-4 max-w-2xl text-lg text-white/70">{subtitle}</p>
           ) : null}
-        </Reveal>
+        </div>
       </div>
     </header>
   );

@@ -157,3 +157,103 @@
     .cadre-neon::before { display: none; }
   }
 }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Verre et tissu — la matière des cartes de la Formation IA 360.
+
+   Deux couches dans un seul `background` plutôt qu'un pseudo-élément : la trame tissée
+   se superpose au dégradé du verre sans occuper `::before`, que `.cadre-neon` utilise
+   déjà pour son halo. Une carte peut donc être à la fois verre, tissu et néon.
+
+   La trame est une toile fine — fils horizontaux clairs, fils verticaux sombres — à
+   très faible opacité. De près elle se lit comme une matière ; de loin elle disparaît
+   et ne gêne jamais la lecture.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+@layer utilities {
+  /* Sur fond sombre */
+  .verre {
+    position: relative;
+    background:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='6'%3E%3Cpath d='M0 1.5h6M0 4.5h6' stroke='%23ffffff' stroke-opacity='.06'/%3E%3Cpath d='M1.5 0v6M4.5 0v6' stroke='%23000000' stroke-opacity='.12'/%3E%3C/svg%3E"),
+      linear-gradient(145deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.035));
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.22),
+      0 28px 60px -28px rgba(2, 8, 30, 0.85);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    backdrop-filter: blur(18px) saturate(160%);
+  }
+
+  /* Sur fond clair */
+  .verre-clair {
+    position: relative;
+    background:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='6'%3E%3Cpath d='M0 1.5h6M0 4.5h6' stroke='%23ffffff' stroke-opacity='.7'/%3E%3Cpath d='M1.5 0v6M4.5 0v6' stroke='%231D3FAE' stroke-opacity='.045'/%3E%3C/svg%3E"),
+      linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(236, 242, 255, 0.7));
+    border: 1px solid rgba(29, 63, 174, 0.12);
+    box-shadow:
+      inset 0 1px 0 #ffffff,
+      0 22px 44px -26px rgba(11, 34, 57, 0.38);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    backdrop-filter: blur(14px) saturate(140%);
+  }
+
+  /* Le fond « espace » des sections sombres : deux lueurs et une grille technique. */
+  .fond-espace {
+    background:
+      radial-gradient(55% 45% at 82% 8%, rgba(46, 95, 224, 0.42), transparent 62%),
+      radial-gradient(40% 40% at 6% 92%, rgba(34, 211, 238, 0.16), transparent 60%),
+      linear-gradient(180deg, #050b1c 0%, #0b2239 100%);
+    color: #fff;
+  }
+
+  .grille-tech {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+    background-size: 56px 56px;
+    -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, #000 30%, transparent 80%);
+    mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, #000 30%, transparent 80%);
+  }
+
+  .texte-lumiere {
+    background: linear-gradient(92deg, #ffffff 0%, #b9d0ff 45%, #67e8f9 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Le bouton principal : rouge, avec la même lueur que le cadre néon. */
+  .bouton-neon {
+    background: linear-gradient(135deg, #ff2d2d, #e0115f);
+    color: #fff;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12) inset, 0 10px 30px -8px rgba(255, 45, 45, 0.65);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .bouton-neon:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2) inset, 0 14px 38px -8px rgba(255, 45, 45, 0.85);
+  }
+
+  @keyframes curseur-clignote {
+    50% { opacity: 0; }
+  }
+  .curseur {
+    animation: curseur-clignote 1s steps(1) infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .curseur { animation: none; }
+  }
+}
+
+/* Les pages passent au titre des en-têtes sombres une portion en `text-teal-600`, lisible
+   sur fond clair et invisible sur l'espace. On la convertit en texte lumineux ici, plutôt
+   que de modifier chaque page appelante. */
+.entete-sombre h1 [class*="text-teal"] {
+  background: linear-gradient(92deg, #ffffff 0%, #b9d0ff 45%, #67e8f9 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

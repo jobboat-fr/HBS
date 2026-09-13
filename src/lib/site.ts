@@ -6,12 +6,10 @@
 export const site = {
   name: "HBS FORMATION",
   shortName: "HBS",
-  baseline: "La montée en compétences des particuliers et des entreprises",
-  // Pas de canal de financement annoncé ici : CPF, OPCO, France Travail et Région supposent
-  // tous la certification Qualiopi, qui n'est pas encore obtenue. Une méta-description est
-  // ce que les moteurs citent — c'est le dernier endroit où laisser une éligibilité fausse.
+  baseline: "L'intelligence artificielle, maîtrisée et au travail",
+  // Aucun dispositif de financement annoncé ici : c'est la phrase que les moteurs citent.
   description:
-    "HBS FORMATION, organisme de formation à Rouen : formation à l'intelligence artificielle, formations certifiantes, bilan de compétences, VAE et e-learning. Pour les particuliers comme pour les entreprises, en ligne ou en présentiel.",
+    "Formation IA 360 : 21 heures pour comprendre, fiabiliser et déployer l'intelligence artificielle dans votre activité, outils IA inclus. HBS FORMATION, organisme de formation à Rouen, pour les particuliers et les entreprises.",
   // Apex, pas www : www.hbs-formation.fr redirige (308) vers l'apex côté Vercel.
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://hbs-formation.fr",
   email: "contact@hbs-formation.fr",
@@ -41,22 +39,14 @@ export const legal = {
 };
 
 export const navLinks = [
-  { label: "Formations", href: "/formations" },
-  { label: "Formation IA", href: "/formations#ia-360" },
-  { label: "Certifications", href: "/certifications" },
-  { label: "Financement", href: "/financement" },
+  { label: "Formation IA 360", href: "/formations" },
+  { label: "Programme", href: "/formations#programme" },
+  { label: "Tarif", href: "/financement" },
   { label: "Entreprises", href: "/entreprises" },
   { label: "À propos", href: "/a-propos" },
   { label: "Contact", href: "/contact" },
 ] as const;
 
-/**
- * L'annonce affichée en bandeau sur toutes les pages.
- *
- * `date` est la date réelle d'ouverture, pas un artifice commercial : elle est affichée au
- * visiteur et elle engage l'organisme. `iso` sert au balisage et au tri ; il n'y a qu'une
- * seule source pour les deux afin qu'elles ne puissent pas diverger.
- */
 /**
  * Le titre remis à l'issue de la Formation IA 360.
  *
@@ -77,7 +67,7 @@ export const certificat = {
   emetteur: "HBS FORMATION",
   mention: "Certificat délivré par l'organisme",
   // Ce qui rend le certificat sérieux, et qu'il faut dire à sa place.
-  obtention: "Épreuve finale de 1 h 30, notée sur 20, seuil de réussite à 12",
+  obtention: "Épreuve pratique de 45 min notée sur 20 (seuil 12) et revue croisée du dossier",
   preuve: "Remis avec les livrables datés produits pendant la formation",
   // La phrase qui accompagne le certificat partout où il est affiché.
   precision:
@@ -89,153 +79,191 @@ export const annonce = {
   iso: "2026-10-26",
   dateLisible: "26 octobre 2026",
   titre: "Formation IA 360",
-  texte: "Première session le 26 octobre 2026 — inscriptions ouvertes.",
-  href: "/formations#ia-360",
-  lienLabel: "Voir le programme",
+  // « Prochaine » et jamais « première » : l'organisme ne se présente pas comme débutant.
+  texte: "Prochaine session le 26 octobre 2026 — inscriptions ouvertes.",
+  href: "/formations",
+  lienLabel: "Réserver ma place",
 } as const;
+
+/**
+ * Le prix d'une place. Un seul tarif, outils compris.
+ *
+ * Aucune mention de régime de TVA tant qu'il n'est pas confirmé : l'exonération de
+ * l'article 261-4-4°a porte sur la formation professionnelle continue, et une place qui
+ * inclut l'accès à des outils logiciels peut ne pas relever entièrement de ce régime.
+ * Mieux vaut ne rien affirmer qu'afficher un traitement fiscal que le comptable démentira.
+ */
+export const tarif = {
+  montant: "1 300 €",
+  unite: "par place",
+  resume: "Formation de 21 h et outils IA inclus",
+} as const;
+
+/** Ce que comprend une place, au-delà des 21 heures de formation. */
+export const outilsInclus = [
+  { titre: "Agents IA", texte: "Des agents prêts à travailler sur vos tâches réelles." },
+  { titre: "Couches d'automatisation", texte: "Vos enchaînements répétitifs confiés à la machine, sous contrôle." },
+  { titre: "Recherche d'emploi automatisée", texte: "Un moteur qui trouve, trie et prépare les candidatures pertinentes." },
+  { titre: "Secrétariat & gestion", texte: "Courriers, relances, dossiers : l'administratif pris en charge." },
+  { titre: "Assistant de réunion", texte: "Notes, synthèse et suivi des actions après chaque réunion." },
+  { titre: "Et d'autres outils", texte: "La boîte à outils s'enrichit à mesure que vos usages évoluent." },
+] as const;
 
 /** Piliers de formation — affichés en page d'accueil (3) et détaillés sur /formations. */
 export const formations = [
   {
     slug: "ia-360",
+    disponible: true,
     icon: "Sparkles",
     title: "Formation IA 360",
     tagline: "Connaissance, conformité, déploiement — 21 heures",
     description:
-      "Trois journées pour comprendre ce que fait réellement l'IA, produire un travail fiable sur ses propres documents, et repartir avec le dossier IA de son activité : registre des risques, règles d'usage, feuille de route chiffrée. Ouverte aux particuliers comme aux entreprises.",
+      "Trois journées pour comprendre ce que fait réellement l'IA, la faire travailler de façon fiable sur vos propres documents, et repartir avec votre dossier IA et vos outils : agents, automatisations, recherche d'emploi, secrétariat et assistant de réunion.",
     features: [
-      "Certificat IA 360 délivré par HBS FORMATION",
-      "Première session le 26 octobre 2026",
-      "21 h — 3 journées de 7 h, 6 ateliers",
+      "21 h — 3 journées, 6 ateliers pratiques",
+      "Outils IA inclus dans votre place",
       "Particuliers, indépendants et entreprises",
-      "Épreuve finale notée — seuil 12/20",
-      "Chaque journée produit un livrable daté",
+      "Certificat IA 360 délivré par HBS FORMATION",
     ],
   },
   {
     slug: "formations-certifiantes",
+    disponible: false,
     icon: "GraduationCap",
     title: "Formations certifiantes & continues",
-    tagline: "Montez en compétences, faites reconnaître votre expertise",
-    description:
-      "Des parcours certifiants et de formation continue ouverts aux particuliers, aux indépendants et aux entreprises, en présentiel ou à distance.",
-    features: [
-      "Parcours certifiants reconnus",
-      "Présentiel, distanciel ou mixte (FOAD)",
-      "Sessions inter et intra-entreprise",
-      "Évaluation et attestation de fin de formation",
-    ],
+    tagline: "Bientôt disponible",
+    description: "Des parcours de montée en compétences pour les particuliers et les entreprises.",
+    features: ["Bientôt disponible"],
   },
   {
     slug: "bilan-de-competences",
+    disponible: false,
     icon: "Compass",
     title: "Bilan de compétences",
-    tagline: "Faites le point, construisez votre projet",
-    description:
-      "Un accompagnement individuel pour analyser vos compétences, vos aptitudes et vos motivations afin de définir un projet professionnel cohérent.",
-    features: [
-      "Entretiens individuels confidentiels",
-      "Analyse des compétences et aptitudes",
-      "Définition d'un projet réaliste",
-      // Le bilan est une prestation que le CPF peut financer, mais la prise en charge
-      // suppose un organisme certifié Qualiopi. Tant qu'elle n'est pas obtenue, écrire
-      // « éligible au CPF » sur une carte produit est une promesse que le dossier démentira.
-      "Particuliers, salariés et entreprises",
-    ],
+    tagline: "Bientôt disponible",
+    description: "Un accompagnement individuel pour faire le point et construire votre projet.",
+    features: ["Bientôt disponible"],
   },
   {
     slug: "vae",
+    disponible: false,
     icon: "Award",
-    title: "Validation des Acquis (VAE)",
-    tagline: "Transformez votre expérience en diplôme",
-    description:
-      "Faites reconnaître officiellement les compétences acquises par votre expérience grâce à un accompagnement structuré tout au long de votre VAE.",
-    features: [
-      "Étude de recevabilité",
-      "Accompagnement à la rédaction du dossier",
-      "Préparation au jury",
-      "Suivi personnalisé",
-    ],
+    title: "Validation des acquis (VAE)",
+    tagline: "Bientôt disponible",
+    description: "Faire reconnaître les compétences acquises par l'expérience.",
+    features: ["Bientôt disponible"],
   },
   {
     slug: "e-learning-foad",
+    disponible: false,
     icon: "MonitorPlay",
     title: "E-learning & FOAD",
-    tagline: "Apprendre où vous voulez, quand vous voulez",
-    description:
-      "Des contenus pédagogiques digitaux, classes virtuelles et tutorat en ligne pour une formation ouverte et à distance pleinement encadrée.",
-    features: [
-      "Plateforme digitale dédiée",
-      "Classes virtuelles & tutorat en ligne",
-      "Contenus pédagogiques sur mesure",
-      "Suivi de progression",
-    ],
+    tagline: "Bientôt disponible",
+    description: "Des contenus à distance, à suivre à votre rythme.",
+    features: ["Bientôt disponible"],
   },
   {
     slug: "conseil-ingenierie",
+    disponible: false,
     icon: "Lightbulb",
     title: "Conseil & ingénierie pédagogique",
-    tagline: "Concevons ensemble vos dispositifs de formation",
-    description:
-      "Conseil, accompagnement et ingénierie pédagogique auprès des entreprises et des organismes pour bâtir des dispositifs de formation efficaces.",
-    features: [
-      "Audit des besoins en compétences",
-      "Conception de parcours sur mesure",
-      "Création de contenus pédagogiques",
-      "Mise à disposition de formateurs",
-    ],
+    tagline: "Bientôt disponible",
+    description: "Concevoir avec les organisations des dispositifs de formation sur mesure.",
+    features: ["Bientôt disponible"],
   },
 ] as const;
+
+/**
+ * Le programme de la Formation IA 360, tel qu'il figure au document d'information du public
+ * (IA360_00, v2). Toute modification se fait d'abord dans le programme, puis ici.
+ */
+export const programme = {
+  fiche: [
+    { label: "Durée", valeur: "21 h", detail: "3 journées · 6 ateliers de 3 h 30" },
+    { label: "Format", valeur: "3 semaines", detail: "une journée par semaine, ou 3 jours consécutifs" },
+    { label: "Modalité", valeur: "À distance, en direct", detail: "présentiel possible en entreprise" },
+    { label: "Effectif", valeur: "4 à 12", detail: "participants par session" },
+    { label: "Horaires", valeur: "9h00 – 17h00", detail: "pause 12h30 – 13h30" },
+    { label: "Prérequis", valeur: "Aucun technique", detail: "venir avec un cas réel de son activité" },
+  ],
+  domaines: [
+    { code: "DC1", nom: "Comprendre l'IA et ses défaillances" },
+    { code: "DC2", nom: "Produire de façon fiable, traçable et licite" },
+    { code: "DC3", nom: "Décider, encadrer et engager" },
+  ],
+  journees: [
+    {
+      jour: "Journée 1", nom: "Connaissance", dc: "DC1",
+      pieces: ["Grille de licéité", "Registre des risques", "Classification des données"],
+      ateliers: [
+        { code: "A1", titre: "Ouvrir la machine",
+          objectif: "Expliquer ce que fait un modèle de langage quand il répond, et écarter les usages illicites avant toute conception.",
+          notions: ["Le jeton, unité découpée et facturée", "Le contexte : sa vue, pas sa mémoire", "L'absence de mémoire entre deux tours", "La prédiction, cause mécanique de l'invention"] },
+        { code: "A2", titre: "Défaillances, sécurité et gouvernance",
+          objectif: "Identifier erreur, fuite et détournement, et produire le registre des risques et la procédure d'incident.",
+          notions: ["L'hallucination et le biais d'automatisation", "L'IA de l'ombre dans l'entreprise", "L'injection de consigne", "La classification des données"] },
+      ],
+    },
+    {
+      jour: "Journée 2", nom: "Conformité", dc: "DC2",
+      pieces: ["Jeu de référence mesuré", "Registre de traitement", "Charte d'usage"],
+      ateliers: [
+        { code: "A3", titre: "Produire un travail vérifiable",
+          objectif: "Obtenir un résultat exact sur une tâche réelle, et prouver qu'il est exact.",
+          notions: ["La consigne comme commande de travail", "Le contexte prime sur la formulation", "Les critères d'acceptation écrits avant", "Le jeu de référence"] },
+        { code: "A4", titre: "Gouverner ses données et ses documents",
+          objectif: "Faire travailler l'IA sur vos documents, et encadrer cet usage par une charte.",
+          notions: ["Le « RAG » sans jargon", "La reconnaissance de texte", "Le schéma d'extraction", "La chaîne de traitement complète"] },
+      ],
+    },
+    {
+      jour: "Journée 3", nom: "Déploiement", dc: "DC3",
+      pieces: ["Spécification encadrée", "Feuille de route 90 jours chiffrée", "Dossier complet"],
+      ateliers: [
+        { code: "A5", titre: "Cartographier et déléguer",
+          objectif: "Décomposer un processus réel, décider ce qui relève de l'IA, et le spécifier.",
+          notions: ["Cartographier un processus", "Génératif ou déterministe", "Ce qu'est vraiment un agent", "Pourquoi un agent est lent"] },
+        { code: "A6", titre: "Chiffrer et engager",
+          objectif: "Chiffrer un cas d'usage vérification comprise, et produire la feuille de route 90 jours.",
+          notions: ["Le coût au jeton", "Le coût complet, vérification comprise", "Cache, raisonnement, traitements en lot", "Le retour sur investissement chiffré"] },
+      ],
+    },
+  ],
+  evaluation: [
+    { quand: "Avant l'entrée", quoi: "Test de positionnement", seuil: "oriente votre parcours", clef: false },
+    { quand: "Chaque atelier", quoi: "Pièce datée et grille", seuil: "tous les critères remplis", clef: false },
+    { quand: "Jour 3", quoi: "Épreuve pratique · 45 min", seuil: "12 / 20 minimum", clef: true },
+    { quand: "Jour 3", quoi: "Revue croisée des dossiers", seuil: "4 critères sur 5", clef: true },
+    { quand: "Fin de session", quoi: "Questionnaire à chaud", seuil: "satisfaction", clef: false },
+    { quand: "À 3 mois", quoi: "Questionnaire à froid", seuil: "ce qui a été déployé", clef: false },
+  ],
+} as const;
 
 /** Les 3 piliers mis en avant en page d'accueil. */
-export const featuredFormationSlugs = [
-  "ia-360",
-  "formations-certifiantes",
-  "bilan-de-competences",
-] as const;
+export const featuredFormationSlugs = ["ia-360"] as const;
 
 export const processSteps = [
-  {
-    step: "01",
-    title: "Échange & positionnement",
-    description:
-      "Nous analysons votre besoin, votre niveau et vos objectifs pour vous orienter vers le parcours adapté.",
-  },
-  {
-    step: "02",
-    title: "Montage & financement",
-    description:
-      "Nous construisons votre dossier et identifions ce qui est réellement mobilisable pour vous : financement par votre entreprise, ou à titre personnel.",
-  },
-  {
-    step: "03",
-    title: "Formation",
-    description:
-      "Vous suivez votre parcours en présentiel, à distance ou en mixte, encadré par nos formateurs experts.",
-  },
-  {
-    step: "04",
-    title: "Certification & suivi",
-    description:
-      "Évaluation, attestation ou certification, puis suivi post-formation pour ancrer durablement les acquis.",
-  },
+  { step: "01", title: "Réservation & positionnement",
+    description: "Vous réservez votre place, puis un court test établit votre niveau et votre cas réel." },
+  { step: "02", title: "Trois journées d'ateliers",
+    description: "Six ateliers pratiques, en direct, sur les documents et les tâches de votre activité." },
+  { step: "03", title: "Vos outils en place",
+    description: "Agents, automatisations, secrétariat, recherche d'emploi, assistant de réunion : prêts à servir." },
+  { step: "04", title: "Certificat & suivi",
+    description: "Épreuve pratique, Certificat IA 360, puis un point à 3 mois sur ce que vous avez déployé." },
 ] as const;
 
 export const stats = [
-  { value: "6", suffix: "", label: "domaines de formation" },
-  { value: "100", suffix: "%", label: "parcours personnalisés" },
-  { value: "48", suffix: "h", label: "pour une réponse à votre demande" },
-  { value: "3", suffix: "", label: "modalités : présentiel, distance, mixte" },
+  { value: "21", suffix: "h", label: "de formation en direct" },
+  { value: "6", suffix: "", label: "ateliers pratiques" },
+  { value: "9", suffix: "", label: "pièces pour votre dossier IA" },
+  { value: "12", suffix: "", label: "participants au plus par session" },
 ] as const;
 
 /** Modes de financement mobilisables (formulaire de contact). */
 export const financements = [
-  { value: "cpf", label: "CPF (Compte Personnel de Formation)" },
-  { value: "opco", label: "OPCO (via mon employeur)" },
-  { value: "entreprise", label: "Plan de développement des compétences (entreprise)" },
-  { value: "france_travail", label: "France Travail" },
-  { value: "personnel", label: "Financement personnel" },
-  { value: "region", label: "Région" },
+  { value: "entreprise", label: "Mon entreprise finance ma place" },
+  { value: "personnel", label: "Je finance ma place" },
   { value: "autre", label: "Autre / je ne sais pas encore" },
 ] as const;
 
@@ -250,32 +278,44 @@ export const social = {
  */
 export const faqs = [
   {
-    q: "Les formations HBS FORMATION sont-elles éligibles au CPF ?",
-    a: "Pas à ce jour, et nous préférons le dire avant que vous construisiez votre projet dessus. Mobiliser le CPF suppose deux conditions réunies : un organisme certifié Qualiopi, et une formation conduisant à une certification enregistrée au RNCP ou au répertoire spécifique. Notre démarche de certification est engagée. En attendant, nos actions se financent par l'entreprise sur ses fonds propres ou à titre personnel.",
+    id: "ia-360",
+    q: "Qu'est-ce que la Formation IA 360 ?",
+    a: "Trois journées d'ateliers pratiques, en direct, pour comprendre ce que fait réellement l'intelligence artificielle, la faire travailler de façon fiable sur vos propres documents, et la déployer dans votre activité. Vous repartez avec votre dossier IA — neuf pièces datées — et avec vos outils en place.",
   },
   {
-    q: "Peut-on suivre une formation à distance ?",
-    a: "Oui. Nos formations sont proposées en présentiel, à distance (FOAD, classes virtuelles) ou en format mixte, pour s'adapter à votre rythme et à vos contraintes.",
+    id: "outils",
+    q: "Quels outils sont inclus dans la place ?",
+    a: "Des agents IA et des couches d'automatisation, un moteur de recherche d'emploi automatisé, une assistance au secrétariat et à la gestion administrative, un assistant de réunion, et d'autres outils encore. Ils sont compris dans le prix de la place.",
   },
   {
-    q: "Comment financer ma formation ?",
-    a: "Aujourd'hui, par votre entreprise sur ses fonds propres ou à titre personnel : ces deux voies ne demandent aucune certification et sont ouvertes dès maintenant. Les dispositifs mutualisés — CPF, OPCO, France Travail, aides de la Région — supposent la certification Qualiopi, que nous n'avons pas encore obtenue. Dites-nous votre situation et nous regarderons ensemble ce qui est réellement mobilisable.",
+    id: "tarif",
+    q: "Combien coûte la formation ?",
+    a: "1 300 € par place, formation de 21 heures et outils IA inclus. La place peut être réglée par votre entreprise ou à titre personnel.",
   },
   {
-    q: "Quand démarre la formation à l'intelligence artificielle ?",
-    a: "La première session de la Formation IA 360 ouvre le 26 octobre 2026. Elle dure 21 heures réparties sur trois journées et s'adresse autant aux particuliers et aux indépendants qu'aux entreprises. Chaque journée produit un livrable daté que vous emportez : cartographie de vos usages, registre des risques, puis feuille de route chiffrée à 90 jours.",
+    id: "prochaine-session",
+    q: "Quand a lieu la prochaine session ?",
+    a: "La prochaine session démarre le 26 octobre 2026. Les inscriptions sont ouvertes, dans la limite de 12 participants par session.",
   },
   {
-    q: "Comment se déroule un bilan de compétences ?",
-    a: "Le bilan de compétences se déroule en entretiens individuels et confidentiels : analyse de vos compétences et motivations, exploration des pistes, puis construction d'un projet professionnel réaliste. Le bilan est, par nature, une prestation que le CPF peut financer — mais la prise en charge suppose un organisme certifié Qualiopi, et notre certification est en cours. Chez nous, il se finance donc pour l'instant par l'entreprise ou à titre personnel.",
+    id: "prerequis",
+    q: "Faut-il des connaissances techniques ?",
+    a: "Non. Il suffit d'utiliser couramment un ordinateur et de venir avec un cas réel de votre activité : c'est la matière des six ateliers. Un court test de positionnement précède l'entrée.",
   },
   {
-    q: "Où se situe HBS FORMATION ?",
-    a: "HBS FORMATION est un organisme de formation basé à Rouen (50 Passage Saint-Étienne des Tonneliers, 76000 Rouen), intervenant en présentiel et partout en France à distance.",
+    id: "distance",
+    q: "La formation se suit-elle à distance ?",
+    a: "Oui, en direct avec le formateur. Elle peut aussi être organisée en présentiel dans votre entreprise.",
   },
   {
+    id: "autres",
+    q: "Proposez-vous d'autres formations ?",
+    a: "Le bilan de compétences, la VAE, les parcours certifiants, l'e-learning et le conseil en ingénierie pédagogique arrivent bientôt. Aujourd'hui, notre offre se concentre sur la Formation IA 360.",
+  },
+  {
+    id: "delai",
     q: "Sous combien de temps suis-je recontacté·e ?",
-    a: "Après votre demande, un conseiller vous recontacte sous 48 heures ouvrées pour étudier votre projet et vos possibilités de financement.",
+    a: "Un conseiller vous recontacte sous 48 heures ouvrées après votre demande.",
   },
 ] as const;
 
@@ -326,12 +366,3 @@ export const azzco = {
   credit: "Conçu & développé par AZZ&CO Labs",
 };
 
-/** Financeurs / dispositifs (libellés publics — pas de logos propriétaires). */
-export const financeurs = [
-  "CPF",
-  "OPCO",
-  "France Travail",
-  "Plan de développement des compétences",
-  "Région Normandie",
-  "Financement personnel",
-] as const;

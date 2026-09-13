@@ -8,7 +8,7 @@ import { site, legal } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Contactez HBS FORMATION à Rouen pour construire votre projet de formation et identifier les financements mobilisables (CPF, OPCO, France Travail).",
+    "Contactez HBS FORMATION à Rouen : une question sur la Formation IA 360, une réservation pour votre entreprise ou pour vous-même. Réponse sous 48 heures ouvrées.",
 };
 
 export default function ContactPage() {
@@ -55,12 +55,11 @@ export default function ContactPage() {
               </ul>
             </div>
 
-            <div className="rounded-2xl border border-mist bg-cloud p-8">
-              <h3 className="font-display text-lg font-bold text-teal-600">Financements</h3>
+            <div className="verre-clair rounded-2xl p-8">
+              <h3 className="font-display text-lg font-bold text-teal-600">Formation IA 360</h3>
               <p className="mt-3 text-sm leading-relaxed text-ink-soft">
-                Nos formations peuvent être prises en charge via le CPF, votre OPCO, France Travail,
-                le plan de développement des compétences de votre entreprise ou un financement
-                personnel. Nous vous guidons vers le bon dispositif.
+                1 300 € par place, formation de 21 heures et outils IA inclus. La place peut être
+                réglée par votre entreprise ou à titre personnel. Prochaine session le 26 octobre 2026.
               </p>
             </div>
           </div>

@@ -11,14 +11,14 @@ import { media, site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Entreprises & Organisations",
   description:
-    "HBS FORMATION accompagne les entreprises : montée en compétences des équipes, formations intra-entreprise sur mesure, ingénierie pédagogique — et la formation à l'intelligence artificielle.",
+    "Formation IA 360 pour les entreprises : vos collaborateurs formés à l'intelligence artificielle sur vos propres processus, outils IA inclus dans chaque place. 1 300 € par place, en intra-entreprise possible.",
 };
 
 const offres = [
-  { icon: Target, title: "Diagnostic des besoins", text: "Nous analysons vos enjeux et les compétences à développer au sein de vos équipes." },
-  { icon: Layers, title: "Formations sur mesure", text: "Des parcours intra-entreprise conçus spécifiquement pour votre contexte et vos métiers." },
-  { icon: Users2, title: "Formateurs experts", text: "Des intervenants issus du terrain, mis à disposition selon vos besoins." },
-  { icon: LineChart, title: "Suivi & impact", text: "Un suivi des acquis et de la montée en compétences, du déploiement au bilan." },
+  { icon: Target, title: "Ce que l'IA peut prendre", text: "On identifie les tâches de vos équipes que l'IA peut assumer — et celles qu'elle ne doit pas toucher." },
+  { icon: Layers, title: "La formation dans vos locaux", text: "La Formation IA 360 organisée pour vos collaborateurs, sur vos propres documents et processus." },
+  { icon: Users2, title: "Des outils pour chaque place", text: "Agents, automatisations, secrétariat, assistant de réunion : inclus pour chaque collaborateur formé." },
+  { icon: LineChart, title: "Un suivi à trois mois", text: "On mesure ce qui a réellement été déployé dans vos équipes, et ce qui reste à faire." },
 ];
 
 export default function EntreprisesPage() {
@@ -34,10 +34,10 @@ export default function EntreprisesPage() {
         eyebrow="Entreprises"
         title={
           <>
-            Faites grandir <span className="text-teal-600">vos équipes</span>
+            Mettez l&apos;IA <span className="text-teal-600">au travail dans vos équipes</span>
           </>
         }
-        subtitle="Montée en compétences, formations intra-entreprise sur mesure et ingénierie pédagogique pour les organisations."
+        subtitle="La Formation IA 360 pour vos collaborateurs, sur vos processus, avec les outils IA inclus dans chaque place."
       />
 
       <section className="py-16 lg:py-24">
@@ -50,7 +50,7 @@ export default function EntreprisesPage() {
           <div className="grid gap-6 sm:grid-cols-2">
             {offres.map((o) => (
               <Reveal key={o.title}>
-                <div className="h-full rounded-2xl border border-mist bg-white p-6 shadow-card">
+                <div className="verre-clair h-full rounded-2xl p-6">
                   <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-teal-50 text-teal-600">
                     <o.icon size={22} strokeWidth={1.75} />
                   </div>

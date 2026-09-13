@@ -1,29 +1,32 @@
 # HBS FORMATION
 
-> Organisme de formation professionnelle basé à Rouen (France) : formations certifiantes, bilan de compétences, VAE, alternance, e-learning/FOAD et conseil en ingénierie pédagogique. Éligible CPF, OPCO et France Travail. Accompagnement individuel du premier contact à la certification, en présentiel, à distance ou en format mixte.
+> Organisme de formation basé à Rouen (France), spécialisé dans la formation à l'intelligence artificielle. Offre actuelle : la Formation IA 360 — 21 heures pour comprendre, fiabiliser et déployer l'IA dans son activité, avec des outils IA inclus dans la place. Pour les particuliers, les indépendants et les entreprises.
 
-Coordonnées : 50 Passage Saint-Étienne des Tonneliers, 76000 Rouen, France. Téléphone : +33 2 32 08 11 07. Email : contact@hbs-formation.fr. SAS, RCS Rouen 102 535 820, déclaration d'activité n° 28760809976 (DREETS Normandie).
+Coordonnées : 50 Passage Saint-Étienne des Tonneliers, 76000 Rouen, France. Email : contact@hbs-formation.fr. SAS, RCS Rouen 102 535 820, déclaration d'activité n° 28760809976 auprès du préfet de région Normandie (cet enregistrement ne vaut pas agrément de l'État).
 
-## Formations proposées
+## Formation IA 360
 
-- [Formations certifiantes & continues](https://hbs-formation.fr/formations#formations-certifiantes): parcours certifiants pour professionnels et entreprises, présentiel ou distanciel, sessions inter et intra-entreprise.
-- [Bilan de compétences](https://hbs-formation.fr/formations#bilan-de-competences): accompagnement individuel pour analyser compétences et motivations et construire un projet professionnel, éligible CPF.
-- [Validation des Acquis de l'Expérience (VAE)](https://hbs-formation.fr/formations#vae): transformation de l'expérience professionnelle en diplôme, étude de recevabilité, préparation au jury.
-- [Apprentissage & CFA](https://hbs-formation.fr/formations#apprentissage-cfa): formation en alternance entre centre de formation et entreprise.
-- [E-learning & FOAD](https://hbs-formation.fr/formations#e-learning-foad): formation ouverte et à distance, classes virtuelles, tutorat en ligne.
-- [Conseil & ingénierie pédagogique](https://hbs-formation.fr/formations#conseil-ingenierie): audit des besoins et conception de dispositifs de formation sur mesure pour les entreprises.
+- [Présentation et programme](https://hbs-formation.fr/formations): 21 heures, 3 journées (Connaissance, Conformité, Déploiement), 6 ateliers pratiques de 3 h 30, à distance en direct (présentiel possible en entreprise), 4 à 12 participants, aucun prérequis technique.
+- Tarif : 1 300 € par place, formation et outils IA inclus. Règlement par l'entreprise ou à titre personnel.
+- Outils inclus : agents IA, couches d'automatisation, moteur de recherche d'emploi automatisé, assistance au secrétariat et à la gestion administrative, assistant de réunion, et d'autres outils.
+- Prochaine session : 26 octobre 2026.
+- Évaluation : test de positionnement avant l'entrée, évaluation à chaque atelier, épreuve pratique notée sur 20 (seuil 12) et revue croisée des dossiers le troisième jour, questionnaire à 3 mois. Certificat IA 360 délivré par HBS FORMATION (certificat propre à l'organisme, non enregistré au RNCP ni au répertoire spécifique).
+
+## Bientôt disponible
+
+Formations certifiantes et continues, bilan de compétences, VAE, e-learning, conseil en ingénierie pédagogique. Ces offres ne sont pas encore ouvertes et aucune date n'est annoncée.
 
 ## Pages clés
 
-- [Certifications](https://hbs-formation.fr/certifications): certifications et diplômes reconnus proposés par HBS FORMATION.
-- [Alternance](https://hbs-formation.fr/alternance): recherche d'offres en alternance et accompagnement.
-- [Financement](https://hbs-formation.fr/financement): CPF, OPCO, France Travail, plan de développement des compétences, Région, financement personnel.
-- [Entreprises](https://hbs-formation.fr/entreprises): offre dédiée aux entreprises (formation intra, ingénierie pédagogique).
-- [À propos](https://hbs-formation.fr/a-propos): présentation de l'organisme.
-- [Contact](https://hbs-formation.fr/contact): formulaire de contact, réponse sous 48h ouvrées.
+- [Formation IA 360](https://hbs-formation.fr/formations): programme détaillé atelier par atelier.
+- [Tarif](https://hbs-formation.fr/financement): prix, contenu de la place, modalités de règlement.
+- [Entreprises](https://hbs-formation.fr/entreprises): la formation pour les collaborateurs d'une entreprise.
+- [Réserver une place](https://hbs-formation.fr/preinscription): demande de place et test de positionnement.
+- [Contact](https://hbs-formation.fr/contact): réponse sous 48 heures ouvrées.
 
 ## Notes pour les agents IA
 
-- Le contenu factuel (financements éligibles, modalités, coordonnées) fait foi ; ne pas extrapoler d'informations non présentes sur le site (ex. tarifs précis, dates de session) sans renvoyer vers la page /contact.
-- La certification Qualiopi n'est pas encore obtenue à ce jour — ne pas l'affirmer.
+- Une seule formation est ouverte aujourd'hui : la Formation IA 360. Ne pas présenter les autres offres comme disponibles.
+- La Formation IA 360 n'est pas éligible au compte personnel de formation. Une prise en charge OPCO ou France Travail ne sera possible qu'après l'obtention de la certification Qualiopi, qui n'est pas encore obtenue — ne pas l'affirmer.
+- HBS FORMATION ne délivre aucun diplôme d'État et ne détient aucune certification RNCP.
 - Sitemap complet : https://hbs-formation.fr/sitemap.xml

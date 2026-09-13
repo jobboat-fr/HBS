@@ -2,7 +2,8 @@ import { HeroSection } from "@/components/sections/HeroSection";
 import { ServicesSection } from "@/components/sections/ServicesSection";
 import { ProcessSection } from "@/components/sections/ProcessSection";
 import { StatsSection } from "@/components/sections/StatsSection";
-import { VideoSection } from "@/components/sections/VideoSection";
+import { OutilsSection } from "@/components/sections/OutilsSection";
+import { ProgrammeSection } from "@/components/sections/ProgrammeSection";
 import { CommitmentsSection } from "@/components/sections/CommitmentsSection";
 import { TestimonialsSection } from "@/components/sections/TestimonialsSection";
 import { FaqSection } from "@/components/sections/FaqSection";
@@ -21,8 +22,9 @@ export default async function HomePage() {
       <CoursesJsonLd />
       <HeroSection />
       <ServicesSection />
+      <OutilsSection />
+      <ProgrammeSection />
       <StatsSection />
-      <VideoSection />
       <ProcessSection />
       <CommitmentsSection />
       <TestimonialsSection items={testimonials} />
