@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { localAnswer, suggestLink, type AssistantReply } from "@/lib/assistant";
-import { aiAnswer } from "@/lib/llm";
+import { aiAnswer, systemPrompt } from "@/lib/llm";
 import { log, errMsg } from "@/lib/log";
 import { isSecretSeeking, redactSecrets, SAFE_REFUSAL } from "@/lib/guard";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/rateLimit";
@@ -75,22 +75,34 @@ export async function POST(request: NextRequest) {
     if (endpoint) {
       try {
         const controller = new AbortController();
-        const timer = setTimeout(() => controller.abort(), 12000);
+        const timer = setTimeout(() => controller.abort(), 25000);
+        // Pont Caddy de l'agent (agent.vtlvs.com/bridge/chat) → API compatible OpenAI de l'agent.
+        // Le jeton du pont voyage en en-tête ; la clé de l'API reste sur le serveur de l'agent.
+        // La conversation suit la session du visiteur, et le contexte du site (formations,
+        // planning, tarifs) est passé en message système à chaque appel.
         const res = await fetch(endpoint, {
           method: "POST",
           signal: controller.signal,
           headers: {
             "Content-Type": "application/json",
-            ...(process.env.AGENT_TOKEN ? { Authorization: `Bearer ${process.env.AGENT_TOKEN}` } : {}),
+            ...(process.env.AGENT_TOKEN ? { "X-Bridge-Token": process.env.AGENT_TOKEN } : {}),
+            "X-Hermes-Session-Id": `site-${sessionId}`,
           },
-          body: JSON.stringify({ sessionId, message, page, channel: "hub_chat", site: "hbs-formation" }),
+          body: JSON.stringify({
+            model: "hermes-agent",
+            messages: [
+              { role: "system", content: systemPrompt(page) },
+              { role: "user", content: message },
+            ],
+          }),
         });
         clearTimeout(timer);
         if (res.ok) {
-          const data = (await res.json()) as { reply?: string; text?: string; links?: AssistantReply["links"] };
-          const text = data.reply ?? data.text;
+          const data = (await res.json()) as { choices?: { message?: { content?: string } }[]; reply?: string; text?: string; links?: AssistantReply["links"] };
+          const text = data.choices?.[0]?.message?.content ?? data.reply ?? data.text;
           if (text) {
-            reply = { text, links: data.links };
+            const lien = suggestLink(message);
+            reply = { text, links: data.links ?? (lien ? [lien] : undefined) };
             source = "agent";
           } else {
             reply = await aiOrLocal();

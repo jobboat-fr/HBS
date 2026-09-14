@@ -7,7 +7,7 @@ import { FORMATIONS, ORDRE, euros, libelleSemaine, planning } from "@/lib/comman
  * Activée dès que LLM_API_KEY est défini (sinon le site retombe sur la FAQ locale).
  */
 
-function systemPrompt(page?: string): string {
+export function systemPrompt(page?: string): string {
   const faq = faqs.map((f) => `Q: ${f.q}\nR: ${f.a}`).join("\n\n");
   const disponible = ORDRE.map((c) => {
     const f = FORMATIONS[c];
