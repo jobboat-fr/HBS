@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { MapPin, Mail, Phone } from "lucide-react";
-import { navLinks, site, legal, social, formations, azzco } from "@/lib/site";
+import { navLinks, site, legal, social, azzco } from "@/lib/site";
+import { FORMATIONS, ORDRE, euros } from "@/lib/commande";
 import { HbsBadge } from "@/components/ui/Logo";
 import { AzzcoLogo } from "@/components/ui/AzzcoLogo";
 
@@ -23,19 +24,17 @@ export function Footer() {
           <div>
             <h3 className="text-sm font-semibold text-white">Formations</h3>
             <ul className="mt-5 space-y-3 text-sm">
-              {formations.map((f) => (
-                <li key={f.slug}>
-                  {f.disponible ? (
-                    <Link href="/formations" className="font-semibold text-white hover:text-teal-400">
-                      {f.title}
-                    </Link>
-                  ) : (
-                    <span className="text-white/40">
-                      {f.title} <span className="text-[11px] uppercase tracking-wide text-white/30">· bientôt</span>
-                    </span>
-                  )}
+              {ORDRE.map((c) => (
+                <li key={c}>
+                  <Link href={FORMATIONS[c].href} className="font-semibold text-white hover:text-teal-400">
+                    {FORMATIONS[c].nom}
+                  </Link>
+                  <span className="text-white/45"> · {euros(FORMATIONS[c].prix)}</span>
                 </li>
               ))}
+              <li>
+                <Link href="/planning" className="text-teal-300 hover:text-teal-200">Voir le planning →</Link>
+              </li>
             </ul>
           </div>
 

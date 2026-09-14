@@ -1,5 +1,5 @@
-import { site, legal, social, faqs, formations, certificat } from "@/lib/site";
-import { PRODUIT } from "@/lib/commande";
+import { site, legal, social, faqs, certificat } from "@/lib/site";
+import { FORMATIONS, PLACES_MAX, libelleSemaine, planning, type CodeFormation } from "@/lib/commande";
 
 const Ld = ({ data }: { data: unknown }) => (
   <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />
@@ -73,56 +73,53 @@ export function FaqJsonLd({ questions = faqs }: { questions?: readonly { q: stri
   );
 }
 
-/** La Formation IA 360 décrite complètement : cours, session, offre, certificat. */
-export function CourseJsonLd() {
-  const f = formations.find((x) => x.disponible);
-  if (!f) return null;
-  const offre = {
+/** Une formation 360 décrite complètement : cours, sessions ouvertes, offre. */
+export function CourseJsonLd({ code = "IA360" }: { code?: CodeFormation }) {
+  const f = FORMATIONS[code];
+  const sessions = planning(new Date(), 4).filter((x) => x.formation === code && x.statut === "ouvert").slice(0, 3);
+  const offre = (url: string) => ({
     "@type": "Offer",
-    price: String(PRODUIT.prixUnitaire / 100),
+    price: String(f.prix / 100),
     priceCurrency: "EUR",
     availability: "https://schema.org/InStock",
-    url: `${site.url}/reserver`,
+    url,
     category: "Place de formation",
-    validFrom: "2026-09-01",
-  };
+  });
   return (
     <Ld
       data={{
         "@context": "https://schema.org",
         "@type": "Course",
-        "@id": `${site.url}/formations#ia-360`,
-        name: PRODUIT.nom,
-        description: f.description,
-        url: `${site.url}/formations`,
+        "@id": `${site.url}${f.href}#cours`,
+        name: f.nom,
+        alternateName: `${f.nom} — ${f.accroche}`,
+        description: f.resume,
+        url: `${site.url}${f.href}`,
         inLanguage: "fr",
         provider: organisme,
-        educationalLevel: "Débutant à intermédiaire",
-        coursePrerequisites: "Aucun prérequis technique",
+        coursePrerequisites: f.prerequis,
         timeRequired: "PT21H",
-        teaches: [
-          "Comprendre le fonctionnement et les limites de l'IA",
-          "Vérifier et fiabiliser les résultats d'une IA",
-          "Protéger les données et respecter le RGPD et l'AI Act",
-          "Déployer des agents IA et des automatisations sur un cas réel",
-        ],
-        educationalCredentialAwarded: {
-          "@type": "EducationalOccupationalCredential",
-          name: certificat.nom,
-          credentialCategory: "Certificat délivré par l'organisme (non enregistré au RNCP)",
-        },
-        offers: offre,
-        hasCourseInstance: {
+        teaches: f.objectifs,
+        educationalCredentialAwarded:
+          code === "IA360"
+            ? {
+                "@type": "EducationalOccupationalCredential",
+                name: certificat.nom,
+                credentialCategory: "Certificat délivré par l'organisme (non enregistré au RNCP)",
+              }
+            : undefined,
+        offers: offre(`${site.url}/reserver?formation=${code}`),
+        hasCourseInstance: sessions.map((x) => ({
           "@type": "CourseInstance",
-          name: `${PRODUIT.nom} — ${PRODUIT.session.libelle}`,
+          name: `${f.nom} — semaine ${libelleSemaine(x)}`,
           courseMode: "online",
           courseWorkload: "PT21H",
-          startDate: PRODUIT.session.debut,
-          endDate: PRODUIT.session.fin,
-          location: { "@type": "VirtualLocation", url: `${site.url}/formations` },
-          maximumAttendeeCapacity: PRODUIT.placesMax,
-          offers: offre,
-        },
+          startDate: x.debut,
+          endDate: x.fin,
+          location: { "@type": "VirtualLocation", url: `${site.url}${f.href}` },
+          maximumAttendeeCapacity: PLACES_MAX,
+          offers: offre(`${site.url}/reserver?formation=${code}&session=${x.code}`),
+        })),
       }}
     />
   );
@@ -130,7 +127,11 @@ export function CourseJsonLd() {
 
 /** Conservé pour l'accueil : même cours, sous forme de liste. */
 export function CoursesJsonLd() {
-  return <CourseJsonLd />;
+  return (
+    <>
+      {(["DATA360", "CONTENT360", "MKT360", "IA360"] as const).map((c) => <CourseJsonLd key={c} code={c} />)}
+    </>
+  );
 }
 
 export function BreadcrumbJsonLd({ items }: { items: { name: string; url: string }[] }) {

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, Check, Clock, FileCheck2, CalendarDays } from "lucide-react";
+import { ArrowRight, Check, FileCheck2, CalendarDays } from "lucide-react";
+import { Rythme } from "@/components/planning/Planning";
+import { prochaineSession, libelleSemaine } from "@/lib/commande";
 import { Reveal } from "@/components/ui/Reveal";
 import { CTASection } from "@/components/sections/CTASection";
 import { OutilsSection } from "@/components/sections/OutilsSection";
@@ -18,7 +20,7 @@ export const metadata: Metadata = {
 
 export default function FormationsPage() {
   const ia = formations.find((f) => f.disponible)!;
-  const bientot = formations.filter((f) => !f.disponible);
+  const prochaine = prochaineSession("IA360");
 
   return (
     <>
@@ -38,7 +40,7 @@ export default function FormationsPage() {
           <div>
             <span className="verre inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold text-white/90">
               <CalendarDays size={14} className="text-cyan-300" aria-hidden />
-              Prochaine session · {annonce.dateLisible}
+              Prochaine session · {prochaine ? `semaine ${libelleSemaine(prochaine)}` : annonce.dateLisible}
             </span>
             <h1 className="mt-5 font-display text-5xl font-extrabold leading-[1.03] text-white md:text-6xl">
               Formation <span className="texte-lumiere">IA 360</span>
@@ -52,10 +54,13 @@ export default function FormationsPage() {
                 <p className="text-xs font-semibold uppercase tracking-widest text-white/55">Votre place</p>
                 <p className="mt-1 font-display text-6xl font-extrabold text-white">{tarif.montant}</p>
                 <p className="text-sm text-white/65">{tarif.resume}</p>
-                <Link href="/reserver" className="bouton-neon mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 font-bold">
-                  Réserver ma place <ArrowRight size={18} aria-hidden />
+                <Link
+                  href={prochaine ? `/preinscription?formation=IA360&session=${prochaine.code}` : "/preinscription?formation=IA360"}
+                  className="bouton-neon mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 font-bold"
+                >
+                  Je réserve ma place <ArrowRight size={18} aria-hidden />
                 </Link>
-                <p className="mt-3 text-center text-xs text-white/50">Test de positionnement inclus · réponse sous 48 h</p>
+                <p className="mt-3 text-center text-xs text-white/50">Gratuit et sans engagement · 12 places · réponse sous 48 h</p>
               </div>
             </div>
           </div>
@@ -182,29 +187,22 @@ export default function FormationsPage() {
         </div>
       </section>
 
-      {/* ── Bientôt disponible ──────────────────────────────────────────────── */}
+      {/* ── Les autres formations 360 ─────────────────────────────────────── */}
       <section className="py-20">
         <div className="container-page">
           <Reveal>
-            <h2 className="text-center font-display text-display-md font-extrabold text-ink">Bientôt disponible</h2>
+            <h2 className="text-center font-display text-display-md font-extrabold text-ink">Enchaînez les quatre semaines</h2>
             <p className="mx-auto mt-3 max-w-2xl text-center text-ink-soft">
-              Notre offre s&apos;élargit. Laissez-nous vos coordonnées pour être prévenu à l&apos;ouverture.
+              L&apos;IA 360 clôt chaque mois. Les trois semaines d&apos;avant, apprenez à lire vos chiffres, créer vos contenus
+              et vendre — avec l&apos;IA à chaque étape.
             </p>
           </Reveal>
-          <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            {bientot.map((f) => (
-              <li key={f.slug} id={f.slug} className="verre-clair scroll-mt-28 rounded-2xl p-5">
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/80 px-2.5 py-1 text-[11px] font-semibold text-ink-muted ring-1 ring-mist">
-                  <Clock size={12} aria-hidden /> Bientôt
-                </span>
-                <h3 className="mt-3 font-display text-base font-bold leading-snug text-ink">{f.title}</h3>
-                <p className="mt-1.5 text-xs leading-relaxed text-ink-soft">{f.description}</p>
-              </li>
-            ))}
-          </ul>
+          <div className="mt-10">
+            <Rythme />
+          </div>
           <div className="mt-8 text-center">
-            <Link href="/contact" className="inline-flex items-center gap-2 font-semibold text-teal-700 hover:text-teal-600">
-              Être prévenu à l&apos;ouverture <ArrowRight size={16} aria-hidden />
+            <Link href="/planning" className="inline-flex min-h-[44px] items-center gap-2 font-bold text-teal-700 hover:underline">
+              Voir toutes les dates <ArrowRight size={16} aria-hidden />
             </Link>
           </div>
         </div>

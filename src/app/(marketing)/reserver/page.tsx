@@ -7,9 +7,9 @@ import { venteOuverte } from "@/lib/stripe";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Réserver la Formation IA 360 — 1 300 € la place, paiement sécurisé",
+  title: "Réserver et payer en ligne — formations Data, Content, Marketing et IA 360",
   description:
-    "Réservez votre place à la Formation IA 360 en deux minutes : paiement en ligne pour les entreprises, 0 € aujourd'hui et paiement en trois fois pour les particuliers, devis OPCO ou France Travail.",
+    "Réservez et payez votre place en deux minutes : paiement en ligne pour les entreprises, 0 € aujourd'hui et paiement en trois fois pour les particuliers, devis OPCO ou France Travail.",
   alternates: { canonical: "/reserver" },
 };
 

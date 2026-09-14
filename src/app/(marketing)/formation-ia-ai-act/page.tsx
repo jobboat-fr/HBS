@@ -91,7 +91,7 @@ export default function AiActPage() {
                 <p className="mt-2 font-display text-5xl font-extrabold text-ink">{tarif.montant}</p>
                 <p className="text-sm text-ink-soft">{tarif.unite} · 21 h · outils IA inclus</p>
                 <p className="mt-3 text-sm text-ink-soft">Prochaine session le {annonce.dateLisible}.</p>
-                <Link href="/reserver?profil=entreprise" className="bouton-neon mt-5 flex min-h-[48px] items-center justify-center gap-2 rounded-full px-6 font-bold">
+                <Link href="/preinscription?formation=IA360" className="bouton-neon mt-5 flex min-h-[48px] items-center justify-center gap-2 rounded-full px-6 font-bold">
                   Réserver pour mon équipe <ArrowRight size={18} aria-hidden />
                 </Link>
                 <Link href="/entreprises" className="mt-3 block text-center text-sm font-semibold text-teal-700 underline">

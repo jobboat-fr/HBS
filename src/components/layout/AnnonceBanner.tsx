@@ -39,11 +39,11 @@ export function AnnonceBanner() {
         <span className="truncate">
           {/* Texte court : « Formation IA 360 · prochaine session le 26 octobre » mesurait
               plus que la bande à 375 px et finissait en « 26 oct… », la date coupée. */}
-          <span className="font-semibold"><span className="max-[359px]:hidden">Formation </span>IA 360</span>
-          <span className="text-white/85"> · session du </span>
+          <span className="text-white/85">Lancement le </span>
           <time dateTime={annonce.iso} className="font-semibold">
             26 octobre
           </time>
+          <span className="text-white/85"> · voir le planning</span>
         </span>
         <ArrowRight aria-hidden className="h-3.5 w-3.5 shrink-0" />
       </Link>
@@ -53,15 +53,14 @@ export function AnnonceBanner() {
         {/* teal-200 (#96B6F7) et non coral : dans ce thème « coral » est du noir,
             invisible sur l'encre. Le bleu clair de la palette porte sur fond #0B2239. */}
         <Sparkles aria-hidden className="h-4 w-4 shrink-0 text-teal-200" />
-        <span className="font-semibold">{annonce.titre}</span>
+        <span className="font-semibold">4 formations 360</span>
         <span className="truncate text-white/85">
           {/* La date machine sert aux lecteurs d'écran et aux moteurs ; le texte reste lisible. */}
-          <span className="hidden md:inline">Prochaine session le </span>
-          <span className="md:hidden">Prochaine session le </span>
+          Lancement le{" "}
           <time dateTime={annonce.iso} className="font-semibold text-white">
             {annonce.dateLisible}
           </time>
-          <span className="hidden lg:inline"> — inscriptions ouvertes.</span>
+          <span className="hidden lg:inline"> — puis chaque mois Data, Content, Marketing et IA.</span>
         </span>
         <Link
           href={annonce.href}

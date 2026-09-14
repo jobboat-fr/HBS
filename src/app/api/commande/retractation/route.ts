@@ -5,6 +5,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { envoyer, destinatairesOrganisme } from "@/lib/commandes-serveur";
 import { buildRetractationConfirmee, buildAlerteOrganisme } from "@/lib/email/templates";
 import { log } from "@/lib/log";
+import { FORMATIONS, type CodeFormation } from "@/lib/commande";
 
 export const runtime = "nodejs";
 
@@ -27,7 +28,7 @@ export async function POST(request: NextRequest) {
   if (!signatureValide(d.c, d.s)) return NextResponse.json({ error: "Lien invalide." }, { status: 403 });
 
   const db = createAdminClient();
-  const { data: c } = await db.from("hbs_commandes").select("id, statut, nom, email, retractation_fin").eq("id", d.c).maybeSingle();
+  const { data: c } = await db.from("hbs_commandes").select("id, statut, produit, nom, email, retractation_fin").eq("id", d.c).maybeSingle();
   if (!c) return NextResponse.json({ error: "Commande introuvable." }, { status: 404 });
   if (c.statut === "retractee") return NextResponse.json({ ok: true, deja: true });
   if (!c.retractation_fin || new Date(c.retractation_fin) < new Date()) {
@@ -41,7 +42,7 @@ export async function POST(request: NextRequest) {
   await db.from("hbs_commandes").update({ statut: "retractee", retractee_le: maintenant, updated_at: maintenant }).eq("id", c.id);
   await db.from("hbs_echeances").update({ statut: "annulee" }).eq("commande_id", c.id).neq("statut", "payee");
 
-  if (c.email) await envoyer(c.email, "Votre rétractation est enregistrée — HBS FORMATION", buildRetractationConfirmee({ nom: c.nom }));
+  if (c.email) await envoyer(c.email, "Votre rétractation est enregistrée — HBS FORMATION", buildRetractationConfirmee({ nom: c.nom, formation: FORMATIONS[c.produit as CodeFormation]?.nom ?? "votre formation" }));
   await envoyer(destinatairesOrganisme(), `Rétractation — ${c.nom ?? c.email}`,
     buildAlerteOrganisme("Rétractation", [
       `${c.nom ?? ""} (${c.email ?? ""}) s'est rétracté(e) le ${new Date().toLocaleString("fr-FR", { timeZone: "Europe/Paris" })}.`,

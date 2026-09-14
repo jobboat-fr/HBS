@@ -28,6 +28,9 @@ import { annonce, certificat } from "@/lib/site";
 
 type Programme = { id: string; title: string };
 
+/** La semaine choisie depuis le planning — voyage avec la demande jusqu'à l'organisme. */
+export type Choix = { code: string; formation: string; semaine: string; prix: string };
+
 type Result =
   | { kind: "sent"; positionnement: string | null; next: string }
   | { kind: "known"; next: string };
@@ -56,10 +59,12 @@ export function InscriptionForm({
   programmes,
   consentText,
   defaultProgramId,
+  choix,
 }: {
   programmes: Programme[];
   consentText: string;
   defaultProgramId?: string;
+  choix?: Choix | null;
 }) {
   const [result, setResult] = useState<Result | null>(null);
   const [paper, setPaper] = useState<Paper | null>(null);
@@ -97,7 +102,14 @@ export function InscriptionForm({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...values,
-          campaign: new URLSearchParams(window.location.search).get("utm_campaign") || undefined,
+          // La plateforme ne reçoit pas encore la session : la semaine choisie part dans le
+          // message (lu par l'organisme) et dans la campagne (filtrable dans LEARN).
+          message: choix
+            ? `Semaine souhaitée : ${choix.formation} — ${choix.semaine}${values.message ? `\n\n${values.message}` : ""}`
+            : values.message,
+          campaign:
+            new URLSearchParams(window.location.search).get("utm_campaign") ||
+            (choix ? `planning:${choix.code}` : undefined),
           website: honeypot,
           renderedAt: renderedAt.current,
         }),
@@ -267,7 +279,7 @@ export function InscriptionForm({
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-ink-soft">
                 Vous hésitez encore — c&apos;est le cas le plus fréquent, et c&apos;est une
-                bonne raison de commencer par là. En trois journées, l&apos;IA&nbsp;360 part de
+                bonne raison de commencer par là. En une semaine, l&apos;IA&nbsp;360 part de
                 votre activité réelle : vous repartez avec vos propres usages cartographiés, de
                 quoi décider ensuite ce qu&apos;il vous faut vraiment.
               </p>
@@ -302,7 +314,7 @@ export function InscriptionForm({
       </div>
 
       <div>
-        <Label htmlFor="message">Votre projet</Label>
+        <Label htmlFor="message">Votre projet (facultatif)</Label>
         <Textarea
           id="message"
           placeholder="Quelques mots sur votre situation et ce que vous visez."
@@ -324,17 +336,24 @@ export function InscriptionForm({
         <p className="rounded-xl bg-coral/10 px-4 py-3 text-sm text-coral-dark">{serverError}</p>
       ) : null}
 
-      <Button type="submit" size="md" disabled={isSubmitting} className="w-full sm:w-auto">
+      <button
+        type="submit"
+        disabled={isSubmitting}
+        className="bouton-neon flex min-h-[56px] w-full items-center justify-center gap-2 rounded-full px-6 text-lg font-bold disabled:opacity-60"
+      >
         {isSubmitting ? (
           <>
-            <Loader2 size={16} className="animate-spin" /> Envoi…
+            <Loader2 size={18} className="animate-spin" /> Envoi…
           </>
         ) : (
           <>
-            Demander une place <ArrowRight size={16} />
+            {choix ? `Je réserve ma place — ${choix.formation}` : "Je réserve ma place"} <ArrowRight size={18} />
           </>
         )}
-      </Button>
+      </button>
+      <p className="text-center text-xs font-semibold text-ink-soft">
+        Gratuit et sans engagement · réponse sous 48 h ouvrées · 12 places par session
+      </p>
 
       <p className="text-xs text-ink-muted">
         Cette demande ne crée pas de compte. Un test de positionnement établit votre niveau,

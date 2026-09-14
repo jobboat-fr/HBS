@@ -4,7 +4,7 @@ import { stripe, commission, options } from "@/lib/stripe";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { envoyer, destinatairesOrganisme, dateFr } from "@/lib/commandes-serveur";
 import { buildRappelEcheance, buildEcheanceEchec, buildAlerteOrganisme } from "@/lib/email/templates";
-import { PRODUIT, euros } from "@/lib/commande";
+import { FORMATIONS, euros, type CodeFormation } from "@/lib/commande";
 import { log, errMsg } from "@/lib/log";
 import { site } from "@/lib/site";
 
@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
 
   const { data: lignes, error } = await db
     .from("hbs_echeances")
-    .select("id, rang, montant, due_le, statut, rappel_le, tentatives, commande:hbs_commandes(id, statut, nom, email, stripe_account, stripe_customer_id, stripe_payment_method_id, retractation_fin)")
+    .select("id, rang, montant, due_le, statut, rappel_le, tentatives, commande:hbs_commandes(id, statut, produit, nom, email, stripe_account, stripe_customer_id, stripe_payment_method_id, retractation_fin)")
     .eq("statut", "a_prelever")
     .lte("due_le", new Date(maintenant.getTime() + 3 * JOUR).toISOString())
     .order("due_le");
@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
 
   for (const l of lignes ?? []) {
     const c = (Array.isArray(l.commande) ? l.commande[0] : l.commande) as {
-      id: string; statut: string; nom: string | null; email: string | null; stripe_account: string | null;
+      id: string; statut: string; produit: string; nom: string | null; email: string | null; stripe_account: string | null;
       stripe_customer_id: string | null; stripe_payment_method_id: string | null; retractation_fin: string | null;
     } | null;
     if (!c || !["carte_enregistree", "impayee"].includes(c.statut)) {
@@ -58,11 +58,12 @@ export async function GET(request: NextRequest) {
     }
 
     const due = new Date(l.due_le);
+    const nomFormation = FORMATIONS[c.produit as CodeFormation]?.nom ?? "votre formation";
 
     // Rappel à J-3 (ou dès que possible si la commande est plus récente).
     if (!l.rappel_le && c.email) {
-      await envoyer(c.email, `Rappel : échéance du ${dateFr(due)} — Formation IA 360`,
-        buildRappelEcheance({ nom: c.nom, montant: euros(l.montant), date: dateFr(due), rang: l.rang }));
+      await envoyer(c.email, `Rappel : échéance du ${dateFr(due)} — ${nomFormation}`,
+        buildRappelEcheance({ nom: c.nom, montant: euros(l.montant), date: dateFr(due), rang: l.rang, formation: nomFormation }));
       await db.from("hbs_echeances").update({ rappel_le: maintenant.toISOString() }).eq("id", l.id);
       bilan.rappels++;
     }
@@ -81,15 +82,15 @@ export async function GET(request: NextRequest) {
       const pi = await stripe().paymentIntents.create(
         {
           amount: l.montant,
-          currency: PRODUIT.devise,
+          currency: "eur",
           customer: c.stripe_customer_id,
           payment_method: c.stripe_payment_method_id,
           off_session: true,
           confirm: true,
-          description: `${PRODUIT.nom} — échéance ${l.rang}/3`,
-          statement_descriptor_suffix: "FORMATION IA",
+          description: `${nomFormation} — échéance ${l.rang}/3`,
+          statement_descriptor_suffix: "FORMATION",
           application_fee_amount: c.stripe_account ? commission(l.montant) : undefined,
-          metadata: { produit: PRODUIT.code, commande_id: c.id, echeance_id: l.id, rang: String(l.rang) },
+          metadata: { produit: c.produit, commande_id: c.id, echeance_id: l.id, rang: String(l.rang) },
         },
         opts,
       );
@@ -114,21 +115,21 @@ export async function GET(request: NextRequest) {
             mode: "payment",
             locale: "fr",
             customer: c.stripe_customer_id,
-            line_items: [{ quantity: 1, price_data: { currency: PRODUIT.devise, unit_amount: l.montant, product_data: { name: `${PRODUIT.nom} — échéance ${l.rang}/3` } } }],
+            line_items: [{ quantity: 1, price_data: { currency: "eur", unit_amount: l.montant, product_data: { name: `${nomFormation} — échéance ${l.rang}/3` } } }],
             payment_intent_data: {
               application_fee_amount: c.stripe_account ? commission(l.montant) : undefined,
               setup_future_usage: "off_session",
-              metadata: { produit: PRODUIT.code, commande_id: c.id, echeance_id: l.id },
+              metadata: { produit: c.produit, commande_id: c.id, echeance_id: l.id },
             },
-            metadata: { produit: PRODUIT.code, commande_id: c.id, echeance_id: l.id },
+            metadata: { produit: c.produit, commande_id: c.id, echeance_id: l.id },
             success_url: `${origine}/reserver/merci?echeance=1`,
             cancel_url: `${origine}/contact`,
           },
           options(c.stripe_account),
         );
         if (c.email && lien.url) {
-          await envoyer(c.email, "Votre échéance n'a pas pu être prélevée — Formation IA 360",
-            buildEcheanceEchec({ nom: c.nom, montant: euros(l.montant), rang: l.rang, lien: lien.url }));
+          await envoyer(c.email, `Votre échéance n'a pas pu être prélevée — ${nomFormation}`,
+            buildEcheanceEchec({ nom: c.nom, montant: euros(l.montant), rang: l.rang, lien: lien.url, formation: nomFormation }));
         }
       } catch (e2) {
         log.error("echeances.lien", { echeance: l.id, err: errMsg(e2) });

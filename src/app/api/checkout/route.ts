@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import type Stripe from "stripe";
 import { stripe, surCompte, commission, venteOuverte, compteConnecte } from "@/lib/stripe";
-import { PRODUIT, RETRACTATION_JOURS, CGV_VERSION, echeancier, montantsEcheances, euros } from "@/lib/commande";
+import { FORMATIONS, PLACES_MAX, RETRACTATION_JOURS, CGV_VERSION, echeancier, montantsEcheances, euros, sessionParCode, libelleSemaine, type CodeFormation } from "@/lib/commande";
 import { checkRateLimit } from "@/lib/rateLimit";
 import { log, errMsg } from "@/lib/log";
 import { site } from "@/lib/site";
@@ -10,8 +10,10 @@ import { site } from "@/lib/site";
 export const runtime = "nodejs";
 
 const schema = z.object({
+  formation: z.enum(["DATA360", "CONTENT360", "MKT360", "IA360"]),
+  session: z.string().max(40),
   profil: z.enum(["entreprise", "particulier"]),
-  quantite: z.number().int().min(1).max(PRODUIT.placesMax),
+  quantite: z.number().int().min(1).max(PLACES_MAX),
   cgv: z.literal(true, { message: "Les conditions générales de vente doivent être acceptées" }),
   // Particulier : l'échéancier et l'autorisation de prélèvement sont acceptés explicitement.
   echeancier: z.boolean().optional(),
@@ -20,7 +22,7 @@ const schema = z.object({
 /**
  * Crée la session Stripe Checkout. Deux régimes, qui ne se ressemblent pas :
  *
- * - **Entreprise** : paiement immédiat de `quantite × 1 300 €`, facture émise par Stripe au
+ * - **Entreprise** : paiement immédiat de `quantite × prix de la formation`, facture émise par Stripe au
  *   nom du compte de HBS, SIRET/TVA et adresse de facturation collectés.
  * - **Particulier** : mode `setup` — la carte est enregistrée, **rien n'est prélevé**. Le Code
  *   du travail interdit d'exiger une somme avant la fin de la rétractation (L6353-6) ; la
@@ -56,12 +58,23 @@ export async function POST(request: NextRequest) {
     }
   }
 
+  // La session est recalculée depuis le planning : un code inventé, une semaine passée ou
+  // complète, ou la session d'une autre formation ne passent pas.
+  const creneau = sessionParCode(data.session);
+  if (!creneau || creneau.formation !== data.formation || creneau.statut !== "ouvert") {
+    return NextResponse.json({ error: "Cette session n'est plus ouverte à la réservation. Choisissez une autre semaine." }, { status: 409 });
+  }
+  const f = FORMATIONS[data.formation as CodeFormation];
+  const semaine = `semaine ${libelleSemaine(creneau)}`;
+
   const origine = process.env.NEXT_PUBLIC_SITE_URL || site.url;
-  const total = PRODUIT.prixUnitaire * data.quantite;
+  const total = f.prix * data.quantite;
   const acceptees = new Date().toISOString();
   const metadata = {
-    produit: PRODUIT.code,
-    session_code: PRODUIT.session.code,
+    produit: f.code,
+    session_code: creneau.code,
+    session_debut: creneau.debut,
+    session_fin: creneau.fin,
     profil: data.profil,
     quantite: String(data.quantite),
     cgv_version: CGV_VERSION,
@@ -71,7 +84,7 @@ export async function POST(request: NextRequest) {
   const commun: Stripe.Checkout.SessionCreateParams = {
     locale: "fr",
     success_url: `${origine}/reserver/merci?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${origine}/reserver?profil=${data.profil}&annule=1`,
+    cancel_url: `${origine}/reserver?formation=${f.code}&session=${creneau.code}&profil=${data.profil}&annule=1`,
     billing_address_collection: "required",
     metadata,
     // Plus de 30 minutes de réflexion sur la page de paiement : on repart de la page de réservation.
@@ -93,13 +106,13 @@ export async function POST(request: NextRequest) {
             {
               quantity: data.quantite,
               price_data: {
-                currency: PRODUIT.devise,
-                unit_amount: PRODUIT.prixUnitaire,
+                currency: "eur",
+                unit_amount: f.prix,
                 tax_behavior: "inclusive",
                 product_data: {
-                  name: `${PRODUIT.nom} — ${PRODUIT.session.libelle}`,
-                  description: PRODUIT.description,
-                  metadata: { produit: PRODUIT.code },
+                  name: `${f.nom} — ${semaine}`,
+                  description: `${f.accroche}. 21 heures de formation en direct.`,
+                  metadata: { produit: f.code },
                 },
               },
             },
@@ -112,14 +125,14 @@ export async function POST(request: NextRequest) {
           invoice_creation: {
             enabled: true,
             invoice_data: {
-              description: `${PRODUIT.nom} — ${PRODUIT.session.libelle} — ${data.quantite} place(s)`,
+              description: `${f.nom} — ${semaine} — ${data.quantite} place(s)`,
               footer: "HBS FORMATION — organisme de formation, déclaration d'activité n° 28760809976 (préfet de région Normandie). Certifié Qualiopi — actions de formation.",
               metadata,
             },
           },
           payment_intent_data: {
-            description: `${PRODUIT.nom} — ${data.quantite} place(s)`,
-            statement_descriptor_suffix: "FORMATION IA",
+            description: `${f.nom} — ${data.quantite} place(s)`,
+            statement_descriptor_suffix: "FORMATION",
             application_fee_amount: commission(total),
             metadata,
           },
@@ -130,18 +143,18 @@ export async function POST(request: NextRequest) {
         surCompte(),
       );
     } else {
-      const [m1, m2, m3] = montantsEcheances(PRODUIT.prixUnitaire);
-      const [e1, e2, e3] = echeancier(new Date()).map((e) =>
+      const [m1, m2, m3] = montantsEcheances(f.prix);
+      const [e1, e2, e3] = echeancier(new Date(), creneau).map((e) =>
         e.date.toLocaleDateString("fr-FR", { day: "numeric", month: "long", timeZone: "Europe/Paris" }),
       );
       session = await stripe().checkout.sessions.create(
         {
           ...commun,
           mode: "setup",
-          currency: PRODUIT.devise,
+          currency: "eur",
           customer_creation: "always",
           payment_method_types: ["card"],
-          setup_intent_data: { metadata, description: `${PRODUIT.nom} — échéancier particulier` },
+          setup_intent_data: { metadata, description: `${f.nom} — ${semaine} — échéancier particulier` },
           custom_text: {
             submit: {
               message:
@@ -154,7 +167,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    log.info("checkout.cree", { profil: data.profil, quantite: data.quantite, connect: Boolean(compteConnecte()) });
+    log.info("checkout.cree", { formation: f.code, session: creneau.code, profil: data.profil, quantite: data.quantite, connect: Boolean(compteConnecte()) });
     return NextResponse.json({ url: session.url });
   } catch (e) {
     log.error("checkout.erreur", { err: errMsg(e) });

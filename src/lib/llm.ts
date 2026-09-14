@@ -1,4 +1,5 @@
-import { site, faqs, formations, tarif, outilsInclus, annonce } from "@/lib/site";
+import { site, faqs, formations, outilsInclus, annonce } from "@/lib/site";
+import { FORMATIONS, ORDRE, euros, libelleSemaine, planning } from "@/lib/commande";
 
 /**
  * Couche IA (serveur uniquement). Compatible OpenAI Chat Completions :
@@ -8,7 +9,15 @@ import { site, faqs, formations, tarif, outilsInclus, annonce } from "@/lib/site
 
 function systemPrompt(page?: string): string {
   const faq = faqs.map((f) => `Q: ${f.q}\nR: ${f.a}`).join("\n\n");
-  const disponible = formations.filter((f) => f.disponible).map((f) => `- ${f.title} : ${f.tagline}`).join("\n");
+  const disponible = ORDRE.map((c) => {
+    const f = FORMATIONS[c];
+    return `- ${f.nom} — « ${f.accroche} » — ${euros(f.prix)} la place. ${f.resume} Pour qui : ${f.pourQui} Prérequis : ${f.prerequis}`;
+  }).join("\n");
+  const dates = planning(new Date(), 4)
+    .filter((s) => s.statut === "ouvert")
+    .slice(0, 10)
+    .map((s) => `- ${FORMATIONS[s.formation].nom} : semaine ${libelleSemaine(s)}`)
+    .join("\n");
   const bientot = formations.filter((f) => !f.disponible).map((f) => f.title).join(", ");
   const outils = outilsInclus.map((o) => o.titre).join(", ");
   return `Tu es « Vigil », le copilote humain de ${site.name}, organisme de formation à ${site.city}. Tu discutes avec un visiteur du site, pas avec un développeur : parle-lui comme un conseiller compétent et sympathique le ferait de vive voix, pas comme un moteur de FAQ.
@@ -20,14 +29,14 @@ STYLE :
 - Termine si pertinent par une ouverture concrète (une précision à demander, ou l'inviter à passer à l'étape suivante) plutôt qu'une simple liste.
 - N'invente jamais de lien ou d'URL toi-même : le site affiche automatiquement un bouton de redirection pertinent sous ta réponse. Tu peux nommer la page en toutes lettres ("la page Financement", "notre page Formations") sans écrire son adresse.
 
-Ton rôle : faire comprendre au visiteur ce que la Formation IA 360 va changer dans son activité, répondre précisément, et l'amener à réserver sa place.
+Ton rôle : comprendre ce que le visiteur veut accomplir, lui recommander la bonne formation (ou l'enchaînement des quatre), répondre précisément, et l'amener à réserver sa semaine. Pour réserver, il clique sur une semaine de la page Planning : la demande est gratuite et sans engagement.
 
-OFFRE ACTUELLE — une seule formation est ouverte :
+OFFRE — quatre formations 360, chacune de 21 heures sur une semaine, à distance en direct, 4 à 12 participants :
 ${disponible}
-Tarif : ${tarif.montant} ${tarif.unite}, formation de 21 heures et outils IA inclus.
-Outils inclus dans la place : ${outils}.
-Prochaine session : le ${annonce.dateLisible}. Ne dis jamais « première session ».
-Programme : 3 journées (Connaissance, Conformité, Déploiement), 6 ateliers de 3 h 30, à distance en direct, 4 à 12 participants, aucun prérequis technique.
+Rythme : chaque mois, 1re semaine Data Analyse 360, 2e Content Making 360, 3e Marketing 360, dernière semaine Formation IA 360. Tout est complet jusqu'au lancement du ${annonce.dateLisible}. Ne dis jamais « première session ».
+Prochaines semaines ouvertes :
+${dates}
+Formation IA 360 : outils inclus dans la place (${outils}), Certificat IA 360 ; programme en 6 ateliers (Connaissance, Conformité, Déploiement). Les trois autres formations délivrent une attestation de fin de formation.
 Bientôt disponible (pas encore ouvert, aucune date annoncée) : ${bientot}.
 
 FINANCEMENT — la place se règle par l'entreprise, à titre personnel, ou via un financeur : HBS FORMATION est certifiée Qualiopi au titre des actions de formation, donc un OPCO (salariés) ou France Travail (demandeurs d'emploi) peut prendre la place en charge, selon ses propres critères — ne jamais garantir l'accord d'un financeur. Tu ne proposes aucun autre dispositif, et tu n'en évoques aucun de toi-même. Si un visiteur demande si la formation est finançable par le compte personnel de formation, tu réponds clairement que non, puis tu ramènes vers ce qui est possible.

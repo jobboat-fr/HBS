@@ -2,7 +2,7 @@ import "server-only";
 import type Stripe from "stripe";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { stripe, signer, options } from "@/lib/stripe";
-import { PRODUIT, RETRACTATION_JOURS, echeancier, montantsEcheances, euros } from "@/lib/commande";
+import { FORMATIONS, RETRACTATION_JOURS, echeancier, montantsEcheances, euros, libelleSemaine, type CodeFormation } from "@/lib/commande";
 import { submitDemande, catalogue, configured as learnConfigured } from "@/lib/learn";
 import { buildCommandeClient, buildCommandeOrganisme, type CommandeMail } from "@/lib/email/templates";
 import { log, errMsg } from "@/lib/log";
@@ -59,7 +59,10 @@ export async function enregistrerCommande(sessionId: string, compte?: string) {
     opts,
   );
   const md = s.metadata ?? {};
-  if (md.produit !== PRODUIT.code) return { ignore: true };
+  const formation = FORMATIONS[md.produit as CodeFormation];
+  if (!formation || !md.session_debut || !md.session_fin) return { ignore: true };
+  const session = { debut: md.session_debut, fin: md.session_fin };
+  const semaine = `semaine ${libelleSemaine(session)}`;
 
   const db = createAdminClient();
   const { data: existante } = await db.from("hbs_commandes").select("id").eq("stripe_session_id", s.id).maybeSingle();
@@ -67,7 +70,7 @@ export async function enregistrerCommande(sessionId: string, compte?: string) {
 
   const profil = md.profil === "particulier" ? "particulier" : "entreprise";
   const quantite = Number(md.quantite ?? 1);
-  const total = PRODUIT.prixUnitaire * quantite;
+  const total = formation.prix * quantite;
   const client = s.customer_details;
   const raison = s.custom_fields?.find((f) => f.key === "raison_sociale")?.text?.value ?? null;
   const siret = s.custom_fields?.find((f) => f.key === "siret")?.text?.value ?? null;
@@ -90,8 +93,8 @@ export async function enregistrerCommande(sessionId: string, compte?: string) {
     .insert({
       profil,
       statut: profil === "entreprise" ? (s.payment_status === "paid" ? "payee" : "en_attente") : "carte_enregistree",
-      produit: PRODUIT.code,
-      session_code: md.session_code ?? PRODUIT.session.code,
+      produit: formation.code,
+      session_code: md.session_code,
       quantite,
       montant_total: total,
       email: client?.email ?? null,
@@ -121,7 +124,7 @@ export async function enregistrerCommande(sessionId: string, compte?: string) {
   let echeances: { date: string; montant: string }[] = [];
   if (profil === "particulier") {
     const montants = montantsEcheances(total);
-    const plan = echeancier(commandeLe).map((e, i) => ({
+    const plan = echeancier(commandeLe, session).map((e, i) => ({
       commande_id: cmd.id,
       rang: e.rang,
       montant: montants[i],
@@ -137,7 +140,7 @@ export async function enregistrerCommande(sessionId: string, compte?: string) {
   if (learnConfigured() && client?.email) {
     try {
       const cat = await catalogue().catch(() => null);
-      const programme = cat?.programmes.find((p) => /IA\s*360/i.test(p.title));
+      const programme = cat?.programmes.find((p) => p.title.toLowerCase() === formation.nom.toLowerCase());
       const r = await submitDemande({
         full_name: client.name || raison || client.email,
         email: client.email,
@@ -162,7 +165,8 @@ export async function enregistrerCommande(sessionId: string, compte?: string) {
     telephone: client?.phone,
     quantite,
     montant: euros(total),
-    session: PRODUIT.session.libelle,
+    formation: formation.nom,
+    session: semaine,
     positionnement,
     retractation: profil === "particulier" ? { lien: lienRetractation(cmd.id), fin: dateFr(finRetractation) } : null,
     echeances,
@@ -170,7 +174,7 @@ export async function enregistrerCommande(sessionId: string, compte?: string) {
   };
 
   if (client?.email) {
-    await envoyer(client.email, "Votre réservation — Formation IA 360", buildCommandeClient(mail), destinatairesOrganisme()[0]);
+    await envoyer(client.email, `Votre réservation — ${formation.nom}`, buildCommandeClient(mail), destinatairesOrganisme()[0]);
   }
   await envoyer(
     destinatairesOrganisme(),

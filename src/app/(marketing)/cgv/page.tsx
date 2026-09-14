@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { LegalPage } from "@/components/layout/LegalPage";
-import { legal, site, tarif, annonce } from "@/lib/site";
-import { echeancier } from "@/lib/commande";
+import { legal, site } from "@/lib/site";
+import { echeancier, FORMATIONS, ORDRE, euros } from "@/lib/commande";
 
 export const metadata: Metadata = {
   title: "Conditions générales de vente",
@@ -78,23 +78,25 @@ export default function CgvPage() {
           contenu: (
             <>
               <p>
-                La Formation IA 360 comprend 21 heures de formation réparties en trois journées et six
-                ateliers pratiques, dispensées à distance en direct (ou en présentiel dans les locaux du
-                Client professionnel sur accord). Le programme détaillé, les objectifs, les prérequis, les
-                modalités d&apos;évaluation et d&apos;accès sont décrits sur la page{" "}
-                <Link href="/formations" className="text-teal-700 underline">Formation IA 360</Link>, qui fait
+                HBS FORMATION propose quatre formations — Data Analyse 360, Content Making 360, Marketing 360
+                et Formation IA 360 — de 21 heures chacune, réparties sur une semaine et dispensées à distance
+                en direct (ou en présentiel dans les locaux du Client professionnel sur accord). Le programme,
+                les objectifs, les prérequis, les modalités d&apos;évaluation et d&apos;accès de chaque formation
+                sont décrits sur sa page, et les dates sur la page{" "}
+                <Link href="/planning" className="text-teal-700 underline">Planning</Link> ; ces informations font
                 partie intégrante du contrat ou de la convention.
               </p>
               <p>
                 Chaque session réunit de 4 à 12 participants. L&apos;entrée en formation est précédée d&apos;un
                 test de positionnement, qui permet d&apos;adapter le parcours au niveau et au projet du
-                participant. La prochaine session débute le {annonce.dateLisible}.
+                participant.
               </p>
               <p>
-                À l&apos;issue de la formation, le participant reçoit une attestation de fin de formation et,
-                en cas de réussite à l&apos;épreuve finale, le Certificat IA 360 délivré par {legal.raisonSociale}.
-                Ce certificat n&apos;est ni un diplôme d&apos;État ni une certification enregistrée au RNCP ou au
-                répertoire spécifique ; la formation n&apos;est pas éligible au compte personnel de formation.
+                À l&apos;issue de chaque formation, le participant reçoit une attestation de fin de formation. Pour
+                la Formation IA 360, la réussite à l&apos;épreuve finale donne en outre lieu au Certificat IA 360
+                délivré par {legal.raisonSociale}. Aucune de ces formations ne délivre de diplôme d&apos;État ni de
+                certification enregistrée au RNCP ou au répertoire spécifique ; elles ne sont pas éligibles au
+                compte personnel de formation.
               </p>
             </>
           ),
@@ -105,10 +107,21 @@ export default function CgvPage() {
           contenu: (
             <>
               <p>
-                Le prix est de <b>{tarif.montant} par place</b>, toutes taxes comprises. Il comprend la
-                formation, le test de positionnement, les supports, l&apos;évaluation, le Certificat IA 360 en
-                cas de réussite, le point de suivi à trois mois et la mise à disposition des outils IA
-                présentés sur le site, dans les conditions précisées dans la convention ou le contrat.
+                Les prix par place, toutes taxes comprises, sont les suivants :
+              </p>
+              <ul>
+                {ORDRE.map((c) => (
+                  <li key={c}>
+                    {FORMATIONS[c].nom} : <b>{euros(FORMATIONS[c].prix)}</b>
+                  </li>
+                ))}
+              </ul>
+              <p>
+                Le prix comprend la formation, le test de positionnement, les supports et modèles remis,
+                l&apos;évaluation, l&apos;attestation de fin de formation et le questionnaire de suivi à trois mois ;
+                pour la Formation IA 360, il comprend aussi le Certificat IA 360 en cas de réussite et la mise à
+                disposition des outils IA présentés sur le site, dans les conditions précisées dans la convention
+                ou le contrat.
               </p>
               <p>
                 Les frais éventuels de déplacement pour une session en présentiel chez le Client

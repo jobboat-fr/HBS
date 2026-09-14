@@ -17,7 +17,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [
     page("", 1, "weekly"),
+    page("/planning", 1, "weekly"),
     page("/formations", 1, "weekly"),
+    page("/formations/data-analyse-360", 0.95, "weekly"),
+    page("/formations/content-making-360", 0.95, "weekly"),
+    page("/formations/marketing-360", 0.95, "weekly"),
     page("/reserver", 0.95, "weekly"),
     page("/financement", 0.9),
     page("/entreprises", 0.85),

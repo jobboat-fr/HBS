@@ -3,7 +3,7 @@ import Link from "next/link";
 import { CheckCircle2, Mail, ClipboardList, FileSignature } from "lucide-react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { stripe, surCompte } from "@/lib/stripe";
-import { PRODUIT } from "@/lib/commande";
+import { FORMATIONS, libelleSemaine, type CodeFormation } from "@/lib/commande";
 
 export const metadata: Metadata = {
   title: "Réservation confirmée",
@@ -23,10 +23,17 @@ export default async function MerciPage({ searchParams }: { searchParams: Promis
   let profil: "entreprise" | "particulier" | null = null;
   let email: string | null = null;
   let valide = false;
+  let nomFormation = "votre formation";
+  let semaine = "";
   if (session_id && /^cs_(test|live)_[A-Za-z0-9]+$/.test(session_id)) {
     try {
       const s = await stripe().checkout.sessions.retrieve(session_id, {}, surCompte());
-      valide = s.status === "complete" && s.metadata?.produit === PRODUIT.code;
+      const f = FORMATIONS[s.metadata?.produit as CodeFormation];
+      valide = s.status === "complete" && Boolean(f);
+      if (f) nomFormation = f.nom;
+      if (s.metadata?.session_debut && s.metadata?.session_fin) {
+        semaine = `semaine ${libelleSemaine({ debut: s.metadata.session_debut, fin: s.metadata.session_fin })}`;
+      }
       profil = s.metadata?.profil === "particulier" ? "particulier" : "entreprise";
       email = s.customer_details?.email ?? null;
     } catch {
@@ -69,7 +76,7 @@ export default async function MerciPage({ searchParams }: { searchParams: Promis
     <>
       <PageHeader
         eyebrow="C'est réservé"
-        title={<>Bienvenue dans la <span className="texte-lumiere">Formation IA 360</span></>}
+        title={<>Bienvenue en <span className="texte-lumiere">{nomFormation}</span></>}
         subtitle={profil === "particulier" ? "Votre place est réservée. Rien n'a été prélevé aujourd'hui." : "Votre paiement est confirmé."}
       />
       <section className="bg-cloud py-12 lg:py-16">
@@ -77,7 +84,7 @@ export default async function MerciPage({ searchParams }: { searchParams: Promis
           <div className="flex items-center gap-3 rounded-2xl border border-teal-200 bg-white p-5">
             <CheckCircle2 size={28} className="shrink-0 text-teal-600" aria-hidden />
             <p className="text-ink">
-              {PRODUIT.nom} — <b>{PRODUIT.session.libelle}</b>
+              {nomFormation} — <b>{semaine}</b>
             </p>
           </div>
           <ol className="mt-8 space-y-4">

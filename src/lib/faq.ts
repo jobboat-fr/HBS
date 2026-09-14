@@ -23,14 +23,14 @@ export const faqComplete: Theme[] = [
     questions: [
       court("ia-360"),
       {
-        q: "Que contient le programme ?",
-        a: "Trois journées. Connaissance : ce que fait réellement un modèle d'IA, ses limites, le coût réel d'un usage. Conformité : vérifier les résultats, protéger les données, RGPD et règlement européen sur l'IA. Déploiement : agents et automatisations construits sur votre propre cas. Chaque journée compte deux ateliers pratiques de 3 h 30.",
+        q: "Que contient le programme de la Formation IA 360 ?",
+        a: "Trois temps sur la semaine. Connaissance : ce que fait réellement un modèle d'IA, ses limites, le coût réel d'un usage. Conformité : vérifier les résultats, protéger les données, RGPD et règlement européen sur l'IA. Déploiement : agents et automatisations construits sur votre propre cas. Chaque journée compte deux ateliers pratiques de 3 h 30.",
       },
       court("prerequis"),
       court("distance"),
       {
-        q: "Comment la formation est-elle organisée dans le temps ?",
-        a: "21 heures sur trois journées de 7 heures : une journée par semaine pendant trois semaines, ou trois jours consécutifs selon la session. Le calendrier exact figure dans votre convention ou votre contrat.",
+        q: "Comment les formations sont-elles organisées dans le temps ?",
+        a: "Chaque formation dure 21 heures, réparties sur une semaine. Chaque mois suit le même rythme : Data Analyse 360 la première semaine, Content Making 360 la deuxième, Marketing 360 la troisième et la Formation IA 360 la dernière. Les horaires exacts figurent dans votre convention ou votre contrat.",
       },
       {
         q: "Combien de participants par session ?",

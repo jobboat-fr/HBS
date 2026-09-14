@@ -18,13 +18,13 @@ const publics = [
     icon: Building2,
     titre: "Entreprises normandes",
     texte: "Vos équipes formées sur leurs propres processus, à distance ou en présentiel dans vos locaux à Rouen, au Havre, à Évreux ou à Caen. Financement OPCO possible.",
-    lien: { href: "/reserver?profil=entreprise", label: "Réserver des places" },
+    lien: { href: "/preinscription?formation=IA360", label: "Réserver des places" },
   },
   {
     icon: UserRound,
     titre: "Indépendants et particuliers",
     texte: "Une place à titre personnel, rien de prélevé pendant 14 jours, puis un paiement en trois fois. Vous repartez avec vos outils IA en place.",
-    lien: { href: "/reserver?profil=particulier", label: "Réserver ma place" },
+    lien: { href: "/preinscription?formation=IA360", label: "Réserver ma place" },
   },
   {
     icon: Briefcase,
@@ -56,7 +56,7 @@ export default function RouenPage() {
           <div className="space-y-5 text-[15px] leading-relaxed text-ink-soft">
             <h2 className="font-display text-display-md font-extrabold text-ink">Une formation IA concrète, près de chez vous</h2>
             <p>
-              La <b>Formation IA 360</b> part de votre activité réelle : trois journées, six ateliers pratiques,
+              La <b>Formation IA 360</b> part de votre activité réelle : une semaine, six ateliers pratiques,
               et un cas de votre entreprise traité de bout en bout — de la compréhension des outils à leur
               déploiement fiable, dans le respect du RGPD et du règlement européen sur l&apos;IA.
             </p>
@@ -86,7 +86,7 @@ export default function RouenPage() {
               <p className="mt-2 font-display text-3xl font-extrabold text-ink">{annonce.dateLisible}</p>
               <p className="mt-4 font-display text-5xl font-extrabold text-ink">{tarif.montant}</p>
               <p className="text-sm text-ink-soft">{tarif.unite} · 21 h · outils IA inclus</p>
-              <Link href="/reserver" className="bouton-neon mt-6 flex min-h-[48px] items-center justify-center gap-2 rounded-full px-6 font-bold">
+              <Link href="/preinscription?formation=IA360" className="bouton-neon mt-6 flex min-h-[48px] items-center justify-center gap-2 rounded-full px-6 font-bold">
                 Réserver ma place <ArrowRight size={18} aria-hidden />
               </Link>
               <Link href="/formations" className="mt-3 block text-center text-sm font-semibold text-teal-700 underline">

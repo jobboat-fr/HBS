@@ -35,7 +35,7 @@ function Retractation() {
         </>
       ) : (
         <>
-          <h1 className="font-display text-2xl font-bold text-ink">Vous rétracter de la Formation IA 360</h1>
+          <h1 className="font-display text-2xl font-bold text-ink">Vous rétracter de votre formation</h1>
           <p className="mt-3 text-ink-soft">
             Votre réservation sera annulée et aucun prélèvement ne sera effectué. Cette action est définitive.
           </p>

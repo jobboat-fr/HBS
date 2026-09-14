@@ -46,9 +46,9 @@ export const legal = {
 };
 
 export const navLinks = [
+  { label: "Planning", href: "/planning" },
   { label: "Formation IA 360", href: "/formations" },
-  { label: "Programme", href: "/formations#programme" },
-  { label: "Tarif", href: "/financement" },
+  { label: "Tarifs", href: "/financement" },
   { label: "Entreprises", href: "/entreprises" },
   { label: "À propos", href: "/a-propos" },
   { label: "Contact", href: "/contact" },
@@ -87,9 +87,9 @@ export const annonce = {
   dateLisible: "26 octobre 2026",
   titre: "Formation IA 360",
   // « Prochaine » et jamais « première » : l'organisme ne se présente pas comme débutant.
-  texte: "Prochaine session le 26 octobre 2026 — inscriptions ouvertes.",
-  href: "/reserver",
-  lienLabel: "Réserver ma place",
+  texte: "Lancement le 26 octobre 2026, puis chaque mois : Data, Content, Marketing et IA 360.",
+  href: "/planning",
+  lienLabel: "Choisir ma semaine",
 } as const;
 
 /**
@@ -187,7 +187,7 @@ export const formations = [
 export const programme = {
   fiche: [
     { label: "Durée", valeur: "21 h", detail: "3 journées · 6 ateliers de 3 h 30" },
-    { label: "Format", valeur: "3 semaines", detail: "une journée par semaine, ou 3 jours consécutifs" },
+    { label: "Format", valeur: "1 semaine", detail: "21 heures en direct, sur la semaine" },
     { label: "Modalité", valeur: "À distance, en direct", detail: "présentiel possible en entreprise" },
     { label: "Effectif", valeur: "4 à 12", detail: "participants par session" },
     { label: "Horaires", valeur: "9h00 – 17h00", detail: "pause 12h30 – 13h30" },
@@ -289,7 +289,7 @@ export const faqs = [
   {
     id: "ia-360",
     q: "Qu'est-ce que la Formation IA 360 ?",
-    a: "Trois journées d'ateliers pratiques, en direct, pour comprendre ce que fait réellement l'intelligence artificielle, la faire travailler de façon fiable sur vos propres documents, et la déployer dans votre activité. Vous repartez avec votre dossier IA — neuf pièces datées — et avec vos outils en place.",
+    a: "Une semaine d'ateliers pratiques, en direct, pour comprendre ce que fait réellement l'intelligence artificielle, la faire travailler de façon fiable sur vos propres documents, et la déployer dans votre activité. Vous repartez avec votre dossier IA — neuf pièces datées — et avec vos outils en place.",
   },
   {
     id: "outils",
@@ -298,13 +298,13 @@ export const faqs = [
   },
   {
     id: "tarif",
-    q: "Combien coûte la formation ?",
-    a: "1 300 € par place, formation de 21 heures et outils IA inclus. La place peut être réglée par votre entreprise, à titre personnel, ou prise en charge par un OPCO ou France Travail selon les critères du financeur : HBS FORMATION est certifiée Qualiopi au titre des actions de formation.",
+    q: "Combien coûtent les formations ?",
+    a: "Chaque formation dure 21 heures sur une semaine. Data Analyse 360 : 1 800 € ; Content Making 360 : 1 200 € ; Marketing 360 : 1 500 € ; Formation IA 360 : 1 300 €, outils IA inclus. La place peut être réglée par votre entreprise, à titre personnel, ou prise en charge par un OPCO ou France Travail selon les critères du financeur : HBS FORMATION est certifiée Qualiopi au titre des actions de formation.",
   },
   {
     id: "prochaine-session",
-    q: "Quand a lieu la prochaine session ?",
-    a: "La prochaine session démarre le 26 octobre 2026. Les inscriptions sont ouvertes, dans la limite de 12 participants par session.",
+    q: "Quand ont lieu les prochaines sessions ?",
+    a: "Chaque mois, une formation par semaine : Data Analyse 360 la première, Content Making 360 la deuxième, Marketing 360 la troisième, et la Formation IA 360 la dernière semaine du mois. Lancement le 26 octobre 2026 avec la Formation IA 360 ; toutes les dates sont sur la page Planning. 12 places par session.",
   },
   {
     id: "prerequis",
@@ -319,7 +319,7 @@ export const faqs = [
   {
     id: "autres",
     q: "Proposez-vous d'autres formations ?",
-    a: "Le bilan de compétences, la VAE, les parcours certifiants, l'e-learning et le conseil en ingénierie pédagogique arrivent bientôt. Aujourd'hui, notre offre se concentre sur la Formation IA 360.",
+    a: "Oui, quatre formations 360 : Data Analyse 360 (lire entre les chiffres), Content Making 360 (votre prochaine tendance), Marketing 360 et la Formation IA 360. Le bilan de compétences, la VAE et l'e-learning arrivent plus tard.",
   },
   {
     id: "delai",

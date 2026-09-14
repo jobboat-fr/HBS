@@ -79,7 +79,7 @@ export function Header() {
               sur chaque page. */}
           {/* "Se connecter" désactivé temporairement — remplacé par l'entrée du tunnel d'inscription. */}
           <Link
-            href="/reserver"
+            href="/planning"
             className="bouton-neon inline-flex min-h-[40px] items-center gap-1.5 whitespace-nowrap rounded-full px-4 text-[15px] font-bold"
           >
             <ClipboardList size={17} /> Réserver ma place
@@ -123,8 +123,8 @@ export function Header() {
                 <p className="text-center text-sm font-semibold text-ink-soft">
                   Prêt·e à passer à l&apos;étape suivante ?
                 </p>
-                <Button href="/reserver" onClick={() => setOpen(false)}>
-                  Réserver ma place · 1 300 €
+                <Button href="/planning" onClick={() => setOpen(false)}>
+                  Choisir ma semaine
                 </Button>
                 <Button href="/faq" variant="outline" onClick={() => setOpen(false)}>
                   Questions fréquentes
