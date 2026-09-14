@@ -6,6 +6,8 @@ import { envoyer, destinatairesOrganisme, dateFr } from "@/lib/commandes-serveur
 import { buildRappelEcheance, buildEcheanceEchec, buildAlerteOrganisme } from "@/lib/email/templates";
 import { FORMATIONS, euros, type CodeFormation } from "@/lib/commande";
 import { log, errMsg } from "@/lib/log";
+import { archiverPdf } from "@/lib/coffre";
+import { buildFactureEcheance } from "@/lib/email/templates";
 import { site } from "@/lib/site";
 
 export const runtime = "nodejs";
@@ -37,7 +39,7 @@ export async function GET(request: NextRequest) {
 
   const { data: lignes, error } = await db
     .from("hbs_echeances")
-    .select("id, rang, montant, due_le, statut, rappel_le, tentatives, commande:hbs_commandes(id, statut, produit, nom, email, stripe_account, stripe_customer_id, stripe_payment_method_id, retractation_fin)")
+    .select("id, rang, montant, due_le, statut, rappel_le, tentatives, commande:hbs_commandes(id, statut, produit, session_code, nom, email, stripe_account, stripe_customer_id, stripe_payment_method_id, retractation_fin)")
     .eq("statut", "a_prelever")
     .lte("due_le", new Date(maintenant.getTime() + 3 * JOUR).toISOString())
     .order("due_le");
@@ -48,7 +50,7 @@ export async function GET(request: NextRequest) {
 
   for (const l of lignes ?? []) {
     const c = (Array.isArray(l.commande) ? l.commande[0] : l.commande) as {
-      id: string; statut: string; produit: string; nom: string | null; email: string | null; stripe_account: string | null;
+      id: string; statut: string; produit: string; session_code: string; nom: string | null; email: string | null; stripe_account: string | null;
       stripe_customer_id: string | null; stripe_payment_method_id: string | null; retractation_fin: string | null;
     } | null;
     if (!c || !["carte_enregistree", "impayee"].includes(c.statut)) {
@@ -97,6 +99,26 @@ export async function GET(request: NextRequest) {
       if (pi.status === "succeeded") {
         await db.from("hbs_echeances").update({ statut: "payee", payee_le: new Date().toISOString(), stripe_payment_intent_id: pi.id }).eq("id", l.id);
         bilan.payees++;
+        // Facture de l'échéance : émise, marquée payée (le prélèvement vient d'aboutir), archivée, envoyée.
+        try {
+          const o = options(c.stripe_account, { idempotencyKey: `facture-${l.id}` });
+          await stripe().invoiceItems.create({ customer: c.stripe_customer_id, amount: l.montant, currency: "eur", description: `${nomFormation} — échéance ${l.rang}/3` }, o);
+          const brouillon = await stripe().invoices.create(
+            { customer: c.stripe_customer_id, auto_advance: false, pending_invoice_items_behavior: "include", metadata: { commande_id: c.id, echeance_id: l.id, payment_intent: pi.id } },
+            options(c.stripe_account, { idempotencyKey: `facture-doc-${l.id}` }),
+          );
+          const finale = await stripe().invoices.finalizeInvoice(brouillon.id!, { auto_advance: false }, options(c.stripe_account));
+          const payee = await stripe().invoices.pay(finale.id!, { paid_out_of_band: true }, options(c.stripe_account));
+          if (payee.invoice_pdf) {
+            await archiverPdf({ url: payee.invoice_pdf, filename: `facture-${payee.number ?? payee.id}.pdf`, kind: "facture", sessionCode: c.session_code, ref: `stripe:${payee.id}` });
+          }
+          if (c.email && payee.hosted_invoice_url) {
+            await envoyer(c.email, `Votre facture — ${nomFormation}, échéance ${l.rang}/3`,
+              buildFactureEcheance({ nom: c.nom, formation: nomFormation, rang: l.rang, montant: euros(l.montant), lien: payee.hosted_invoice_url }));
+          }
+        } catch (e) {
+          log.error("echeances.facture", { echeance: l.id, err: errMsg(e) });
+        }
       } else {
         throw Object.assign(new Error(`statut ${pi.status}`), { payment_intent: pi });
       }
@@ -121,7 +143,8 @@ export async function GET(request: NextRequest) {
               setup_future_usage: "off_session",
               metadata: { produit: c.produit, commande_id: c.id, echeance_id: l.id },
             },
-            metadata: { produit: c.produit, commande_id: c.id, echeance_id: l.id },
+            metadata: { produit: c.produit, commande_id: c.id, echeance_id: l.id, session_code: c.session_code },
+            invoice_creation: { enabled: true, invoice_data: { description: `${nomFormation} — échéance ${l.rang}/3` } },
             success_url: `${origine}/reserver/merci?echeance=1`,
             cancel_url: `${origine}/contact`,
           },

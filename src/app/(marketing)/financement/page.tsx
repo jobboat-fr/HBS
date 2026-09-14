@@ -66,7 +66,7 @@ export default function TarifPage() {
                     </li>
                   ))}
                 </ul>
-                <Link href="/preinscription?formation=IA360" className="bouton-neon mt-9 inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-4 text-base font-bold">
+                <Link href="/reserver?formation=IA360" className="bouton-neon mt-9 inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-4 text-base font-bold">
                   Réserver ma place <ArrowRight size={18} aria-hidden />
                 </Link>
               </div>

@@ -46,7 +46,6 @@ export function venteOuverte(): { ouverte: boolean; raison?: string } {
   if (!process.env.STRIPE_SECRET_KEY) return { ouverte: false, raison: "cle_absente" };
   const production = process.env.VERCEL_ENV === "production";
   if (production && modeTest()) return { ouverte: false, raison: "cle_de_test_en_production" };
-  if (production && !compteConnecte()) return { ouverte: false, raison: "compte_hbs_non_connecte" };
   return { ouverte: true };
 }
 

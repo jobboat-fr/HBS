@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
   if (!etat.ouverte) {
     log.warn("checkout.ferme", { raison: etat.raison });
     return NextResponse.json(
-      { error: "La réservation en ligne ouvre très bientôt. Demandez votre place : nous vous recontactons sous 48 h.", fallback: "/preinscription" },
+      { error: "Le paiement en ligne est momentanément indisponible. Réessayez dans quelques minutes." },
       { status: 503 },
     );
   }

@@ -62,7 +62,7 @@ export function ServicesSection() {
                       {euros(f.prix)} <span className="text-sm font-semibold text-ink-muted">/ place</span>
                     </p>
                     <Link
-                      href={s ? `/preinscription?formation=${code}&session=${s.code}` : `/preinscription?formation=${code}`}
+                      href={s ? `/reserver?formation=${code}&session=${s.code}` : `/reserver?formation=${code}`}
                       className="bouton-neon mt-4 flex min-h-[48px] items-center justify-center gap-2 rounded-full px-5 font-bold"
                     >
                       Je réserve ma place <ArrowRight size={18} aria-hidden />

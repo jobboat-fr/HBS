@@ -34,6 +34,7 @@ const demandeSchema = z.object({
   company: z.string().trim().max(200).optional().or(z.literal("")),
   message: z.string().trim().max(2000).optional().or(z.literal("")),
   program_id: z.string().uuid().optional().or(z.literal("")),
+  session_id: z.string().uuid().optional().or(z.literal("")),
   campaign: z.string().trim().max(120).optional().or(z.literal("")),
   // Le consentement est coché ici ; c'est le serveur qui l'atteste ensuite à LEARN, avec
   // le texte exact affiché, stocké côté plateforme.
@@ -90,6 +91,7 @@ export async function POST(request: NextRequest) {
       company: data.company || null,
       message: data.message || null,
       program_id: data.program_id || null,
+      session_id: data.session_id || null,
       campaign: data.campaign || null,
     });
 

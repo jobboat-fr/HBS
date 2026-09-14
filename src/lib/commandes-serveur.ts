@@ -6,6 +6,7 @@ import { FORMATIONS, RETRACTATION_JOURS, echeancier, montantsEcheances, euros, l
 import { submitDemande, catalogue, configured as learnConfigured } from "@/lib/learn";
 import { buildCommandeClient, buildCommandeOrganisme, type CommandeMail } from "@/lib/email/templates";
 import { log, errMsg } from "@/lib/log";
+import { archiverPdf } from "@/lib/coffre";
 import { site } from "@/lib/site";
 
 const origine = () => process.env.NEXT_PUBLIC_SITE_URL || site.url;
@@ -148,6 +149,7 @@ export async function enregistrerCommande(sessionId: string, compte?: string) {
         company: raison,
         message: `Commande en ligne ${profil} — ${quantite} place(s) — ${md.session_code ?? ""}`,
         program_id: programme?.id ?? null,
+        session_id: programme?.sessions?.find((x) => x.code === md.session_code)?.id ?? null,
         campaign: "commande-en-ligne",
       });
       if (r.positionnement_path) positionnement = new URL(r.positionnement_path, origine()).toString();
@@ -155,6 +157,16 @@ export async function enregistrerCommande(sessionId: string, compte?: string) {
       log.warn("commande.learn", { err: errMsg(e) });
     }
     if (positionnement) await db.from("hbs_commandes").update({ learn_positionnement: positionnement }).eq("id", cmd.id);
+  }
+
+  // La facture de la commande entreprise, au coffre de l'organisme, rattachée à la session.
+  let factureUrl = facture?.hosted_invoice_url ?? null;
+  if (facture?.id) {
+    const f = await stripe().invoices.retrieve(facture.id, {}, opts).catch(() => null);
+    factureUrl = f?.hosted_invoice_url ?? factureUrl;
+    if (f?.invoice_pdf) {
+      await archiverPdf({ url: f.invoice_pdf, filename: `facture-${f.number ?? f.id}.pdf`, kind: "facture", sessionCode: md.session_code, ref: `stripe:${f.id}` });
+    }
   }
 
   const mail: CommandeMail = {
@@ -170,7 +182,7 @@ export async function enregistrerCommande(sessionId: string, compte?: string) {
     positionnement,
     retractation: profil === "particulier" ? { lien: lienRetractation(cmd.id), fin: dateFr(finRetractation) } : null,
     echeances,
-    facture: facture?.hosted_invoice_url ?? null,
+    facture: factureUrl,
   };
 
   if (client?.email) {

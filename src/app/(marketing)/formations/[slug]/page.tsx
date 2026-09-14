@@ -106,13 +106,13 @@ export default async function FormationPage({ params }: { params: Promise<{ slug
                   {f.inclus.map((x) => <li key={x}>✓ {x}</li>)}
                 </ul>
                 <Link
-                  href={prochaine ? `/preinscription?formation=${f.code}&session=${prochaine.code}` : "/contact"}
+                  href={prochaine ? `/reserver?formation=${f.code}&session=${prochaine.code}` : `/reserver?formation=${f.code}`}
                   className="bouton-neon mt-6 flex min-h-[52px] items-center justify-center gap-2 rounded-full px-6 font-bold"
                 >
                   Réserver ma place <ArrowRight size={18} aria-hidden />
                 </Link>
                 <p className="mt-3 text-center text-xs text-ink-muted">
-                  Gratuit et sans engagement · réponse sous 48 h · OPCO ou France Travail possible
+                  Paiement sécurisé par Stripe · OPCO ou France Travail possible
                 </p>
               </div>
             </div>

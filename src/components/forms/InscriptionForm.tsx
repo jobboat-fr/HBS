@@ -60,11 +60,13 @@ export function InscriptionForm({
   consentText,
   defaultProgramId,
   choix,
+  sessionId,
 }: {
   programmes: Programme[];
   consentText: string;
   defaultProgramId?: string;
   choix?: Choix | null;
+  sessionId?: string | null;
 }) {
   const [result, setResult] = useState<Result | null>(null);
   const [paper, setPaper] = useState<Paper | null>(null);
@@ -102,6 +104,7 @@ export function InscriptionForm({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...values,
+          session_id: sessionId || undefined,
           // La plateforme ne reçoit pas encore la session : la semaine choisie part dans le
           // message (lu par l'organisme) et dans la campagne (filtrable dans LEARN).
           message: choix

@@ -77,6 +77,8 @@ export default async function InscriptionPage({
   const programmeId =
     data?.programmes.find((p) => f && p.title.toLowerCase() === f.nom.toLowerCase())?.id ??
     data?.programmes.find((p) => /IA\s*360/i.test(p.title))?.id;
+  const sessionId =
+    data?.programmes.find((p) => p.id === programmeId)?.sessions?.find((s) => creneau && s.code === creneau.code)?.id ?? null;
   const choix: Choix | null =
     f && creneau ? { code: creneau.code, formation: f.nom, semaine: libelleSemaine(creneau), prix: euros(f.prix) } : null;
 
@@ -141,6 +143,12 @@ export default async function InscriptionPage({
                     <span className="font-display text-3xl font-extrabold text-ink">{euros(f.prix)}</span>
                   </div>
                   <p className="text-right text-xs text-ink-muted">TTC · OPCO ou France Travail possible</p>
+                  <Link
+                    href={`/reserver?formation=${f.code}&session=${creneau.code}`}
+                    className="bouton-neon mt-4 flex min-h-[52px] items-center justify-center gap-2 rounded-full px-6 font-bold"
+                  >
+                    Payer ma place maintenant
+                  </Link>
 
                   {autres.length > 1 ? (
                     <div className="mt-5">
@@ -208,6 +216,7 @@ export default async function InscriptionPage({
                   consentText={data.consent_text}
                   defaultProgramId={programmeId}
                   choix={choix}
+                  sessionId={sessionId}
                 />
               ) : (
                 <div className="py-8 text-center">

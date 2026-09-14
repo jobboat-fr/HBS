@@ -4,6 +4,8 @@ import { stripe } from "@/lib/stripe";
 import { enregistrerCommande } from "@/lib/commandes-serveur";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { log, errMsg } from "@/lib/log";
+import { archiverPdf } from "@/lib/coffre";
+import { options } from "@/lib/stripe";
 
 export const runtime = "nodejs";
 
@@ -53,6 +55,13 @@ export async function POST(request: NextRequest) {
                 stripe_payment_intent_id: typeof session.payment_intent === "string" ? session.payment_intent : null,
               })
               .eq("id", session.metadata.echeance_id);
+            const invId = typeof session.invoice === "string" ? session.invoice : session.invoice?.id;
+            if (invId) {
+              const inv = await stripe().invoices.retrieve(invId, {}, options(event.account)).catch(() => null);
+              if (inv?.invoice_pdf) {
+                await archiverPdf({ url: inv.invoice_pdf, filename: `facture-${inv.number ?? inv.id}.pdf`, kind: "facture", sessionCode: session.metadata.session_code, ref: `stripe:${inv.id}` });
+              }
+            }
           }
           break;
         }

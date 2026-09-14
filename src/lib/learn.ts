@@ -91,6 +91,7 @@ export type Programme = {
   certifiante: boolean;
   rncp_code: string | null;
   next_session: string | null;
+  sessions?: { id: string; code: string; starts_on: string; ends_on: string; capacity: number }[];
 };
 
 export type Catalogue = {
@@ -120,6 +121,7 @@ export type DemandeInput = {
   company?: string | null;
   message?: string | null;
   program_id?: string | null;
+  session_id?: string | null;
   campaign?: string | null;
 };
 

@@ -66,7 +66,7 @@ function Ligne({ s }: { s: Session }) {
           </span>
         ) : (
           <Link
-            href={`/preinscription?formation=${s.formation}&session=${s.code}`}
+            href={`/reserver?formation=${s.formation}&session=${s.code}`}
             className="bouton-neon inline-flex min-h-[44px] items-center gap-1.5 whitespace-nowrap rounded-full px-5 text-sm font-bold"
           >
             Je réserve <ArrowRight size={16} aria-hidden />
@@ -91,7 +91,7 @@ export function Rythme() {
             <p className={`mt-2 font-display text-xl font-extrabold ${f.couleur.texte}`}>{f.nom}</p>
             <p className="text-sm font-semibold text-ink-soft">{f.accroche}</p>
             <p className="mt-3 flex items-baseline justify-between">
-              <Link href={`/preinscription?formation=${code}`} className="text-sm font-bold text-teal-700 underline">Réserver</Link>
+              <Link href={`/reserver?formation=${code}`} className="text-sm font-bold text-teal-700 underline">Réserver</Link>
               <span className="font-display text-lg font-extrabold text-ink">{euros(f.prix)}</span>
             </p>
           </li>

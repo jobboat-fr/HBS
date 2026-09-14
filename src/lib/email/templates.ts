@@ -252,6 +252,15 @@ export function buildEcheanceEchec(d: { nom?: string | null; montant: string; ra
   `);
 }
 
+export function buildFactureEcheance(d: { nom?: string | null; formation: string; rang: number; montant: string; lien: string }) {
+  return wrap(`
+    ${titre("Votre facture")}
+    ${para(`Bonjour${d.nom ? " " + esc(d.nom) : ""},`)}
+    ${para(`L'échéance n° ${d.rang} de votre formation ${esc(d.formation)} (${esc(d.montant)}) a bien été réglée. Votre facture est disponible :`)}
+    ${bouton(d.lien, "Voir et télécharger la facture")}
+  `);
+}
+
 export function buildRetractationConfirmee(d: { nom?: string | null; formation: string }) {
   return wrap(`
     ${titre("Votre rétractation est enregistrée")}

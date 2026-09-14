@@ -55,12 +55,12 @@ export default function FormationsPage() {
                 <p className="mt-1 font-display text-6xl font-extrabold text-white">{tarif.montant}</p>
                 <p className="text-sm text-white/65">{tarif.resume}</p>
                 <Link
-                  href={prochaine ? `/preinscription?formation=IA360&session=${prochaine.code}` : "/preinscription?formation=IA360"}
+                  href={prochaine ? `/reserver?formation=IA360&session=${prochaine.code}` : "/reserver?formation=IA360"}
                   className="bouton-neon mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 font-bold"
                 >
                   Je réserve ma place <ArrowRight size={18} aria-hidden />
                 </Link>
-                <p className="mt-3 text-center text-xs text-white/50">Gratuit et sans engagement · 12 places · réponse sous 48 h</p>
+                <p className="mt-3 text-center text-xs text-white/50">Paiement sécurisé par Stripe · 12 places</p>
               </div>
             </div>
           </div>
