@@ -4,7 +4,7 @@ import { stripe, commission, options } from "@/lib/stripe";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { envoyer, destinatairesOrganisme, dateFr } from "@/lib/commandes-serveur";
 import { buildRappelEcheance, buildEcheanceEchec, buildAlerteOrganisme } from "@/lib/email/templates";
-import { FORMATIONS, euros, type CodeFormation } from "@/lib/commande";
+import { euros, nomProduit } from "@/lib/commande";
 import { log, errMsg } from "@/lib/log";
 import { archiverPdf } from "@/lib/coffre";
 import { buildFactureEcheance } from "@/lib/email/templates";
@@ -60,7 +60,7 @@ export async function GET(request: NextRequest) {
     }
 
     const due = new Date(l.due_le);
-    const nomFormation = FORMATIONS[c.produit as CodeFormation]?.nom ?? "votre formation";
+    const nomFormation = nomProduit(c.produit);
 
     // Rappel à J-3 (ou dès que possible si la commande est plus récente).
     if (!l.rappel_le && c.email) {

@@ -6,7 +6,7 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { CTASection } from "@/components/sections/CTASection";
 import { Planning } from "@/components/planning/Planning";
 import { BreadcrumbJsonLd, CourseJsonLd } from "@/components/seo/JsonLd";
-import { FORMATIONS, FORMAT, ORDRE, euros, prochaineSession, libelleSemaine, type CodeFormation } from "@/lib/commande";
+import { FORMATIONS, FORMAT, ORDRE, PACK, duree, euros, prochaineSession, libelleDates, type CodeFormation } from "@/lib/commande";
 import { site } from "@/lib/site";
 
 export const revalidate = 3600;
@@ -22,8 +22,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const f = parSlug((await params).slug);
   if (!f) return {};
   return {
-    title: `${f.nom} — ${f.accroche} · formation en ligne ${euros(f.prix)}`,
-    description: `${f.resume} 21 h en direct, ${euros(f.prix)} la place. Organisme certifié Qualiopi, financement OPCO ou France Travail possible.`,
+    title: `Formation ${f.nom} — ${f.accroche} · ${duree(f)}`,
+    description: `${f.resume} ${duree(f)} en direct, ${euros(f.prix)}. Organisme certifié Qualiopi, financement OPCO ou France Travail possible.`,
     alternates: { canonical: f.href },
   };
 }
@@ -45,7 +45,7 @@ export default async function FormationPage({ params }: { params: Promise<{ slug
       <CourseJsonLd code={f.code} />
 
       <PageHeader
-        eyebrow={`Formation 360 · ${euros(f.prix)}`}
+        eyebrow={`${duree(f)} · ${euros(f.prix)}`}
         title={<>{f.nom} <span className="texte-lumiere">— {f.accroche}</span></>}
         subtitle={f.resume}
       />
@@ -66,7 +66,7 @@ export default async function FormationPage({ params }: { params: Promise<{ slug
 
             <div className="mt-10 grid gap-4 sm:grid-cols-3">
               {[
-                { i: Clock, t: "Durée", d: FORMAT.duree },
+                { i: Clock, t: "Durée", d: `${duree(f)}, 7 h par jour` },
                 { i: MonitorPlay, t: "Modalité", d: FORMAT.modalite },
                 { i: Users, t: "Effectif", d: FORMAT.effectif },
               ].map(({ i: I, t, d }) => (
@@ -82,7 +82,7 @@ export default async function FormationPage({ params }: { params: Promise<{ slug
               <p><b className="text-ink">Pour qui :</b> {f.pourQui}</p>
               <p><b className="text-ink">Prérequis :</b> {f.prerequis}</p>
               <p>
-                <b className="text-ink">Avant l&apos;entrée :</b> un test de positionnement d&apos;environ 20 minutes adapte les
+                <b className="text-ink">Avant l&apos;entrée :</b> un test de positionnement d&apos;environ 15 minutes adapte les
                 ateliers à votre niveau et à votre cas réel. <b className="text-ink">Évaluation :</b> mises en situation
                 pendant la formation, attestation de fin de formation, questionnaire de suivi à 3 mois.
               </p>
@@ -98,10 +98,10 @@ export default async function FormationPage({ params }: { params: Promise<{ slug
               <div className="p-7">
                 <p className={`text-xs font-bold uppercase tracking-widest ${f.couleur.texte}`}>Prochaine session</p>
                 <p className="mt-2 font-display text-2xl font-extrabold text-ink">
-                  {prochaine ? `Semaine ${libelleSemaine(prochaine)}` : "Dates à venir"}
+                  {prochaine ? libelleDates(prochaine) : "Dates à venir"}
                 </p>
                 <p className="mt-4 font-display text-5xl font-extrabold text-ink">{euros(f.prix)}</p>
-                <p className="text-sm text-ink-soft">par place · TTC</p>
+                <p className="text-sm text-ink-soft">TTC · {duree(f)}</p>
                 <ul className="mt-4 space-y-1.5 text-sm text-ink-soft">
                   {f.inclus.map((x) => <li key={x}>✓ {x}</li>)}
                 </ul>
@@ -109,7 +109,10 @@ export default async function FormationPage({ params }: { params: Promise<{ slug
                   href={prochaine ? `/reserver?formation=${f.code}&session=${prochaine.code}` : `/reserver?formation=${f.code}`}
                   className="bouton-neon mt-6 flex min-h-[52px] items-center justify-center gap-2 rounded-full px-6 font-bold"
                 >
-                  Réserver ma place <ArrowRight size={18} aria-hidden />
+                  Je réserve maintenant <ArrowRight size={18} aria-hidden />
+                </Link>
+                <Link href={PACK.href} className="mt-3 block text-center text-sm font-semibold text-teal-700 underline">
+                  Ou les 4 formations avec le Pack 360 : {euros(PACK.prix)}
                 </Link>
                 <p className="mt-3 text-center text-xs text-ink-muted">
                   Paiement sécurisé par Stripe · OPCO ou France Travail possible
@@ -122,9 +125,9 @@ export default async function FormationPage({ params }: { params: Promise<{ slug
 
       <section className="bg-cloud py-14 lg:py-20">
         <div className="container-page mx-auto max-w-4xl">
-          <h2 className="font-display text-display-md font-extrabold text-ink">Les prochaines semaines {f.nom}</h2>
+          <h2 className="font-display text-display-md font-extrabold text-ink">Les prochaines sessions {f.nom}</h2>
           <p className="mt-2 text-ink-soft">
-            Une session chaque mois. <Link href="/planning" className="font-semibold text-teal-700 underline">Voir tout le planning</Link>
+            Une session chaque mois, 12 places seulement. <Link href="/planning" className="font-semibold text-teal-700 underline">Voir tout le planning</Link>
           </p>
           <div className="mt-8">
             <Planning formation={f.code} mois={6} avecComplets={false} limite={4} />

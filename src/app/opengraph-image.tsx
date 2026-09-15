@@ -33,18 +33,18 @@ export default function Og() {
 
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div style={{ display: "flex", fontSize: 72, fontWeight: 800, color: "#fff", lineHeight: 1.05 }}>
-            Mettez l'IA
+            C'est le moment
           </div>
           <div style={{ display: "flex", fontSize: 72, fontWeight: 800, color: "#D9DCE1", lineHeight: 1.05 }}>
-            au travail.
+            de changer de cap.
           </div>
           <div style={{ display: "flex", marginTop: 28, fontSize: 30, color: "rgba(255,255,255,0.8)" }}>
-            Formation IA 360 · 21 h · outils IA inclus
+            Analyse de données · Création de contenu · Marketing · La Forge IA
           </div>
         </div>
 
         <div style={{ display: "flex", gap: 16, fontSize: 26, color: "#D9DCE1", fontWeight: 600 }}>
-          <span>1 300 € par place · agents, automatisations, assistant de réunion</span>
+          <span>4 formations de 3 à 5 jours · Pack 360</span>
           <span style={{ color: "rgba(255,255,255,0.5)" }}>· Rouen & à distance</span>
         </div>
       </div>

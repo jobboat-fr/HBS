@@ -48,6 +48,14 @@ const nextConfig = {
       { protocol: "https", hostname: "images.unsplash.com" },
     ],
   },
+  // Les anciennes adresses des formations (avant leur renommage) restent valables.
+  async redirects() {
+    return [
+      { source: "/formations/data-analyse-360", destination: "/formations/analyse-de-donnees", permanent: true },
+      { source: "/formations/content-making-360", destination: "/formations/creation-de-contenu", permanent: true },
+      { source: "/formations/marketing-360", destination: "/formations/marketing", permanent: true },
+    ];
+  },
   async headers() {
     return [
       {

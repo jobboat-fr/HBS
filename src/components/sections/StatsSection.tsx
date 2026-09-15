@@ -41,7 +41,7 @@ export function StatsSection() {
           viewport={viewportOnce}
           className="text-center font-display text-display-md font-extrabold text-ink"
         >
-          La Formation IA 360 en chiffres
+          HBS FORMATION en chiffres
         </motion.h2>
 
         <motion.div

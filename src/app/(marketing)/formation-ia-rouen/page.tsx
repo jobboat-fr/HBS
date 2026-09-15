@@ -4,12 +4,13 @@ import { ArrowRight, Building2, MapPin, UserRound, Briefcase } from "lucide-reac
 import { PageHeader } from "@/components/layout/PageHeader";
 import { CTASection } from "@/components/sections/CTASection";
 import { BreadcrumbJsonLd, CourseJsonLd } from "@/components/seo/JsonLd";
-import { site, legal, tarif, annonce } from "@/lib/site";
+import { site, legal } from "@/lib/site";
+import { FORMATIONS, ORDRE, PACK, dateCourte, duree, dureeCourte, euros, prochaineSession } from "@/lib/commande";
 
 export const metadata: Metadata = {
-  title: "Formation IA à Rouen et en Normandie — organisme certifié Qualiopi",
+  title: "Formation IA, marketing, contenu et données à Rouen — organisme certifié Qualiopi",
   description:
-    "Formation intelligence artificielle à Rouen : la Formation IA 360 de HBS FORMATION, en direct à distance ou dans votre entreprise en Normandie. 21 h, outils IA inclus, 1 300 € la place, OPCO et France Travail.",
+    "Formations à Rouen et en Normandie : La Forge IA (3 jours), Marketing (3 jours), Création de contenu (5 jours), Analyse de données (5 jours). En direct à distance ou dans votre entreprise, OPCO et France Travail.",
   alternates: { canonical: "/formation-ia-rouen" },
 };
 
@@ -18,23 +19,27 @@ const publics = [
     icon: Building2,
     titre: "Entreprises normandes",
     texte: "Vos équipes formées sur leurs propres processus, à distance ou en présentiel dans vos locaux à Rouen, au Havre, à Évreux ou à Caen. Financement OPCO possible.",
-    lien: { href: "/reserver?formation=IA360", label: "Réserver des places" },
+    lien: { href: "/reserver?profil=entreprise", label: "Inscrire mon équipe" },
   },
   {
     icon: UserRound,
     titre: "Indépendants et particuliers",
-    texte: "Une place à titre personnel, rien de prélevé pendant 14 jours, puis un paiement en trois fois. Vous repartez avec vos outils IA en place.",
-    lien: { href: "/reserver?formation=IA360", label: "Réserver ma place" },
+    texte: "À titre personnel : rien de prélevé pendant 14 jours, puis un paiement en 3 fois. En 3 jours, vous changez déjà votre façon de travailler.",
+    lien: { href: "/reserver", label: "Je réserve" },
   },
   {
     icon: Briefcase,
     titre: "Demandeurs d'emploi",
-    texte: "Une prise en charge France Travail est possible si la formation s'inscrit dans votre projet. Le moteur de recherche d'emploi automatisé est inclus.",
+    texte: "Une prise en charge France Travail est possible si la formation s'inscrit dans votre projet. Avec La Forge IA, le moteur de recherche d'emploi automatisé est inclus.",
     lien: { href: "/preinscription", label: "Demander un devis" },
   },
 ];
 
+export const revalidate = 3600;
+
 export default function RouenPage() {
+  const s = prochaineSession("IA360");
+  const ia = FORMATIONS.IA360;
   return (
     <>
       <BreadcrumbJsonLd
@@ -47,18 +52,28 @@ export default function RouenPage() {
 
       <PageHeader
         eyebrow="Rouen · Normandie"
-        title={<>La formation IA <span className="texte-lumiere">née à Rouen</span></>}
-        subtitle="HBS FORMATION est un organisme de formation rouennais, certifié Qualiopi, dédié à l'intelligence artificielle appliquée au travail."
+        title={<>Vos formations <span className="texte-lumiere">nées à Rouen</span></>}
+        subtitle="HBS FORMATION, organisme rouennais certifié Qualiopi : 4 formations courtes pour lire votre marché, créer, vendre et mettre l'IA au travail."
       />
 
       <section className="py-14 lg:py-20">
         <div className="container-page grid gap-10 lg:grid-cols-[1.3fr_1fr]">
           <div className="space-y-5 text-[15px] leading-relaxed text-ink-soft">
-            <h2 className="font-display text-display-md font-extrabold text-ink">Une formation IA concrète, près de chez vous</h2>
+            <h2 className="font-display text-display-md font-extrabold text-ink">Des formations concrètes, près de chez vous</h2>
+            <ul className="space-y-1.5">
+              {ORDRE.map((c) => (
+                <li key={c}>
+                  <Link href={FORMATIONS[c].href} className="font-bold text-ink hover:underline">{FORMATIONS[c].nom}</Link> · {dureeCourte(FORMATIONS[c])} · {euros(FORMATIONS[c].prix)}
+                </li>
+              ))}
+              <li>
+                <Link href={PACK.href} className="font-bold text-ink hover:underline">{PACK.nom}</Link> · les 4 · {euros(PACK.prix)}
+              </li>
+            </ul>
             <p>
-              La <b>Formation IA 360</b> part de votre activité réelle : une semaine, six ateliers pratiques,
-              et un cas de votre entreprise traité de bout en bout — de la compréhension des outils à leur
-              déploiement fiable, dans le respect du RGPD et du règlement européen sur l&apos;IA.
+              <b>La Forge IA</b> part de votre activité réelle : 21 heures en 3 jours, et un cas de votre entreprise
+              traité de bout en bout — de la compréhension des outils à leur déploiement fiable, dans le respect du
+              RGPD et du règlement européen sur l&apos;IA.
             </p>
             <p>
               Les sessions se suivent <b>en direct à distance</b>, depuis Rouen comme depuis toute la France.
@@ -66,7 +81,7 @@ export default function RouenPage() {
               en Normandie.
             </p>
             <p>
-              Chaque place comprend les outils IA qui continuent de travailler après la formation : agents IA,
+              Avec La Forge IA, votre forfait inclut les outils IA qui continuent de travailler après la formation : agents IA,
               automatisations, assistance au secrétariat, assistant de réunion et moteur de recherche
               d&apos;emploi automatisé.
             </p>
@@ -82,12 +97,12 @@ export default function RouenPage() {
 
           <aside className="cadre-neon self-start">
             <div className="p-7">
-              <p className="text-xs font-bold uppercase tracking-widest text-red-600">Prochaine session</p>
-              <p className="mt-2 font-display text-3xl font-extrabold text-ink">{annonce.dateLisible}</p>
-              <p className="mt-4 font-display text-5xl font-extrabold text-ink">{tarif.montant}</p>
-              <p className="text-sm text-ink-soft">{tarif.unite} · 21 h · outils IA inclus</p>
-              <Link href="/reserver?formation=IA360" className="bouton-neon mt-6 flex min-h-[48px] items-center justify-center gap-2 rounded-full px-6 font-bold">
-                Réserver ma place <ArrowRight size={18} aria-hidden />
+              <p className="text-xs font-bold uppercase tracking-widest text-red-600">{ia.nom} · prochaine session</p>
+              <p className="mt-2 font-display text-3xl font-extrabold text-ink">{s ? dateCourte(s.debut) : "Dates à venir"}</p>
+              <p className="mt-4 font-display text-5xl font-extrabold text-ink">{euros(ia.prix)}</p>
+              <p className="text-sm text-ink-soft">TTC · {duree(ia)} · outils IA inclus dans votre forfait</p>
+              <Link href={s ? `/reserver?formation=IA360&session=${s.code}` : "/reserver?formation=IA360"} className="bouton-neon mt-6 flex min-h-[48px] items-center justify-center gap-2 rounded-full px-6 font-bold">
+                Je réserve <ArrowRight size={18} aria-hidden />
               </Link>
               <Link href="/formations" className="mt-3 block text-center text-sm font-semibold text-teal-700 underline">
                 Voir le programme détaillé

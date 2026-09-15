@@ -3,17 +3,18 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { CTASection } from "@/components/sections/CTASection";
 import { Planning, Rythme } from "@/components/planning/Planning";
 import { BreadcrumbJsonLd, CourseJsonLd } from "@/components/seo/JsonLd";
+import { PackCycles } from "@/components/sections/PackSection";
 import { ORDRE } from "@/lib/commande";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Planning des formations — Data, Content, Marketing et IA 360",
+  title: "Planning des formations — Analyse de données, Création de contenu, Marketing, La Forge IA",
   description:
-    "Le calendrier des formations HBS FORMATION : chaque mois, Data Analyse 360, Content Making 360, Marketing 360 et la Formation IA 360 en dernière semaine. Dates, prix et réservation en ligne.",
+    "Toutes les dates HBS FORMATION : chaque mois Analyse de données (5 jours), Création de contenu (5 jours), Marketing (3 jours) et La Forge IA (3 jours). Prix, places et réservation en ligne.",
   alternates: { canonical: "/planning" },
 };
 
-// Recalculé chaque heure : une semaine commencée quitte le planning d'elle-même.
+// Recalculé chaque heure : une session commencée quitte le planning d'elle-même.
 export const revalidate = 3600;
 
 export default function PlanningPage() {
@@ -29,8 +30,8 @@ export default function PlanningPage() {
 
       <PageHeader
         eyebrow="Planning"
-        title={<>Chaque semaine, <span className="texte-lumiere">un thème</span></>}
-        subtitle="Data, contenu, marketing — et chaque fin de mois, la Formation IA 360. Choisissez votre semaine, réservez en deux minutes."
+        title={<>Votre prochaine session <span className="texte-lumiere">est déjà là</span></>}
+        subtitle="4 formations chaque mois, 12 places par session. Choisissez vos dates et réservez en deux minutes, avant que ce soit complet."
       />
 
       <section className="py-12 lg:py-16">
@@ -46,12 +47,18 @@ export default function PlanningPage() {
         <div className="container-page mx-auto max-w-4xl">
           <h2 className="font-display text-display-md font-extrabold text-ink">Les prochaines sessions</h2>
           <p className="mt-2 text-sm text-ink-soft">
-            21 heures sur la semaine, à distance en direct · 4 à 12 participants · une session dédiée pour votre équipe est
-            possible les autres semaines.
+            7 heures par jour, à distance en direct · 4 à 12 participants · une session dédiée à votre équipe est possible
+            à d&apos;autres dates.
           </p>
           <div className="mt-8">
             <Planning mois={6} />
           </div>
+        </div>
+      </section>
+
+      <section className="py-12 lg:py-16">
+        <div className="container-page mx-auto max-w-4xl">
+          <PackCycles />
         </div>
       </section>
 

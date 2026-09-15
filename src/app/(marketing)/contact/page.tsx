@@ -4,11 +4,12 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { ContactForm } from "@/components/forms/ContactForm";
 import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 import { site, legal } from "@/lib/site";
+import { FORMATIONS, ORDRE, PACK, dureeCourte, euros } from "@/lib/commande";
 
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Contactez HBS FORMATION à Rouen : une question sur la Formation IA 360, une réservation pour votre entreprise ou pour vous-même. Réponse sous 48 heures ouvrées.",
+    "Contactez HBS FORMATION à Rouen : une question sur nos 4 formations ou le Pack 360, une réservation pour votre entreprise ou pour vous-même. Réponse sous 48 heures ouvrées.",
   alternates: { canonical: "/contact" },
 };
 
@@ -57,11 +58,19 @@ export default function ContactPage() {
             </div>
 
             <div className="verre-clair rounded-2xl p-8">
-              <h3 className="font-display text-lg font-bold text-teal-600">Formation IA 360</h3>
-              <p className="mt-3 text-sm leading-relaxed text-ink-soft">
-                1 300 € par place, formation de 21 heures et outils IA inclus. La place peut être
-                réglée par votre entreprise ou à titre personnel. Prochaine session le 26 octobre 2026.
-              </p>
+              <h3 className="font-display text-lg font-bold text-teal-600">Nos 4 formations</h3>
+              <ul className="mt-3 space-y-1.5 text-sm text-ink-soft">
+                {ORDRE.map((c) => (
+                  <li key={c} className="flex justify-between gap-3">
+                    <span>{FORMATIONS[c].nom} <span className="text-ink-muted">· {dureeCourte(FORMATIONS[c])}</span></span>
+                    <b className="whitespace-nowrap text-ink">{euros(FORMATIONS[c].prix)}</b>
+                  </li>
+                ))}
+                <li className="flex justify-between gap-3 border-t border-mist pt-1.5">
+                  <span>{PACK.nom} · les 4</span>
+                  <b className="whitespace-nowrap text-ink">{euros(PACK.prix)}</b>
+                </li>
+              </ul>
             </div>
           </div>
 

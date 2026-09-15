@@ -7,7 +7,7 @@ import Link from "next/link";
 import { Input, Textarea, Select, Label, FieldError } from "@/components/ui/Input";
 import { PositionnementQuiz } from "@/components/forms/PositionnementQuiz";
 import { Button } from "@/components/ui/Button";
-import { annonce, certificat } from "@/lib/site";
+import { PACK, euros } from "@/lib/commande";
 
 /**
  * L'entrée du tunnel d'inscription.
@@ -28,7 +28,7 @@ import { annonce, certificat } from "@/lib/site";
 
 type Programme = { id: string; title: string };
 
-/** La semaine choisie depuis le planning — voyage avec la demande jusqu'à l'organisme. */
+/** La session choisie depuis le planning — voyage avec la demande jusqu'à l'organisme. */
 export type Choix = { code: string; formation: string; semaine: string; prix: string };
 
 type Result =
@@ -108,7 +108,7 @@ export function InscriptionForm({
           // La plateforme ne reçoit pas encore la session : la semaine choisie part dans le
           // message (lu par l'organisme) et dans la campagne (filtrable dans LEARN).
           message: choix
-            ? `Semaine souhaitée : ${choix.formation} — ${choix.semaine}${values.message ? `\n\n${values.message}` : ""}`
+            ? `Session souhaitée : ${choix.formation} — ${choix.semaine}${values.message ? `\n\n${values.message}` : ""}`
             : values.message,
           campaign:
             new URLSearchParams(window.location.search).get("utm_campaign") ||
@@ -278,22 +278,21 @@ export function InscriptionForm({
                 <Sparkles size={15} aria-hidden /> Notre recommandation
               </p>
               <h3 className="mt-2 font-display text-lg font-bold text-ink">
-                Commencez par la Formation IA&nbsp;360
+                Vous hésitez ? Prenez les quatre.
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-ink-soft">
-                Vous hésitez encore — c&apos;est le cas le plus fréquent, et c&apos;est une
-                bonne raison de commencer par là. En une semaine, l&apos;IA&nbsp;360 part de
-                votre activité réelle : vous repartez avec vos propres usages cartographiés, de
-                quoi décider ensuite ce qu&apos;il vous faut vraiment.
+                Lire votre marché, créer votre contenu, vendre, automatiser : le {PACK.nom} réunit nos
+                4 formations sur un mois. Ce qu&apos;on vous apprend, même l&apos;IA ne sait pas
+                l&apos;assembler d&apos;un seul bloc ;)
               </p>
               <ul className="mt-3 space-y-1.5 text-sm text-ink-soft">
                 <li className="flex items-start gap-2">
                   <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-red-500" />
-                  {certificat.nom} à la clé, épreuve finale notée
+                  {euros(PACK.prix)} au lieu de {euros(PACK.prixSepare)}
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-red-500" />
-                  Prochaine session le {annonce.dateLisible}
+                  {PACK.heures} heures en {PACK.jours} jours, en direct
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-red-500" />
@@ -301,10 +300,10 @@ export function InscriptionForm({
                 </li>
               </ul>
               <Link
-                href="/formations#ia-360"
+                href={PACK.href}
                 className="mt-4 inline-flex items-center gap-2 rounded-full bg-red-600 px-5 py-2.5 text-sm font-bold text-white transition-colors hover:bg-red-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
               >
-                Découvrir le programme
+                Découvrir le Pack 360
                 <ArrowRight size={16} aria-hidden />
               </Link>
               <p className="mt-3 text-xs leading-relaxed text-ink-muted">
@@ -350,7 +349,7 @@ export function InscriptionForm({
           </>
         ) : (
           <>
-            {choix ? `Je réserve ma place — ${choix.formation}` : "Je réserve ma place"} <ArrowRight size={18} />
+            {choix ? `J'envoie ma demande — ${choix.formation}` : "J'envoie ma demande"} <ArrowRight size={18} />
           </>
         )}
       </button>

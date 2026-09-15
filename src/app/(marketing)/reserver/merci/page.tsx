@@ -3,7 +3,7 @@ import Link from "next/link";
 import { CheckCircle2, Mail, ClipboardList, FileSignature } from "lucide-react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { stripe, surCompte } from "@/lib/stripe";
-import { FORMATIONS, libelleSemaine, type CodeFormation } from "@/lib/commande";
+import { FORMATIONS, PACK, libelleDates, type CodeFormation } from "@/lib/commande";
 
 export const metadata: Metadata = {
   title: "Réservation confirmée",
@@ -28,11 +28,12 @@ export default async function MerciPage({ searchParams }: { searchParams: Promis
   if (session_id && /^cs_(test|live)_[A-Za-z0-9]+$/.test(session_id)) {
     try {
       const s = await stripe().checkout.sessions.retrieve(session_id, {}, surCompte());
-      const f = FORMATIONS[s.metadata?.produit as CodeFormation];
-      valide = s.status === "complete" && Boolean(f);
-      if (f) nomFormation = f.nom;
+      const code = s.metadata?.produit;
+      const nom = code === PACK.code ? PACK.nom : FORMATIONS[code as CodeFormation]?.nom;
+      valide = s.status === "complete" && Boolean(nom);
+      if (nom) nomFormation = nom;
       if (s.metadata?.session_debut && s.metadata?.session_fin) {
-        semaine = `semaine ${libelleSemaine({ debut: s.metadata.session_debut, fin: s.metadata.session_fin })}`;
+        semaine = libelleDates({ debut: s.metadata.session_debut, fin: s.metadata.session_fin });
       }
       profil = s.metadata?.profil === "particulier" ? "particulier" : "entreprise";
       email = s.customer_details?.email ?? null;
@@ -68,7 +69,7 @@ export default async function MerciPage({ searchParams }: { searchParams: Promis
 
   const etapes = [
     { icon: Mail, titre: "Confirmation par courriel", texte: `Envoyée à ${email ?? "votre adresse"}${profil === "entreprise" ? ", avec votre facture" : ", avec votre échéancier et votre lien de rétractation"}.` },
-    { icon: ClipboardList, titre: "Test de positionnement", texte: "Environ 20 minutes, depuis le lien du courriel : il adapte les ateliers à votre niveau et à votre cas réel." },
+    { icon: ClipboardList, titre: "Test de positionnement", texte: "Environ 15 minutes, depuis le lien du courriel : il adapte la formation à votre niveau et à votre projet." },
     { icon: FileSignature, titre: profil === "entreprise" ? "Convention de formation" : "Contrat de formation", texte: profil === "entreprise" ? "Nous vous l'adressons, puis vous nous indiquez le nom des participants." : "Vous le recevez avant le début de la session." },
   ];
 
@@ -77,7 +78,7 @@ export default async function MerciPage({ searchParams }: { searchParams: Promis
       <PageHeader
         eyebrow="C'est réservé"
         title={<>Bienvenue en <span className="texte-lumiere">{nomFormation}</span></>}
-        subtitle={profil === "particulier" ? "Votre place est réservée. Rien n'a été prélevé aujourd'hui." : "Votre paiement est confirmé."}
+        subtitle={profil === "particulier" ? "C'est réservé. Rien n'a été prélevé aujourd'hui." : "Votre paiement est confirmé."}
       />
       <section className="bg-cloud py-12 lg:py-16">
         <div className="container-page mx-auto max-w-3xl">
@@ -100,7 +101,7 @@ export default async function MerciPage({ searchParams }: { searchParams: Promis
           </ol>
           <p className="mt-8 text-center text-sm text-ink-muted">
             Une question ? <Link href="/contact" className="underline">Écrivez-nous</Link> ·{" "}
-            <Link href="/formations#programme" className="underline">revoir le programme</Link>
+            <Link href="/planning" className="underline">revoir les dates</Link>
           </p>
         </div>
       </section>

@@ -18,7 +18,7 @@ export function ProcessSection() {
         >
           <Badge>Votre parcours</Badge>
           <h2 className="mt-5 font-display text-display-lg font-extrabold text-ink text-balance">
-            De la réservation <span className="text-teal-600">à vos outils en place</span>
+            De la réservation <span className="text-teal-600">à vos premiers résultats</span>
           </h2>
         </motion.div>
 

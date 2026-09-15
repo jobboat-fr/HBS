@@ -56,9 +56,9 @@ export function Header() {
 
         <ul className="hidden items-center gap-5 lg:flex xl:gap-7">
           {navLinks.map((link) => (
-            // « Programme » pointe dans la page Formation : on le retire entre lg et xl pour
-            // que le menu et le bouton de réservation tiennent sur une ligne.
-            <li key={link.href} className={link.href.includes("#") ? "hidden xl:block" : undefined}>
+            // « Contact » est retiré entre lg et xl pour que le menu et le bouton de réservation
+            // tiennent sur une ligne ; il reste dans le pied de page.
+            <li key={link.href} className={link.href === "/contact" ? "hidden xl:block" : undefined}>
               <Link
                 href={link.href}
                 className={cn(
@@ -82,7 +82,7 @@ export function Header() {
             href="/planning"
             className="bouton-neon inline-flex min-h-[40px] items-center gap-1.5 whitespace-nowrap rounded-full px-4 text-[15px] font-bold"
           >
-            <ClipboardList size={17} /> Réserver ma place
+            <ClipboardList size={17} /> Je réserve
           </Link>
         </div>
 
@@ -124,7 +124,7 @@ export function Header() {
                   Prêt·e à passer à l&apos;étape suivante ?
                 </p>
                 <Button href="/planning" onClick={() => setOpen(false)}>
-                  Choisir ma semaine
+                  Voir les dates
                 </Button>
                 <Button href="/faq" variant="outline" onClick={() => setOpen(false)}>
                   Questions fréquentes

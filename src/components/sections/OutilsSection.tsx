@@ -8,7 +8,7 @@ import { outilsInclus, tarif } from "@/lib/site";
 const ICONES = [Bot, Workflow, SearchCheck, FileText, Video, Plus];
 
 /**
- * Ce que contient la place au-delà des 21 heures.
+ * Ce que contient le forfait La Forge IA au-delà des 21 heures.
  *
  * C'est l'argument qui distingue cette formation d'une formation sur l'IA : on n'y apprend
  * pas seulement à s'en servir, on repart avec des outils qui travaillent déjà.
@@ -20,7 +20,7 @@ export function OutilsSection() {
       <div className="container-page relative">
         <motion.div variants={fadeUp} initial="initial" whileInView="animate" viewport={viewportOnce} className="mx-auto max-w-2xl text-center">
           <span className="verre inline-flex rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-white/85">
-            Inclus dans votre place
+            La Forge IA · inclus dans votre forfait
           </span>
           <h2 className="mt-5 font-display text-display-lg font-extrabold text-white text-balance">
             Vous ne repartez pas avec des notes.{" "}

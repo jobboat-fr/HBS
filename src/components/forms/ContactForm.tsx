@@ -7,7 +7,8 @@ import { CheckCircle2, Loader2 } from "lucide-react";
 import { Input, Textarea, Select, Label, FieldError } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { contactSchema, type ContactInput } from "@/lib/validation/contact";
-import { formations, financements } from "@/lib/site";
+import { financements } from "@/lib/site";
+import { FORMATIONS, ORDRE, PACK } from "@/lib/commande";
 
 export function ContactForm() {
   const [submitted, setSubmitted] = useState(false);
@@ -89,11 +90,12 @@ export function ContactForm() {
           <Label htmlFor="formation">Formation souhaitée</Label>
           <Select id="formation" defaultValue="" {...register("formation")}>
             <option value="">— Sélectionnez —</option>
-            {formations.map((f) => (
-              <option key={f.slug} value={f.title}>
-                {f.title}
+            {ORDRE.map((code) => (
+              <option key={code} value={FORMATIONS[code].nom}>
+                {FORMATIONS[code].nom}
               </option>
             ))}
+            <option value={PACK.nom}>{PACK.nom} (les 4 formations)</option>
             <option value="Autre">Autre</option>
           </Select>
         </div>

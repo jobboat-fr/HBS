@@ -6,10 +6,10 @@
 export const site = {
   name: "HBS FORMATION",
   shortName: "HBS",
-  baseline: "L'intelligence artificielle, maîtrisée et au travail",
+  baseline: "Lire, créer, vendre, automatiser",
   // Aucun dispositif de financement annoncé ici : c'est la phrase que les moteurs citent.
   description:
-    "Formation IA 360 : 21 heures pour comprendre, fiabiliser et déployer l'intelligence artificielle dans votre activité, outils IA inclus. HBS FORMATION, organisme de formation à Rouen, pour les particuliers et les entreprises.",
+    "Quatre formations courtes et concrètes : Analyse de données (5 jours), Création de contenu (5 jours), Marketing (3 jours) et La Forge IA (3 jours), ou les quatre dans le Pack 360. HBS FORMATION, organisme de formation à Rouen, certifié Qualiopi.",
   // Apex, pas www : www.hbs-formation.fr redirige (308) vers l'apex côté Vercel.
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://hbs-formation.fr",
   email: "contact@hbs-formation.fr",
@@ -46,16 +46,16 @@ export const legal = {
 };
 
 export const navLinks = [
+  { label: "Formations", href: "/#formations" },
+  { label: "Pack 360", href: "/pack-360" },
   { label: "Planning", href: "/planning" },
-  { label: "Formation IA 360", href: "/formations" },
   { label: "Tarifs", href: "/financement" },
   { label: "Entreprises", href: "/entreprises" },
-  { label: "À propos", href: "/a-propos" },
   { label: "Contact", href: "/contact" },
 ] as const;
 
 /**
- * Le titre remis à l'issue de la Formation IA 360.
+ * Le titre remis à l'issue de La Forge IA.
  *
  * **Ce n'est pas un diplôme, et le mot ne doit pas être employé.** Un diplôme est délivré
  * au nom de l'État par un établissement habilité. HBS FORMATION est un organisme de
@@ -70,7 +70,7 @@ export const navLinks = [
  * en entretien d'embauche se retourne contre l'organisme, pas contre le formateur.
  */
 export const certificat = {
-  nom: "Certificat IA 360",
+  nom: "Certificat La Forge IA",
   emetteur: "HBS FORMATION",
   mention: "Certificat délivré par l'organisme",
   // Ce qui rend le certificat sérieux, et qu'il faut dire à sa place.
@@ -85,11 +85,12 @@ export const annonce = {
   actif: true,
   iso: "2026-10-26",
   dateLisible: "26 octobre 2026",
-  titre: "Formation IA 360",
-  // « Prochaine » et jamais « première » : l'organisme ne se présente pas comme débutant.
-  texte: "Lancement le 26 octobre 2026, puis chaque mois : Data, Content, Marketing et IA 360.",
+  titre: "La Forge IA",
+  // « Prochaine » et jamais « première » : l'organisme ne se présente pas comme débutant. Le
+  // bandeau calcule la prochaine session réelle depuis le planning ; ceci est le repli.
+  texte: "Prochaine session le 26 octobre 2026.",
   href: "/planning",
-  lienLabel: "Choisir ma semaine",
+  lienLabel: "Je réserve",
 } as const;
 
 /**
@@ -102,11 +103,11 @@ export const annonce = {
  */
 export const tarif = {
   montant: "1 300 €",
-  unite: "par place",
-  resume: "Formation de 21 h et outils IA inclus",
+  unite: "par personne",
+  resume: "21 heures en 3 jours, outils IA inclus dans votre forfait",
 } as const;
 
-/** Ce que comprend une place, au-delà des 21 heures de formation. */
+/** Ce que comprend le forfait La Forge IA, au-delà des 21 heures de formation. */
 export const outilsInclus = [
   { titre: "Agents IA", texte: "Des agents prêts à travailler sur vos tâches réelles." },
   { titre: "Couches d'automatisation", texte: "Vos enchaînements répétitifs confiés à la machine, sous contrôle." },
@@ -119,18 +120,18 @@ export const outilsInclus = [
 /** Piliers de formation — affichés en page d'accueil (3) et détaillés sur /formations. */
 export const formations = [
   {
-    slug: "ia-360",
+    slug: "la-forge-ia",
     disponible: true,
     icon: "Sparkles",
-    title: "Formation IA 360",
-    tagline: "Connaissance, conformité, déploiement — 21 heures",
+    title: "La Forge IA",
+    tagline: "21 heures en 3 jours",
     description:
-      "Trois journées pour comprendre ce que fait réellement l'IA, la faire travailler de façon fiable sur vos propres documents, et repartir avec votre dossier IA et vos outils : agents, automatisations, recherche d'emploi, secrétariat et assistant de réunion.",
+      "3 jours pour mettre l'IA au travail sur vos vrais dossiers : agents, automatisations, documents fiables — outils inclus dans votre forfait.",
     features: [
-      "21 h — 3 journées, 6 ateliers pratiques",
-      "Outils IA inclus dans votre place",
+      "21 heures en 3 jours",
+      "Outils IA inclus dans votre forfait",
       "Particuliers, indépendants et entreprises",
-      "Certificat IA 360 délivré par HBS FORMATION",
+      "Certificat La Forge IA délivré par HBS FORMATION",
     ],
   },
   {
@@ -181,13 +182,13 @@ export const formations = [
 ] as const;
 
 /**
- * Le programme de la Formation IA 360, tel qu'il figure au document d'information du public
+ * Le programme de La Forge IA, tel qu'il figure au document d'information du public
  * (IA360_00, v2). Toute modification se fait d'abord dans le programme, puis ici.
  */
 export const programme = {
   fiche: [
-    { label: "Durée", valeur: "21 h", detail: "3 journées · 6 ateliers de 3 h 30" },
-    { label: "Format", valeur: "1 semaine", detail: "21 heures en direct, sur la semaine" },
+    { label: "Durée", valeur: "21 heures", detail: "en 3 jours · ateliers de 3 h 30" },
+    { label: "Rythme", valeur: "Lundi → mercredi", detail: "7 heures par jour, en direct" },
     { label: "Modalité", valeur: "À distance, en direct", detail: "présentiel possible en entreprise" },
     { label: "Effectif", valeur: "4 à 12", detail: "participants par session" },
     { label: "Horaires", valeur: "9h00 – 17h00", detail: "pause 12h30 – 13h30" },
@@ -247,32 +248,32 @@ export const programme = {
 } as const;
 
 /** Les 3 piliers mis en avant en page d'accueil. */
-export const featuredFormationSlugs = ["ia-360"] as const;
+export const featuredFormationSlugs = ["la-forge-ia"] as const;
 
 export const processSteps = [
-  { step: "01", title: "Réservation & positionnement",
-    description: "Vous réservez votre place, puis un court test établit votre niveau et votre cas réel." },
-  { step: "02", title: "Trois journées d'ateliers",
-    description: "Six ateliers pratiques, en direct, sur les documents et les tâches de votre activité." },
-  { step: "03", title: "Vos outils en place",
-    description: "Agents, automatisations, secrétariat, recherche d'emploi, assistant de réunion : prêts à servir." },
-  { step: "04", title: "Certificat & suivi",
-    description: "Épreuve pratique, Certificat IA 360, puis un point à 3 mois sur ce que vous avez déployé." },
+  { step: "01", title: "Vous choisissez",
+    description: "Une formation ou les quatre avec le Pack 360. Vous réservez en deux minutes." },
+  { step: "02", title: "On vous positionne",
+    description: "Un test de 15 minutes : on part de votre niveau et de votre projet réel." },
+  { step: "03", title: "Vous pratiquez",
+    description: "3 ou 5 jours en direct, sur vos propres dossiers. Pas de théorie inutile." },
+  { step: "04", title: "Vous appliquez",
+    description: "Vous repartez avec vos outils et un plan d'action. On fait le point à 3 mois." },
 ] as const;
 
 export const stats = [
-  { value: "21", suffix: "h", label: "de formation en direct" },
-  { value: "6", suffix: "", label: "ateliers pratiques" },
-  { value: "9", suffix: "", label: "pièces pour votre dossier IA" },
-  { value: "12", suffix: "", label: "participants au plus par session" },
+  { value: "4", suffix: "", label: "formations complémentaires" },
+  { value: "3 à 5", suffix: " jours", label: "par formation, en direct" },
+  { value: "12", suffix: "", label: "places au plus par session" },
+  { value: "622,50", suffix: " €", label: "économisés avec le Pack 360" },
 ] as const;
 
 /** Modes de financement mobilisables (formulaire de contact). */
 export const financements = [
-  { value: "entreprise", label: "Mon entreprise finance ma place" },
+  { value: "entreprise", label: "Mon entreprise finance ma formation" },
   { value: "opco", label: "OPCO (via mon employeur)" },
   { value: "france_travail", label: "France Travail (demandeur d'emploi)" },
-  { value: "personnel", label: "Je finance ma place" },
+  { value: "personnel", label: "Je finance ma formation" },
   { value: "autre", label: "Autre / je ne sais pas encore" },
 ] as const;
 
@@ -287,44 +288,44 @@ export const social = {
  */
 export const faqs = [
   {
-    id: "ia-360",
-    q: "Qu'est-ce que la Formation IA 360 ?",
-    a: "Une semaine d'ateliers pratiques, en direct, pour comprendre ce que fait réellement l'intelligence artificielle, la faire travailler de façon fiable sur vos propres documents, et la déployer dans votre activité. Vous repartez avec votre dossier IA — neuf pièces datées — et avec vos outils en place.",
+    id: "formations",
+    q: "Quelles formations proposez-vous ?",
+    a: "Quatre formations qui se complètent : Analyse de données (35 heures en 5 jours), Création de contenu (35 heures en 5 jours), Marketing (21 heures en 3 jours) et La Forge IA (21 heures en 3 jours). Ou les quatre ensemble avec le Pack 360.",
   },
   {
-    id: "outils",
-    q: "Quels outils sont inclus dans la place ?",
-    a: "Des agents IA et des couches d'automatisation, un moteur de recherche d'emploi automatisé, une assistance au secrétariat et à la gestion administrative, un assistant de réunion, et d'autres outils encore. Ils sont compris dans le prix de la place.",
+    id: "pack",
+    q: "Qu'est-ce que le Pack 360 ?",
+    a: "Les quatre formations d'un même mois, dans un seul forfait : vous lisez votre marché, créez votre contenu, le vendez et automatisez le tout. 6 026,50 € au lieu de 6 649 € : −15 % sur La Forge IA et sur Création de contenu, −10 % sur Marketing.",
   },
   {
     id: "tarif",
     q: "Combien coûtent les formations ?",
-    a: "Chaque formation dure 21 heures sur une semaine. Data Analyse 360 : 1 800 € ; Content Making 360 : 1 200 € ; Marketing 360 : 1 500 € ; Formation IA 360 : 1 300 €, outils IA inclus. La place peut être réglée par votre entreprise, à titre personnel, ou prise en charge par un OPCO ou France Travail selon les critères du financeur : HBS FORMATION est certifiée Qualiopi au titre des actions de formation.",
+    a: "Analyse de données : 1 999 €. Création de contenu : 1 850 €. Marketing : 1 500 €. La Forge IA : 1 300 €, outils IA inclus dans votre forfait. Pack 360 : 6 026,50 €. Règlement par votre entreprise, à titre personnel, ou prise en charge par un OPCO ou France Travail selon leurs critères : HBS FORMATION est certifiée Qualiopi au titre des actions de formation.",
   },
   {
     id: "prochaine-session",
     q: "Quand ont lieu les prochaines sessions ?",
-    a: "Chaque mois, une formation par semaine : Data Analyse 360 la première, Content Making 360 la deuxième, Marketing 360 la troisième, et la Formation IA 360 la dernière semaine du mois. Lancement le 26 octobre 2026 avec la Formation IA 360 ; toutes les dates sont sur la page Planning. 12 places par session.",
+    a: "Chaque mois, dans le même ordre : Analyse de données, Création de contenu, Marketing, puis La Forge IA. Prochaine session le 26 octobre 2026 avec La Forge IA. Toutes les dates sont sur la page Planning. 12 places par session.",
+  },
+  {
+    id: "outils",
+    q: "Quels outils sont inclus avec La Forge IA ?",
+    a: "Agents IA, automatisations, recherche d'emploi automatisée, assistance au secrétariat, assistant de réunion, et d'autres encore. Tous inclus dans votre forfait.",
   },
   {
     id: "prerequis",
     q: "Faut-il des connaissances techniques ?",
-    a: "Non. Il suffit d'utiliser couramment un ordinateur et de venir avec un cas réel de votre activité : c'est la matière des six ateliers. Un court test de positionnement précède l'entrée.",
+    a: "Non. Venez avec un projet ou un cas réel de votre activité : c'est la matière des ateliers. Un test de positionnement de 15 minutes précède l'entrée.",
   },
   {
     id: "distance",
-    q: "La formation se suit-elle à distance ?",
-    a: "Oui, en direct avec le formateur. Elle peut aussi être organisée en présentiel dans votre entreprise.",
-  },
-  {
-    id: "autres",
-    q: "Proposez-vous d'autres formations ?",
-    a: "Oui, quatre formations 360 : Data Analyse 360 (lire entre les chiffres), Content Making 360 (votre prochaine tendance), Marketing 360 et la Formation IA 360. Le bilan de compétences, la VAE et l'e-learning arrivent plus tard.",
+    q: "Les formations se suivent-elles à distance ?",
+    a: "Oui, en direct avec le formateur. Elles peuvent aussi être organisées en présentiel dans votre entreprise.",
   },
   {
     id: "delai",
     q: "Sous combien de temps suis-je recontacté·e ?",
-    a: "Un conseiller vous recontacte sous 48 heures ouvrées après votre demande.",
+    a: "Sous 48 heures ouvrées après votre demande.",
   },
 ] as const;
 
@@ -350,7 +351,7 @@ export const media = {
     "formations-certifiantes": U("1517245386807-bb43f82c33c4"),
     "bilan-de-competences": U("1454165804606-c3d57bc86b40"),
     vae: U("1434030216411-0b793f4b4173"),
-    "ia-360": U("1677442136019-21780ecad995"),
+    "la-forge-ia": U("1677442136019-21780ecad995"),
     "e-learning-foad": U("1516321318423-f06f85e504b3"),
     "conseil-ingenierie": U("1552664730-d307ca884978"),
   } as Record<string, string>,

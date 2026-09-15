@@ -1,5 +1,5 @@
 import { site, legal, social, faqs, certificat } from "@/lib/site";
-import { FORMATIONS, PLACES_MAX, libelleSemaine, planning, type CodeFormation } from "@/lib/commande";
+import { FORMATIONS, PLACES_MAX, libelleDates, planning, type CodeFormation } from "@/lib/commande";
 
 const Ld = ({ data }: { data: unknown }) => (
   <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />
@@ -73,7 +73,7 @@ export function FaqJsonLd({ questions = faqs }: { questions?: readonly { q: stri
   );
 }
 
-/** Une formation 360 décrite complètement : cours, sessions ouvertes, offre. */
+/** Une formation décrite complètement : cours, sessions ouvertes, offre. */
 export function CourseJsonLd({ code = "IA360" }: { code?: CodeFormation }) {
   const f = FORMATIONS[code];
   const sessions = planning(new Date(), 4).filter((x) => x.formation === code && x.statut === "ouvert").slice(0, 3);
@@ -83,7 +83,7 @@ export function CourseJsonLd({ code = "IA360" }: { code?: CodeFormation }) {
     priceCurrency: "EUR",
     availability: "https://schema.org/InStock",
     url,
-    category: "Place de formation",
+    category: "Formation professionnelle",
   });
   return (
     <Ld
@@ -98,7 +98,7 @@ export function CourseJsonLd({ code = "IA360" }: { code?: CodeFormation }) {
         inLanguage: "fr",
         provider: organisme,
         coursePrerequisites: f.prerequis,
-        timeRequired: "PT21H",
+        timeRequired: `PT${f.heures}H`,
         teaches: f.objectifs,
         educationalCredentialAwarded:
           code === "IA360"
@@ -111,9 +111,9 @@ export function CourseJsonLd({ code = "IA360" }: { code?: CodeFormation }) {
         offers: offre(`${site.url}/reserver?formation=${code}`),
         hasCourseInstance: sessions.map((x) => ({
           "@type": "CourseInstance",
-          name: `${f.nom} — semaine ${libelleSemaine(x)}`,
+          name: `${f.nom} — ${libelleDates(x)}`,
           courseMode: "online",
-          courseWorkload: "PT21H",
+          courseWorkload: `PT${f.heures}H`,
           startDate: x.debut,
           endDate: x.fin,
           location: { "@type": "VirtualLocation", url: `${site.url}${f.href}` },

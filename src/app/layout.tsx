@@ -82,6 +82,9 @@ export const metadata: Metadata = {
   category: "education",
 };
 
+// Le bandeau calcule la prochaine session : aucune page ne garde une date plus d'une heure.
+export const revalidate = 3600;
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {

@@ -67,7 +67,7 @@ export function isSecretSeeking(input: string): boolean {
 export const SAFE_REFUSAL = {
   text:
     "Je ne peux pas partager d'informations techniques ou confidentielles (clés, identifiants, configuration). " +
-    "En revanche, je suis là pour tout ce qui concerne vos formations, la Formation IA 360 ou le financement ! " +
+    "En revanche, je suis là pour tout ce qui concerne vos formations, le Pack 360 ou le financement ! " +
     "Pour une demande spécifique, un conseiller peut vous répondre.",
   links: [{ label: "Contacter un conseiller", href: "/contact" }],
 };

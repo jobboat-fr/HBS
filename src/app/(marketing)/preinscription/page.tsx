@@ -10,8 +10,9 @@ import { catalogue, configured, type Catalogue } from "@/lib/learn";
 import {
   FORMATIONS,
   PLACES_MAX,
+  duree,
   euros,
-  libelleSemaine,
+  libelleDates,
   planning,
   prochaineSession,
   sessionParCode,
@@ -32,15 +33,15 @@ import { site } from "@/lib/site";
  */
 
 export const metadata: Metadata = {
-  title: "Réserver votre place — Data, Content, Marketing ou IA 360",
+  title: "Demande d'inscription — Analyse de données, Création de contenu, Marketing, La Forge IA",
   description:
-    "Réservez votre place en formation chez HBS FORMATION : choisissez votre semaine, laissez vos coordonnées, passez un test de positionnement de 15 minutes. Gratuit et sans engagement.",
+    "Demandez votre inscription chez HBS FORMATION : choisissez vos dates, laissez vos coordonnées, passez un test de positionnement de 15 minutes. Idéal si un OPCO ou France Travail finance votre formation.",
   alternates: { canonical: "/preinscription" },
 };
 
 const ETAPES = [
-  { icon: ClipboardList, title: "Vous réservez", body: "Deux minutes, sans compte ni paiement. Votre demande est enregistrée tout de suite." },
-  { icon: UserCheck, title: "Vous passez le test", body: "15 à 20 minutes, juste après : on adapte la semaine à votre niveau et à votre cas." },
+  { icon: ClipboardList, title: "Vous faites votre demande", body: "Deux minutes, sans compte ni paiement. Votre demande est enregistrée tout de suite." },
+  { icon: UserCheck, title: "Vous passez le test", body: "15 minutes, juste après : on adapte la formation à votre niveau et à votre projet." },
   { icon: CalendarCheck, title: "On confirme", body: "Sous 48 h ouvrées : votre session, votre contrat ou convention, votre financement." },
 ];
 
@@ -76,18 +77,18 @@ export default async function InscriptionPage({
 
   const programmeId =
     data?.programmes.find((p) => f && p.title.toLowerCase() === f.nom.toLowerCase())?.id ??
-    data?.programmes.find((p) => /IA\s*360/i.test(p.title))?.id;
+    data?.programmes.find((p) => p.title.toLowerCase() === FORMATIONS.IA360.nom.toLowerCase())?.id;
   const sessionId =
     data?.programmes.find((p) => p.id === programmeId)?.sessions?.find((s) => creneau && s.code === creneau.code)?.id ?? null;
   const choix: Choix | null =
-    f && creneau ? { code: creneau.code, formation: f.nom, semaine: libelleSemaine(creneau), prix: euros(f.prix) } : null;
+    f && creneau ? { code: creneau.code, formation: f.nom, semaine: libelleDates(creneau), prix: euros(f.prix) } : null;
 
   return (
     <>
       <BreadcrumbJsonLd
         items={[
           { name: "Accueil", url: site.url },
-          { name: "Réserver ma place", url: `${site.url}/preinscription` },
+          { name: "Demande d'inscription", url: `${site.url}/preinscription` },
         ]}
       />
       <PageHeader
@@ -95,18 +96,18 @@ export default async function InscriptionPage({
         title={
           f ? (
             <>
-              {f.accroche}. <span className="texte-lumiere">Votre place vous attend.</span>
+              {f.accroche}. <span className="texte-lumiere">On garde une place pour vous.</span>
             </>
           ) : (
             <>
-              Votre place, <span className="texte-lumiere">en deux minutes</span>
+              Votre inscription, <span className="texte-lumiere">en deux minutes</span>
             </>
           )
         }
         subtitle={
           f && creneau
-            ? `${f.nom}, semaine ${libelleSemaine(creneau)}. ${PLACES_MAX} places seulement : réservez maintenant, c'est gratuit et sans engagement.`
-            : "Choisissez votre formation, laissez vos coordonnées, passez le test : on s'occupe du reste. Gratuit et sans engagement."
+            ? `${f.nom}, ${libelleDates(creneau)}. ${PLACES_MAX} places seulement : faites votre demande avant que ce soit complet.`
+            : "Choisissez votre formation, laissez vos coordonnées, passez le test : on s'occupe du reste, financement compris."
         }
       />
 
@@ -126,10 +127,10 @@ export default async function InscriptionPage({
                   <p className="mt-3 font-display text-2xl font-extrabold leading-tight text-ink">{f.nom}</p>
                   <p className={`font-semibold ${f.couleur.texte}`}>{f.accroche}</p>
                   <p className="mt-4 flex items-center gap-2 font-semibold text-ink">
-                    <CalendarDays size={18} className="text-teal-600" aria-hidden /> Semaine {libelleSemaine(creneau)}
+                    <CalendarDays size={18} className="text-teal-600" aria-hidden /> {libelleDates(creneau)}
                   </p>
                   <p className="mt-1 flex items-center gap-2 text-sm text-ink-soft">
-                    <Users size={16} aria-hidden /> 21 h en direct · {PLACES_MAX} places maximum
+                    <Users size={16} aria-hidden /> {duree(f)} en direct · {PLACES_MAX} places maximum
                   </p>
                   <ul className="mt-4 space-y-1.5 text-sm text-ink-soft">
                     {f.inclus.map((x) => (
@@ -139,7 +140,7 @@ export default async function InscriptionPage({
                     ))}
                   </ul>
                   <div className="mt-5 flex items-baseline justify-between border-t border-mist pt-4">
-                    <span className="text-sm text-ink-soft">Votre place</span>
+                    <span className="text-sm text-ink-soft">Prix</span>
                     <span className="font-display text-3xl font-extrabold text-ink">{euros(f.prix)}</span>
                   </div>
                   <p className="text-right text-xs text-ink-muted">TTC · OPCO ou France Travail possible</p>
@@ -147,12 +148,12 @@ export default async function InscriptionPage({
                     href={`/reserver?formation=${f.code}&session=${creneau.code}`}
                     className="bouton-neon mt-4 flex min-h-[52px] items-center justify-center gap-2 rounded-full px-6 font-bold"
                   >
-                    Payer ma place maintenant
+                    Payer en ligne maintenant
                   </Link>
 
                   {autres.length > 1 ? (
                     <div className="mt-5">
-                      <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Autre semaine ?</p>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Autres dates ?</p>
                       <div className="mt-2 flex flex-wrap gap-2">
                         {autres.map((s) => (
                           <Link
@@ -178,9 +179,9 @@ export default async function InscriptionPage({
               </div>
             ) : (
               <div className="verre-clair rounded-2xl border border-mist p-6">
-                <p className="font-display text-lg font-extrabold text-ink">Pas encore choisi votre semaine ?</p>
+                <p className="font-display text-lg font-extrabold text-ink">Pas encore choisi vos dates ?</p>
                 <p className="mt-2 text-sm text-ink-soft">
-                  Chaque mois : Data Analyse, Content Making, Marketing — et la Formation IA 360 en dernière semaine.
+                  Chaque mois : Analyse de données, Création de contenu, Marketing, puis La Forge IA.
                 </p>
                 <Link href="/planning" className="bouton-neon mt-4 inline-flex min-h-[48px] items-center rounded-full px-5 font-bold">
                   Voir le planning
@@ -204,7 +205,7 @@ export default async function InscriptionPage({
           {/* ── Le formulaire ───────────────────────────────────────────────── */}
           <div className="rounded-3xl border border-mist bg-white p-6 shadow-card md:p-10 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-start">
             <h2 className="font-display text-2xl font-extrabold text-ink">
-              {f ? `Je réserve ma place en ${f.nom}` : "Je réserve ma place"}
+              {f ? `Ma demande d'inscription · ${f.nom}` : "Ma demande d'inscription"}
             </h2>
             <p className="mt-1 text-sm text-ink-soft">Deux minutes. Aucun paiement à cette étape.</p>
             <div className="mt-6">
@@ -225,7 +226,7 @@ export default async function InscriptionPage({
                   </span>
                   <h3 className="mt-5 font-display text-xl font-bold text-ink">Réservez avec un conseiller</h3>
                   <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-ink-soft">
-                    Notre formulaire est momentanément indisponible. Écrivez-nous : votre place est notée dans la journée.
+                    Notre formulaire est momentanément indisponible. Écrivez-nous : votre demande est notée dans la journée.
                   </p>
                   <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
                     <Button href="/contact" size="md">Réserver avec un conseiller</Button>

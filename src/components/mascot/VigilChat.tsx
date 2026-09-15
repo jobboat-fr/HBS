@@ -14,15 +14,15 @@ type Msg = { from: "hub" | "user"; text: string; links?: CLink[] };
 
 /** Tenue + accroche de Vigil selon l'univers de la page. */
 function contextFor(pathname: string): { outfit: MascotVariant; tip: string } {
-  if (pathname.startsWith("/entreprises")) return { outfit: "suit", tip: "Former vos équipes à l'IA ? Je vous explique la formule." };
-  if (pathname.startsWith("/financement")) return { outfit: "casual", tip: "Un prix, outils IA inclus. Une question sur le règlement ?" };
-  if (pathname.startsWith("/formations")) return { outfit: "graduate", tip: "Une question sur un atelier du programme ? Demandez-moi." };
+  if (pathname.startsWith("/entreprises")) return { outfit: "suit", tip: "Former toute votre équipe ? Je vous explique la formule." };
+  if (pathname.startsWith("/financement")) return { outfit: "casual", tip: "Un prix par formation, ou le Pack 360. Une question ?" };
+  if (pathname.startsWith("/formations")) return { outfit: "graduate", tip: "Une question sur le programme ou les dates ? Demandez-moi." };
   if (pathname.startsWith("/contact")) return { outfit: "casual", tip: "Un coup de pouce pour formuler votre demande ?" };
-  return { outfit: "graduate", tip: "Ce que l'IA peut faire pour votre activité ? Demandez-moi." };
+  return { outfit: "graduate", tip: "Quelle formation pour votre projet ? Demandez-moi." };
 }
 
 const QUICK = [
-  "Que contient la Formation IA 360 ?",
+  "Quelle formation me correspond ?",
   "Quels outils sont inclus ?",
   "Quand a lieu la prochaine session ?",
   "Parler à un conseiller",

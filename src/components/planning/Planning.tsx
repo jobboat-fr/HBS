@@ -4,22 +4,22 @@ import {
   FORMATIONS,
   ORDRE,
   PLACES_MAX,
+  duree,
+  dureeCourte,
   euros,
-  libelleSemaine,
+  libelleDates,
+  nomMois as moisLisible,
   planning,
   type CodeFormation,
   type Session,
 } from "@/lib/commande";
 
 /**
- * Le planning des formations 360, calculé — pas saisi. Chaque semaine a son thème : Data,
- * Content, Marketing, et la Formation IA 360 la dernière semaine du mois. Composant serveur :
- * la page qui l'affiche fixe sa fréquence de revalidation, pour que la semaine en cours
- * disparaisse d'elle-même.
+ * Le planning des quatre formations, calculé — pas saisi. Chaque mois, dans le même ordre :
+ * Analyse de données, Création de contenu, Marketing, et La Forge IA en fin de mois.
+ * Composant serveur : la page qui l'affiche fixe sa fréquence de revalidation, pour qu'une
+ * session commencée disparaisse d'elle-même.
  */
-
-const nomMois = (isoDate: string) =>
-  new Date(`${isoDate}T12:00:00Z`).toLocaleDateString("fr-FR", { month: "long", year: "numeric", timeZone: "Europe/Paris" });
 
 export function Pastille({ code, taille = "sm" }: { code: CodeFormation; taille?: "sm" | "md" }) {
   const f = FORMATIONS[code];
@@ -40,23 +40,23 @@ function Ligne({ s }: { s: Session }) {
   const complet = s.statut === "complet";
   return (
     <li
-      className={`verre-clair relative flex flex-col gap-4 overflow-hidden rounded-2xl border p-5 sm:flex-row sm:items-center ${
-        complet ? "border-mist opacity-70" : "border-mist"
+      className={`verre-clair relative flex flex-col gap-4 overflow-hidden rounded-2xl border border-mist p-5 sm:flex-row sm:items-center ${
+        complet ? "opacity-70" : ""
       }`}
     >
       <span aria-hidden className={`absolute inset-y-0 left-0 w-1.5 bg-gradient-to-b ${f.couleur.degrade}`} />
       <div className="min-w-[10.5rem] pl-2">
         <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-ink-muted">
-          <CalendarDays size={14} aria-hidden /> Semaine
+          <CalendarDays size={14} aria-hidden /> {f.jours} jours
         </p>
-        <p className="mt-0.5 font-display font-bold text-ink">{libelleSemaine(s)}</p>
+        <p className="mt-0.5 font-display font-bold text-ink">{libelleDates(s)}</p>
       </div>
       <div className="flex-1 pl-2 sm:pl-0">
         <Pastille code={s.formation} />
         <p className="mt-1.5 font-display text-lg font-extrabold leading-tight text-ink">
           {f.nom} <span className="font-semibold text-ink-soft">— {f.accroche}</span>
         </p>
-        <p className="text-xs text-ink-muted">21 h · à distance, en direct · {PLACES_MAX} places</p>
+        <p className="text-xs text-ink-muted">{duree(f)} · à distance, en direct · {PLACES_MAX} places</p>
       </div>
       <div className="flex items-center justify-between gap-4 pl-2 sm:justify-end sm:pl-0">
         <p className="font-display text-2xl font-extrabold text-ink">{euros(f.prix)}</p>
@@ -77,6 +77,8 @@ function Ligne({ s }: { s: Session }) {
   );
 }
 
+const RANG = ["1er lundi du mois", "2e lundi", "3e lundi", "Dernier lundi"];
+
 /** Le rythme mensuel, en une ligne. */
 export function Rythme() {
   return (
@@ -86,12 +88,12 @@ export function Rythme() {
         return (
           <li key={code} className="verre-clair rounded-2xl border border-mist p-5">
             <p className="text-xs font-bold uppercase tracking-widest text-ink-muted">
-              {i < 3 ? `Semaine ${i + 1}` : "Dernière semaine du mois"}
+              {RANG[i]} · {dureeCourte(f)}
             </p>
             <p className={`mt-2 font-display text-xl font-extrabold ${f.couleur.texte}`}>{f.nom}</p>
             <p className="text-sm font-semibold text-ink-soft">{f.accroche}</p>
             <p className="mt-3 flex items-baseline justify-between">
-              <Link href={`/reserver?formation=${code}`} className="text-sm font-bold text-teal-700 underline">Réserver</Link>
+              <Link href={`/reserver?formation=${code}`} className="text-sm font-bold text-teal-700 underline">Je réserve</Link>
               <span className="font-display text-lg font-extrabold text-ink">{euros(f.prix)}</span>
             </p>
           </li>
@@ -108,7 +110,7 @@ export function Planning({
   avecComplets = true,
 }: {
   mois?: number;
-  /** Nombre maximal de semaines affichées. */
+  /** Nombre maximal de sessions affichées. */
   limite?: number;
   formation?: CodeFormation;
   avecComplets?: boolean;
@@ -129,7 +131,7 @@ export function Planning({
       {[...parMois.entries()].map(([k, liste]) => (
         <section key={k} aria-labelledby={`mois-${k}`}>
           <h3 id={`mois-${k}`} className="font-display text-xl font-extrabold capitalize text-ink">
-            {nomMois(`${k}-15`)}
+            {moisLisible(k)}
           </h3>
           <ul className="mt-4 space-y-3">
             {liste.map((s) => (

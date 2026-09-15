@@ -5,9 +5,9 @@ import { Target, ShieldCheck, Gauge, HeartHandshake } from "lucide-react";
 import { fadeUp, staggerContainer, viewportOnce } from "@/lib/animations";
 
 const engagements = [
-  { icon: Target, title: "Votre cas, pas un cas d'école", text: "Les six ateliers travaillent sur un problème réel de votre activité, choisi dès le premier jour." },
-  { icon: ShieldCheck, title: "Fiable avant d'être rapide", text: "On apprend à vérifier ce que produit l'IA, à protéger ses données et à reconnaître ses défaillances." },
-  { icon: Gauge, title: "Des démonstrations en exploitation", text: "Des systèmes d'IA qui tournent réellement, pannes comprises — pas des vidéos de présentation." },
+  { icon: Target, title: "Votre projet, pas un cas d'école", text: "Chaque formation travaille sur vos données, vos contenus, votre offre — dès le premier jour." },
+  { icon: Gauge, title: "Du concret, tout de suite", text: "Vous appliquez pendant la formation. Le lundi suivant, vous gagnez déjà du temps." },
+  { icon: ShieldCheck, title: "Des méthodes qui tiennent", text: "Chiffres vérifiés, droit d'auteur, RGPD : ce que vous construisez ne se retourne pas contre vous." },
   { icon: HeartHandshake, title: "Un suivi à trois mois", text: "On revient vers vous pour mesurer ce qui a été déployé, et ce qui reste à faire." },
 ];
 
@@ -20,7 +20,7 @@ export function CommitmentsSection() {
             Nos engagements
           </span>
           <h2 className="mt-5 font-display text-display-lg font-extrabold text-ink text-balance">
-            L&apos;IA qui tourne, <span className="text-teal-600">pas l&apos;IA qui promet</span>
+            Des résultats, <span className="text-teal-600">pas des promesses</span>
           </h2>
         </motion.div>
 

@@ -19,18 +19,23 @@ export type Theme = { id: string; titre: string; questions: { q: string; a: stri
 export const faqComplete: Theme[] = [
   {
     id: "formation",
-    titre: "La formation",
+    titre: "Les formations",
     questions: [
-      court("ia-360"),
+      court("formations"),
+      court("pack"),
       {
-        q: "Que contient le programme de la Formation IA 360 ?",
-        a: "Trois temps sur la semaine. Connaissance : ce que fait réellement un modèle d'IA, ses limites, le coût réel d'un usage. Conformité : vérifier les résultats, protéger les données, RGPD et règlement européen sur l'IA. Déploiement : agents et automatisations construits sur votre propre cas. Chaque journée compte deux ateliers pratiques de 3 h 30.",
+        q: "Pourquoi suivre plusieurs formations ?",
+        a: "Parce qu'un projet qui marche tient sur quatre piliers : lire son marché (Analyse de données), produire le contenu qui attire (Création de contenu), le transformer en ventes (Marketing) et gagner du temps sur tout le reste (La Forge IA). Chaque formation se suit seule ; ensemble, elles forment un tout cohérent pour votre marque et votre communication. Ce qu'on vous apprend, même une IA ne sait pas l'assembler d'un seul bloc ;)",
+      },
+      {
+        q: "Que contient le programme de La Forge IA ?",
+        a: "Trois temps en 3 jours. Connaissance : ce que fait réellement un modèle d'IA, ses limites, le coût réel d'un usage. Conformité : vérifier les résultats, protéger les données, RGPD et règlement européen sur l'IA. Déploiement : agents et automatisations construits sur votre propre cas. Chaque journée compte deux ateliers pratiques de 3 h 30.",
       },
       court("prerequis"),
       court("distance"),
       {
         q: "Comment les formations sont-elles organisées dans le temps ?",
-        a: "Chaque formation dure 21 heures, réparties sur une semaine. Chaque mois suit le même rythme : Data Analyse 360 la première semaine, Content Making 360 la deuxième, Marketing 360 la troisième et la Formation IA 360 la dernière. Les horaires exacts figurent dans votre convention ou votre contrat.",
+        a: "7 heures par jour. Analyse de données et Création de contenu : 35 heures en 5 jours, du lundi au vendredi. Marketing et La Forge IA : 21 heures en 3 jours, du lundi au mercredi. Chaque mois, dans le même ordre : Analyse de données, Création de contenu, Marketing, puis La Forge IA. Les horaires exacts figurent dans votre convention ou votre contrat.",
       },
       {
         q: "Combien de participants par session ?",
@@ -38,15 +43,15 @@ export const faqComplete: Theme[] = [
       },
       {
         q: "De quel matériel ai-je besoin ?",
-        a: "Un ordinateur et une connexion Internet qui permet la visioconférence. Aucun logiciel payant à acheter : les outils utilisés pendant la formation sont inclus dans la place.",
+        a: "Un ordinateur et une connexion Internet qui permet la visioconférence. Aucun logiciel payant à acheter : les outils utilisés pendant la formation sont inclus dans votre forfait.",
       },
       {
         q: "Dois-je apporter mes propres documents ?",
         a: "Oui, c'est le principe : environ vingt documents réels et représentatifs de votre activité. Ils restent sur votre poste, et aucune donnée personnelle réelle n'est déposée dans un outil d'IA pendant la session — on les anonymise avant, au besoin ensemble.",
       },
       {
-        q: "Qu'est-ce que le Certificat IA 360 ?",
-        a: "Le certificat délivré par HBS FORMATION à l'issue de la formation, après une épreuve pratique de 45 minutes notée sur 20 (seuil 12) et une revue croisée de votre dossier. C'est un certificat propre à l'organisme : ce n'est ni un diplôme d'État, ni une certification enregistrée au RNCP ou au répertoire spécifique.",
+        q: "Qu'est-ce que le Certificat La Forge IA ?",
+        a: "Le certificat délivré par HBS FORMATION à l'issue de La Forge IA, après une épreuve pratique de 45 minutes notée sur 20 (seuil 12) et une revue croisée de votre dossier. C'est un certificat propre à l'organisme : ce n'est ni un diplôme d'État, ni une certification enregistrée au RNCP ou au répertoire spécifique.",
       },
       {
         q: "La formation est-elle accessible aux personnes en situation de handicap ?",
@@ -56,7 +61,7 @@ export const faqComplete: Theme[] = [
   },
   {
     id: "outils",
-    titre: "Les outils IA inclus",
+    titre: "Les outils IA inclus avec La Forge IA",
     questions: [
       court("outils"),
       {
@@ -65,7 +70,7 @@ export const faqComplete: Theme[] = [
       },
       {
         q: "À qui s'adresse le moteur de recherche d'emploi automatisé ?",
-        a: "Aux participants en recherche d'emploi ou en reconversion, notamment ceux dont la place est financée par France Travail : il automatise la veille des offres et la préparation des candidatures, que vous gardez sous votre contrôle.",
+        a: "Aux participants en recherche d'emploi ou en reconversion, notamment ceux dont la formation est financée par France Travail : il automatise la veille des offres et la préparation des candidatures, que vous gardez sous votre contrôle.",
       },
     ],
   },
@@ -76,7 +81,7 @@ export const faqComplete: Theme[] = [
       court("tarif"),
       {
         q: "Comment payer en tant qu'entreprise ?",
-        a: "En ligne, par carte, au moment de la réservation : vous choisissez le nombre de places, indiquez votre raison sociale et votre numéro de TVA, et recevez la facture de HBS FORMATION par courriel. La convention de formation vous est ensuite adressée.",
+        a: "En ligne, par carte, au moment de la réservation : vous choisissez le nombre de participants, indiquez votre raison sociale et votre numéro de TVA, et recevez la facture de HBS FORMATION par courriel. La convention de formation vous est ensuite adressée.",
       },
       {
         q: "Comment payer à titre personnel ?",
@@ -92,11 +97,11 @@ export const faqComplete: Theme[] = [
       },
       {
         q: "Puis-je utiliser mon CPF ?",
-        a: "Non. Le compte personnel de formation ne finance que des formations menant à une certification enregistrée au RNCP ou au répertoire spécifique, ce qui n'est pas le cas du Certificat IA 360.",
+        a: "Non. Le compte personnel de formation ne finance que des formations menant à une certification enregistrée au RNCP ou au répertoire spécifique, ce qui n'est pas le cas de nos formations.",
       },
       {
-        q: "Puis-je réserver plusieurs places pour mon équipe ?",
-        a: "Oui, en choisissant le nombre de places lors de la réservation entreprise. Pour un groupe de 8 à 12 personnes, une session dédiée — à distance ou dans vos locaux — est aussi possible : écrivez-nous.",
+        q: "Puis-je inscrire toute mon équipe ?",
+        a: "Oui, en choisissant le nombre de participants lors de la réservation entreprise. Pour un groupe de 8 à 12 personnes, une session dédiée — à distance ou dans vos locaux — est aussi possible : écrivez-nous.",
       },
       {
         q: "Le paiement en ligne est-il sécurisé ?",
@@ -110,7 +115,7 @@ export const faqComplete: Theme[] = [
     questions: [
       {
         q: "Comment se passe l'inscription ?",
-        a: "Trois étapes : vous réservez votre place en ligne, vous passez un court test de positionnement (environ 20 minutes) qui nous permet d'adapter la formation à votre niveau et à votre cas, puis vous recevez la confirmation de session avec votre convention ou votre contrat.",
+        a: "Trois étapes : vous réservez en ligne, vous passez un court test de positionnement (environ 15 minutes) qui nous permet d'adapter la formation à votre niveau et à votre cas, puis vous recevez la confirmation de session avec votre convention ou votre contrat.",
       },
       court("prochaine-session"),
       court("delai"),
@@ -120,7 +125,7 @@ export const faqComplete: Theme[] = [
       },
       {
         q: "Que se passe-t-il si je ne peux plus suivre la session ?",
-        a: "Vous pouvez reporter votre place sur une session suivante, ou — pour une entreprise — remplacer le participant. En cas d'empêchement de force majeure, seules les heures effectivement suivies restent dues. Les conditions complètes sont dans nos CGV.",
+        a: "Vous pouvez reporter votre inscription sur une session suivante, ou — pour une entreprise — remplacer le participant. En cas d'empêchement de force majeure, seules les heures effectivement suivies restent dues. Les conditions complètes sont dans nos CGV.",
       },
       {
         q: "Et si la session est annulée ?",
@@ -138,9 +143,8 @@ export const faqComplete: Theme[] = [
       },
       {
         q: "Où est situé l'organisme ?",
-        a: "À Rouen, en Normandie. La Formation IA 360 se suit à distance, en direct, partout en France ; elle peut aussi être organisée en présentiel dans votre entreprise.",
+        a: "À Rouen, en Normandie. Les formations se suivent à distance, en direct, partout en France ; elles peuvent aussi être organisée en présentiel dans votre entreprise.",
       },
-      court("autres"),
     ],
   },
   {
@@ -149,7 +153,7 @@ export const faqComplete: Theme[] = [
     questions: [
       {
         q: "Le règlement européen sur l'IA oblige-t-il à former ses salariés ?",
-        a: "Depuis le 2 février 2025, l'article 4 du règlement européen sur l'intelligence artificielle impose aux entreprises qui utilisent des systèmes d'IA de prendre des mesures pour assurer un niveau suffisant de maîtrise de l'IA de leur personnel. C'est une obligation de moyens : former les équipes concernées en est la mesure la plus directe, et la Formation IA 360 y consacre sa journée Conformité.",
+        a: "Depuis le 2 février 2025, l'article 4 du règlement européen sur l'intelligence artificielle impose aux entreprises qui utilisent des systèmes d'IA de prendre des mesures pour assurer un niveau suffisant de maîtrise de l'IA de leur personnel. C'est une obligation de moyens : former les équipes concernées en est la mesure la plus directe, et La Forge IA y consacre une journée entière.",
       },
       {
         q: "Utiliser ChatGPT ou un autre outil d'IA est-il compatible avec le RGPD ?",

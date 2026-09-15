@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Check, FileCheck2, CalendarDays } from "lucide-react";
 import { Rythme } from "@/components/planning/Planning";
-import { prochaineSession, libelleSemaine } from "@/lib/commande";
+import { PackOffre } from "@/components/sections/PackSection";
+import { FORMATIONS, euros, prochaineSession, libelleDates } from "@/lib/commande";
 import { Reveal } from "@/components/ui/Reveal";
 import { CTASection } from "@/components/sections/CTASection";
 import { OutilsSection } from "@/components/sections/OutilsSection";
@@ -11,10 +12,12 @@ import { BreadcrumbJsonLd, CourseJsonLd } from "@/components/seo/JsonLd";
 import { ChampNeuronal } from "@/components/visuel/ChampNeuronal";
 import { formations, programme, tarif, annonce, certificat, site } from "@/lib/site";
 
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
-  title: "Formation IA 360 — formation intelligence artificielle en ligne, outils IA inclus",
+  title: "La Forge IA — formation intelligence artificielle en 3 jours, outils IA inclus",
   description:
-    "Formation IA 360 : 21 heures, 6 ateliers pratiques, outils IA inclus (agents, automatisations, recherche d'emploi, secrétariat, assistant de réunion). 1 300 € par place. Programme détaillé atelier par atelier.",
+    "La Forge IA : 21 heures en 3 jours pour mettre l'IA au travail, outils IA inclus dans votre forfait (agents, automatisations, recherche d'emploi, secrétariat, assistant de réunion). 1 300 €. Programme détaillé.",
   alternates: { canonical: "/formations" },
 };
 
@@ -28,22 +31,22 @@ export default function FormationsPage() {
       <BreadcrumbJsonLd
         items={[
           { name: "Accueil", url: site.url },
-          { name: "Formation IA 360", url: `${site.url}/formations` },
+          { name: "La Forge IA", url: `${site.url}/formations` },
         ]}
       />
 
       {/* ── En-tête ─────────────────────────────────────────────────────────── */}
-      <header id="ia-360" className="fond-espace relative overflow-hidden pt-[var(--entete)]">
+      <header id="la-forge-ia" className="fond-espace relative overflow-hidden pt-[var(--entete)]">
         <div aria-hidden className="grille-tech pointer-events-none absolute inset-0" />
         <ChampNeuronal className="pointer-events-none absolute inset-0 h-full w-full opacity-70" />
         <div className="container-page relative grid items-end gap-10 py-14 md:py-20 lg:grid-cols-[1.4fr_1fr]">
           <div>
             <span className="verre inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold text-white/90">
               <CalendarDays size={14} className="text-cyan-300" aria-hidden />
-              Prochaine session · {prochaine ? `semaine ${libelleSemaine(prochaine)}` : annonce.dateLisible}
+              Prochaine session · {prochaine ? libelleDates(prochaine) : annonce.dateLisible}
             </span>
             <h1 className="mt-5 font-display text-5xl font-extrabold leading-[1.03] text-white md:text-6xl">
-              Formation <span className="texte-lumiere">IA 360</span>
+              La Forge <span className="texte-lumiere">IA</span>
             </h1>
             <p className="mt-3 text-lg font-semibold text-white/80">{ia.tagline}</p>
             <p className="mt-5 max-w-2xl text-lg leading-relaxed text-white/70">{ia.description}</p>
@@ -51,14 +54,14 @@ export default function FormationsPage() {
           <div>
             <div className="cadre-neon">
               <div className="fond-espace rounded-2xl p-7">
-                <p className="text-xs font-semibold uppercase tracking-widest text-white/55">Votre place</p>
-                <p className="mt-1 font-display text-6xl font-extrabold text-white">{tarif.montant}</p>
+                <p className="text-xs font-semibold uppercase tracking-widest text-white/55">Votre forfait</p>
+                <p className="mt-1 font-display text-6xl font-extrabold text-white">{euros(FORMATIONS.IA360.prix)}</p>
                 <p className="text-sm text-white/65">{tarif.resume}</p>
                 <Link
                   href={prochaine ? `/reserver?formation=IA360&session=${prochaine.code}` : "/reserver?formation=IA360"}
                   className="bouton-neon mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 font-bold"
                 >
-                  Je réserve ma place <ArrowRight size={18} aria-hidden />
+                  Je réserve <ArrowRight size={18} aria-hidden />
                 </Link>
                 <p className="mt-3 text-center text-xs text-white/50">Paiement sécurisé par Stripe · 12 places</p>
               </div>
@@ -95,10 +98,10 @@ export default function FormationsPage() {
                 Programme détaillé
               </span>
               <h2 className="mt-5 font-display text-display-lg font-extrabold text-ink text-balance">
-                Six ateliers, <span className="text-teal-600">trois domaines de compétences</span>
+                3 jours, <span className="text-teal-600">3 domaines de compétences</span>
               </h2>
               <p className="mt-4 text-ink-soft">
-                Chaque atelier dure 3 h 30, part de votre cas réel et produit une pièce de votre dossier IA.
+                Deux ateliers de 3 h 30 par jour, sur votre cas réel : chacun produit une pièce de votre dossier IA.
                 Aucun apport théorique ne dépasse 30 minutes sans mise en pratique.
               </p>
             </div>
@@ -187,18 +190,21 @@ export default function FormationsPage() {
         </div>
       </section>
 
-      {/* ── Les autres formations 360 ─────────────────────────────────────── */}
+      {/* ── Les trois autres formations ───────────────────────────────────── */}
       <section className="py-20">
         <div className="container-page">
           <Reveal>
-            <h2 className="text-center font-display text-display-md font-extrabold text-ink">Enchaînez les quatre semaines</h2>
+            <h2 className="text-center font-display text-display-md font-extrabold text-ink">Allez plus loin : nos 4 formations</h2>
             <p className="mx-auto mt-3 max-w-2xl text-center text-ink-soft">
-              L&apos;IA 360 clôt chaque mois. Les trois semaines d&apos;avant, apprenez à lire vos chiffres, créer vos contenus
-              et vendre — avec l&apos;IA à chaque étape.
+              L&apos;IA va plus vite quand on sait lire son marché, créer son contenu et vendre. Ce qu&apos;on vous apprend,
+              même l&apos;IA ne sait pas l&apos;assembler d&apos;un seul bloc ;)
             </p>
           </Reveal>
           <div className="mt-10">
             <Rythme />
+          </div>
+          <div className="mt-10">
+            <PackOffre />
           </div>
           <div className="mt-8 text-center">
             <Link href="/planning" className="inline-flex min-h-[44px] items-center gap-2 font-bold text-teal-700 hover:underline">

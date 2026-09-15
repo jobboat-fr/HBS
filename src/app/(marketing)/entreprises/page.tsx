@@ -9,16 +9,16 @@ import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 import { media, site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Formation IA entreprise — former vos équipes à l'IA, AI Act compris",
+  title: "Formation professionnelle entreprise — données, contenu, marketing et IA pour vos équipes",
   description:
-    "Formation IA 360 pour les entreprises : vos collaborateurs formés à l'intelligence artificielle sur vos propres processus, outils IA inclus dans chaque place. 1 300 € par place, en intra-entreprise possible.",
+    "Formez vos équipes à l'analyse de données, la création de contenu, le marketing et l'IA (La Forge IA), sur vos propres dossiers. À distance ou dans vos locaux, OPCO possible, organisme certifié Qualiopi.",
   alternates: { canonical: "/entreprises" },
 };
 
 const offres = [
-  { icon: Target, title: "Ce que l'IA peut prendre", text: "On identifie les tâches de vos équipes que l'IA peut assumer — et celles qu'elle ne doit pas toucher." },
-  { icon: Layers, title: "La formation dans vos locaux", text: "La Formation IA 360 organisée pour vos collaborateurs, sur vos propres documents et processus." },
-  { icon: Users2, title: "Des outils pour chaque place", text: "Agents, automatisations, secrétariat, assistant de réunion : inclus pour chaque collaborateur formé." },
+  { icon: Target, title: "Les compétences qui vous manquent", text: "Données, contenu, marketing ou IA : on part de vos objectifs et on forme là où ça rapporte." },
+  { icon: Layers, title: "Dans vos locaux, sur vos dossiers", text: "Nos 4 formations organisées pour vos collaborateurs, sur vos propres chiffres, offres et processus." },
+  { icon: Users2, title: "Toute l'équipe d'un coup", text: "De 4 à 12 collaborateurs par session. Avec La Forge IA, les outils IA sont inclus dans le forfait de chacun." },
   { icon: LineChart, title: "Un suivi à trois mois", text: "On mesure ce qui a réellement été déployé dans vos équipes, et ce qui reste à faire." },
 ];
 
@@ -35,10 +35,10 @@ export default function EntreprisesPage() {
         eyebrow="Entreprises"
         title={
           <>
-            Mettez l&apos;IA <span className="text-teal-600">au travail dans vos équipes</span>
+            Vos équipes ont 3 jours ? <span className="texte-lumiere">Elles repartent transformées.</span>
           </>
         }
-        subtitle="La Formation IA 360 pour vos collaborateurs, sur vos processus, avec les outils IA inclus dans chaque place."
+        subtitle="Analyse de données, Création de contenu, Marketing, La Forge IA : formez vos collaborateurs sur vos vrais dossiers, et voyez la différence dès le lundi suivant."
       />
 
       <section className="py-16 lg:py-24">
@@ -63,7 +63,7 @@ export default function EntreprisesPage() {
           </div>
         </div>
         <div className="container-page mt-12 text-center">
-          <Button href="/contact" size="lg">Construire un plan de formation</Button>
+          <Button href="/contact" size="lg">Construire le plan de mon équipe</Button>
         </div>
       </section>
 

@@ -17,9 +17,10 @@ export function suggestLink(input: string): AssistantLink | undefined {
   if (has("programme", "atelier", "journee", "contenu")) return { label: "Voir le programme", href: "/formations#programme" };
   if (has("outil", "agent", "automatis", "emploi", "secretari", "reunion")) return { label: "Les outils inclus", href: "/formations" };
   if (has("entreprise", "equipe", "salarie", "intra")) return { label: "Offre entreprises", href: "/entreprises" };
-  if (has("inscri", "reserv", "place", "session", "date", "planning", "quand")) return { label: "Choisir ma semaine", href: "/planning" };
+  if (has("pack", "360", "quatre", "toutes")) return { label: "Le Pack 360", href: "/pack-360" };
+  if (has("inscri", "reserv", "place", "session", "date", "planning", "quand")) return { label: "Voir les dates", href: "/planning" };
   if (has("contact", "conseiller", "rdv", "rendez", "parler")) return { label: "Nous contacter", href: "/contact" };
-  return { label: "Formation IA 360", href: "/formations" };
+  return { label: "Nos 4 formations", href: "/#formations" };
 }
 
 /** Assistant guidé local (repli quand l'IA n'est pas joignable). */
@@ -28,7 +29,7 @@ export function localAnswer(input: string): AssistantReply {
   const has = (...k: string[]) => k.some((w) => t.includes(w));
 
   if (has("cpf", "compte personnel"))
-    return { text: "La Formation IA 360 n'est pas finançable par ce dispositif. Elle se règle par votre entreprise, à titre personnel, ou via un OPCO ou France Travail : 1 300 € par place, outils IA inclus.", links: [{ label: "Voir le tarif", href: "/financement" }] };
+    return { text: "Nos formations ne sont pas finançables par le CPF. Elles se règlent par votre entreprise, à titre personnel, ou via un OPCO ou France Travail.", links: [{ label: "Voir le tarif", href: "/financement" }] };
   if (has("prix", "cout", "tarif", "combien", "financ", "payer", "opco", "france travail"))
     return { text: faq("tarif"), links: [{ label: "Voir le tarif", href: "/financement" }] };
   if (has("outil", "agent", "automatis", "emploi", "secretari", "reunion", "inclus"))
@@ -39,19 +40,23 @@ export function localAnswer(input: string): AssistantReply {
     return { text: faq("prerequis"), links: [{ label: "Voir le programme", href: "/formations#programme" }] };
   if (has("distance", "ligne", "visio", "presentiel", "lieu"))
     return { text: faq("distance"), links: [{ label: "Voir le programme", href: "/formations#programme" }] };
-  if (has("bilan", "vae", "certifi", "e-learning", "elearning", "foad", "autre formation"))
-    return { text: faq("autres"), links: [{ label: "Formation IA 360", href: "/formations" }] };
+  if (has("pack", "360", "quatre", "toutes les formations"))
+    return { text: faq("pack"), links: [{ label: "Le Pack 360", href: "/pack-360" }] };
+  if (has("bilan", "vae", "e-learning", "elearning", "foad", "autre formation", "quelles formations", "catalogue"))
+    return { text: faq("formations"), links: [{ label: "Nos 4 formations", href: "/#formations" }] };
   if (has("entreprise", "equipe", "salarie", "intra", "collaborateur"))
-    return { text: "La Formation IA 360 peut être organisée pour vos collaborateurs, sur vos propres processus, avec les outils IA inclus dans chaque place.", links: [{ label: "Offre entreprises", href: "/entreprises" }] };
+    return { text: "Nos 4 formations peuvent être organisées pour vos collaborateurs, sur vos propres dossiers, à distance ou dans vos locaux.", links: [{ label: "Offre entreprises", href: "/entreprises" }] };
   if (has("delai", "combien de temps", "reponse", "recontact", "rappel"))
     return { text: faq("delai"), links: [{ label: "Faire une demande", href: "/contact" }] };
   if (has("conseiller", "contact", "devis", "rdv", "rendez", "parler", "telephone", "appeler", "humain"))
     return { text: "Avec plaisir. Laissez vos coordonnées : un conseiller vous recontacte sous 48 heures ouvrées.", links: [{ label: "Nous contacter", href: "/contact" }] };
-  if (has("ia", "intelligence artificielle", "chatgpt", "formation", "programme", "atelier"))
-    return { text: faq("ia-360"), links: [{ label: "Voir la Formation IA 360", href: "/formations" }] };
+  if (has("ia", "intelligence artificielle", "chatgpt", "forge"))
+    return { text: "La Forge IA : 21 heures en 3 jours pour mettre l'IA au travail sur vos vrais dossiers, outils inclus dans votre forfait. 1 300 €.", links: [{ label: "Découvrir La Forge IA", href: "/formations" }] };
+  if (has("formation", "programme", "atelier"))
+    return { text: faq("formations"), links: [{ label: "Nos 4 formations", href: "/#formations" }] };
 
   return {
-    text: "Je peux vous parler du programme de la Formation IA 360, des outils inclus, du tarif ou de la prochaine session. Que souhaitez-vous savoir ?",
-    links: [{ label: "Formation IA 360", href: "/formations" }],
+    text: "Je peux vous parler de nos 4 formations, du Pack 360, des tarifs ou des prochaines dates. Que souhaitez-vous savoir ?",
+    links: [{ label: "Nos 4 formations", href: "/#formations" }],
   };
 }

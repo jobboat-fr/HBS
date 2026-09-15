@@ -10,7 +10,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "FAQ Formation IA — tarif, financement OPCO, France Travail, programme",
   description:
-    "Toutes les réponses sur la Formation IA 360 : programme, outils IA inclus, prix de 1 300 €, paiement, financement OPCO et France Travail, rétractation, certificat, AI Act.",
+    "Toutes les réponses sur nos 4 formations et le Pack 360 : durées, prix, paiement en 3 fois, financement OPCO et France Travail, rétractation, outils IA inclus, AI Act.",
   alternates: { canonical: "/faq" },
 };
 
@@ -32,7 +32,7 @@ export default function FaqPage() {
 
       <PageHeader
         eyebrow="Questions fréquentes"
-        title={<>Tout savoir sur la <span className="texte-lumiere">Formation IA 360</span></>}
+        title={<>Vos questions, <span className="texte-lumiere">nos réponses</span></>}
         subtitle="Programme, outils inclus, tarif, financement, inscription : les réponses, sans détour."
       />
 

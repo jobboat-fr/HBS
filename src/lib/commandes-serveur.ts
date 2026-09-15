@@ -2,7 +2,7 @@ import "server-only";
 import type Stripe from "stripe";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { stripe, signer, options } from "@/lib/stripe";
-import { FORMATIONS, RETRACTATION_JOURS, echeancier, montantsEcheances, euros, libelleSemaine, type CodeFormation } from "@/lib/commande";
+import { FORMATIONS, PACK, RETRACTATION_JOURS, echeancier, montantsEcheances, euros, libelleDates, type CodeFormation } from "@/lib/commande";
 import { submitDemande, catalogue, configured as learnConfigured } from "@/lib/learn";
 import { buildCommandeClient, buildCommandeOrganisme, type CommandeMail } from "@/lib/email/templates";
 import { log, errMsg } from "@/lib/log";
@@ -60,10 +60,18 @@ export async function enregistrerCommande(sessionId: string, compte?: string) {
     opts,
   );
   const md = s.metadata ?? {};
-  const formation = FORMATIONS[md.produit as CodeFormation];
+  // Une formation, ou le Pack 360 : ses quatre sessions sont dans `sessions` (codes séparés
+  // par des virgules), et ses dates vont du premier jour de la première au dernier de la dernière.
+  const estPack = md.produit === PACK.code;
+  const formation = estPack
+    ? { code: PACK.code, nom: PACK.nom, prix: PACK.prix }
+    : FORMATIONS[md.produit as CodeFormation];
   if (!formation || !md.session_debut || !md.session_fin) return { ignore: true };
   const session = { debut: md.session_debut, fin: md.session_fin };
-  const semaine = `semaine ${libelleSemaine(session)}`;
+  const semaine = libelleDates(session);
+  const sessionsCommandees = estPack
+    ? (md.sessions ?? "").split(",").filter(Boolean).map((code) => ({ code, nom: FORMATIONS[code.split("-")[0] as CodeFormation]?.nom }))
+    : [{ code: md.session_code, nom: formation.nom }];
 
   const db = createAdminClient();
   const { data: existante } = await db.from("hbs_commandes").select("id").eq("stripe_session_id", s.id).maybeSingle();
@@ -139,22 +147,25 @@ export async function enregistrerCommande(sessionId: string, compte?: string) {
   // La demande dans LEARN : c'est elle qui crée le test de positionnement (indicateur 8).
   let positionnement: string | null = null;
   if (learnConfigured() && client?.email) {
-    try {
-      const cat = await catalogue().catch(() => null);
-      const programme = cat?.programmes.find((p) => p.title.toLowerCase() === formation.nom.toLowerCase());
-      const r = await submitDemande({
-        full_name: client.name || raison || client.email,
-        email: client.email,
-        phone: client.phone ?? null,
-        company: raison,
-        message: `Commande en ligne ${profil} — ${quantite} place(s) — ${md.session_code ?? ""}`,
-        program_id: programme?.id ?? null,
-        session_id: programme?.sessions?.find((x) => x.code === md.session_code)?.id ?? null,
-        campaign: "commande-en-ligne",
-      });
-      if (r.positionnement_path) positionnement = new URL(r.positionnement_path, origine()).toString();
-    } catch (e) {
-      log.warn("commande.learn", { err: errMsg(e) });
+    const cat = await catalogue().catch(() => null);
+    // Une demande par session commandée : le Pack 360 en ouvre quatre, une par formation.
+    for (const sc of sessionsCommandees) {
+      try {
+        const programme = cat?.programmes.find((p) => p.title.toLowerCase() === (sc.nom ?? "").toLowerCase());
+        const r = await submitDemande({
+          full_name: client.name || raison || client.email,
+          email: client.email,
+          phone: client.phone ?? null,
+          company: raison,
+          message: `Commande en ligne ${profil}${estPack ? " — Pack 360" : ""} — ${quantite} participant(s) — ${sc.code ?? ""}`,
+          program_id: programme?.id ?? null,
+          session_id: programme?.sessions?.find((x) => x.code === sc.code)?.id ?? null,
+          campaign: "commande-en-ligne",
+        });
+        if (r.positionnement_path && !positionnement) positionnement = new URL(r.positionnement_path, origine()).toString();
+      } catch (e) {
+        log.warn("commande.learn", { err: errMsg(e), session: sc.code });
+      }
     }
     if (positionnement) await db.from("hbs_commandes").update({ learn_positionnement: positionnement }).eq("id", cmd.id);
   }

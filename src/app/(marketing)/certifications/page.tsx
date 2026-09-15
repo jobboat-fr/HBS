@@ -14,7 +14,7 @@ import { CTASection } from "@/components/sections/CTASection";
  */
 export const metadata: Metadata = {
   title: "Parcours certifiants — bientôt disponibles",
-  description: "Les parcours certifiants de HBS FORMATION arrivent bientôt. Aujourd'hui, découvrez la Formation IA 360.",
+  description: "Les parcours certifiants de HBS FORMATION arrivent bientôt. Aujourd'hui, découvrez nos 4 formations et le Pack 360.",
   robots: { index: false },
   alternates: { canonical: "/certifications" },
 };
@@ -33,10 +33,10 @@ export default function CertificationsPage() {
               Les parcours certifiants <span className="texte-lumiere">arrivent bientôt</span>
             </h1>
             <p className="mx-auto mt-4 max-w-2xl text-lg text-white/70">
-              En attendant, notre formation phare est ouverte : la Formation IA 360, outils IA inclus.
+              En attendant, nos 4 formations sont ouvertes : Analyse de données, Création de contenu, Marketing et La Forge IA.
             </p>
             <Link href="/formations" className="bouton-neon mt-8 inline-flex items-center gap-2 rounded-full px-7 py-4 font-bold">
-              Découvrir la Formation IA 360 <ArrowRight size={18} aria-hidden />
+              Découvrir nos 4 formations <ArrowRight size={18} aria-hidden />
             </Link>
           </div>
         </div>

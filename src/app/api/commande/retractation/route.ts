@@ -5,7 +5,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { envoyer, destinatairesOrganisme } from "@/lib/commandes-serveur";
 import { buildRetractationConfirmee, buildAlerteOrganisme } from "@/lib/email/templates";
 import { log } from "@/lib/log";
-import { FORMATIONS, type CodeFormation } from "@/lib/commande";
+import { nomProduit } from "@/lib/commande";
 
 export const runtime = "nodejs";
 
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
   await db.from("hbs_commandes").update({ statut: "retractee", retractee_le: maintenant, updated_at: maintenant }).eq("id", c.id);
   await db.from("hbs_echeances").update({ statut: "annulee" }).eq("commande_id", c.id).neq("statut", "payee");
 
-  if (c.email) await envoyer(c.email, "Votre rétractation est enregistrée — HBS FORMATION", buildRetractationConfirmee({ nom: c.nom, formation: FORMATIONS[c.produit as CodeFormation]?.nom ?? "votre formation" }));
+  if (c.email) await envoyer(c.email, "Votre rétractation est enregistrée — HBS FORMATION", buildRetractationConfirmee({ nom: c.nom, formation: nomProduit(c.produit) }));
   await envoyer(destinatairesOrganisme(), `Rétractation — ${c.nom ?? c.email}`,
     buildAlerteOrganisme("Rétractation", [
       `${c.nom ?? ""} (${c.email ?? ""}) s'est rétracté(e) le ${new Date().toLocaleString("fr-FR", { timeZone: "Europe/Paris" })}.`,

@@ -4,12 +4,13 @@ import { ArrowRight, Check, Scale, ShieldCheck, FileText } from "lucide-react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { CTASection } from "@/components/sections/CTASection";
 import { BreadcrumbJsonLd, CourseJsonLd, FaqJsonLd } from "@/components/seo/JsonLd";
-import { site, tarif, annonce } from "@/lib/site";
+import { site } from "@/lib/site";
+import { FORMATIONS, dateCourte, duree, euros, prochaineSession } from "@/lib/commande";
 
 export const metadata: Metadata = {
   title: "Formation AI Act : l'obligation de maîtrise de l'IA (article 4) pour vos salariés",
   description:
-    "Depuis le 2 février 2025, l'article 4 du règlement européen sur l'IA impose aux entreprises de former leurs équipes à l'IA. La Formation IA 360 y répond : 21 h, conformité RGPD et AI Act, outils inclus, 1 300 € la place.",
+    "Depuis le 2 février 2025, l'article 4 du règlement européen sur l'IA impose aux entreprises de former leurs équipes à l'IA. La Forge IA y répond : 21 heures en 3 jours, conformité RGPD et AI Act, outils IA inclus dans votre forfait, 1 300 €.",
   alternates: { canonical: "/formation-ia-ai-act" },
 };
 
@@ -24,11 +25,15 @@ const questions = [
   },
   {
     q: "Comment prouver que l'entreprise a agi ?",
-    a: "En conservant la trace des actions menées : programme, émargements, évaluations, attestations, et un registre des usages d'IA. La Formation IA 360 fait produire à chaque participant un dossier IA daté qui sert précisément à cela.",
+    a: "En conservant la trace des actions menées : programme, émargements, évaluations, attestations, et un registre des usages d'IA. La Forge IA fait produire à chaque participant un dossier IA daté qui sert précisément à cela.",
   },
 ];
 
+export const revalidate = 3600;
+
 export default function AiActPage() {
+  const ia = FORMATIONS.IA360;
+  const s = prochaineSession("IA360");
   return (
     <>
       <BreadcrumbJsonLd
@@ -67,7 +72,7 @@ export default function AiActPage() {
               nécessiter la consultation du CSE.
             </p>
 
-            <h2 className="pt-4 font-display text-display-md font-extrabold text-ink">Ce que la Formation IA 360 apporte</h2>
+            <h2 className="pt-4 font-display text-display-md font-extrabold text-ink">Ce que La Forge IA apporte</h2>
             <ul className="space-y-3">
               {[
                 "Une journée entière consacrée à la conformité : vérification des résultats, confidentialité, RGPD, AI Act.",
@@ -87,11 +92,11 @@ export default function AiActPage() {
           <aside className="space-y-4">
             <div className="cadre-neon">
               <div className="p-7">
-                <p className="text-xs font-bold uppercase tracking-widest text-red-600">Formation IA 360</p>
-                <p className="mt-2 font-display text-5xl font-extrabold text-ink">{tarif.montant}</p>
-                <p className="text-sm text-ink-soft">{tarif.unite} · 21 h · outils IA inclus</p>
-                <p className="mt-3 text-sm text-ink-soft">Prochaine session le {annonce.dateLisible}.</p>
-                <Link href="/reserver?formation=IA360" className="bouton-neon mt-5 flex min-h-[48px] items-center justify-center gap-2 rounded-full px-6 font-bold">
+                <p className="text-xs font-bold uppercase tracking-widest text-red-600">{ia.nom}</p>
+                <p className="mt-2 font-display text-5xl font-extrabold text-ink">{euros(ia.prix)}</p>
+                <p className="text-sm text-ink-soft">TTC · {duree(ia)} · outils IA inclus dans votre forfait</p>
+                {s ? <p className="mt-3 text-sm font-semibold text-ink">Prochaine session le {dateCourte(s.debut)}.</p> : null}
+                <Link href={s ? `/reserver?formation=IA360&session=${s.code}` : "/reserver?formation=IA360"} className="bouton-neon mt-5 flex min-h-[48px] items-center justify-center gap-2 rounded-full px-6 font-bold">
                   Réserver pour mon équipe <ArrowRight size={18} aria-hidden />
                 </Link>
                 <Link href="/entreprises" className="mt-3 block text-center text-sm font-semibold text-teal-700 underline">

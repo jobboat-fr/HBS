@@ -7,9 +7,9 @@ import { venteOuverte } from "@/lib/stripe";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Réserver et payer en ligne — formations Data, Content, Marketing et IA 360",
+  title: "Réserver et payer en ligne — Analyse de données, Création de contenu, Marketing, La Forge IA",
   description:
-    "Réservez et payez votre place en deux minutes : paiement en ligne pour les entreprises, 0 € aujourd'hui et paiement en trois fois pour les particuliers, devis OPCO ou France Travail.",
+    "Réservez votre formation en deux minutes : paiement en ligne pour les entreprises, 0 € aujourd'hui et paiement en 3 fois pour les particuliers, devis OPCO ou France Travail.",
   alternates: { canonical: "/reserver" },
 };
 
@@ -29,8 +29,8 @@ export default function ReserverPage() {
       <CourseJsonLd />
       <PageHeader
         eyebrow="Réservation"
-        title={<>Votre place, <span className="texte-lumiere">en deux minutes</span></>}
-        subtitle="Choisissez votre situation, validez, et c'est réservé."
+        title={<>C&apos;est réservé <span className="texte-lumiere">en deux minutes</span></>}
+        subtitle="Choisissez votre formation et vos dates, validez : c'est réservé."
       />
       <section className="bg-cloud py-10 lg:py-16">
         <div className="container-page">

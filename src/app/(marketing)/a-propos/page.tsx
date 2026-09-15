@@ -8,16 +8,16 @@ import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 import { legal, site, media } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "À propos — organisme de formation IA à Rouen",
+  title: "À propos — organisme de formation à Rouen, certifié Qualiopi",
   description:
-    "HBS FORMATION, organisme de formation à Rouen spécialisé dans l'intelligence artificielle : rendre l'IA utile, fiable et maîtrisée pour les entreprises et les particuliers.",
+    "HBS FORMATION, organisme de formation à Rouen : 4 formations courtes pour lire son marché, créer son contenu, vendre et mettre l'IA au travail, pour les entreprises et les particuliers.",
   alternates: { canonical: "/a-propos" },
 };
 
 const values = [
-  { title: "Notre mission", text: "Rendre l'intelligence artificielle utile, fiable et maîtrisée — dans les entreprises comme pour les particuliers." },
-  { title: "Notre approche", text: "Des ateliers pratiques sur vos cas réels, des démonstrations sur des systèmes en exploitation, et des outils qui continuent de travailler après la formation." },
-  { title: "Notre ambition", text: "Que chaque participant reparte équipé, et que l'IA soit au travail dans son activité dès la semaine suivante." },
+  { title: "Notre mission", text: "Donner à chacun les compétences qui font avancer un projet : lire son marché, créer, vendre, automatiser." },
+  { title: "Notre approche", text: "Des formations courtes, en direct, sur vos cas réels. Pas de théorie qui dort dans un classeur." },
+  { title: "Notre ambition", text: "Que chaque participant reparte équipé, et applique dès le lundi suivant ce qu'il a appris." },
 ];
 
 export default function AProposPage() {
@@ -33,10 +33,10 @@ export default function AProposPage() {
         eyebrow="À propos"
         title={
           <>
-            Rendre l&apos;IA <span className="text-teal-600">utile, fiable et maîtrisée</span>
+            Des compétences <span className="texte-lumiere">qui changent une carrière</span>
           </>
         }
-        subtitle={`${site.name} est un organisme de formation basé à ${site.city}, spécialisé dans la formation à l'intelligence artificielle.`}
+        subtitle={`${site.name} est un organisme de formation basé à ${site.city}, certifié Qualiopi : Analyse de données, Création de contenu, Marketing et La Forge IA.`}
       />
 
       <section className="py-16 lg:py-24">

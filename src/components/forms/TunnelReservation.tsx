@@ -7,50 +7,68 @@ import { ArrowRight, Building2, UserRound, Landmark, Minus, Plus, Lock, ShieldCh
 import {
   FORMATIONS,
   ORDRE,
+  PACK,
   PLACES_MAX,
   RETRACTATION_JOURS,
+  cyclesPack,
+  duree,
   echeancier,
   euros,
-  libelleSemaine,
+  libelleDates,
   montantsEcheances,
+  nomMois,
   planning,
   type CodeFormation,
   type Profil,
 } from "@/lib/commande";
 
 type Choix = Profil | "financeur";
+type Produit = CodeFormation | "PACK360";
+type Creneau = { code: string; debut: string; fin: string; libelle: string };
 
 const PROFILS: { id: Choix; titre: string; texte: string; icon: typeof Building2 }[] = [
   { id: "particulier", titre: "Pour moi", texte: "Indépendant, salarié à titre personnel, en reconversion", icon: UserRound },
-  { id: "entreprise", titre: "Pour mon entreprise", texte: "Une ou plusieurs places, facture à la société", icon: Building2 },
+  { id: "entreprise", titre: "Pour mon entreprise", texte: "Un ou plusieurs participants, facture à la société", icon: Building2 },
   { id: "financeur", titre: "Avec un financeur", texte: "OPCO ou France Travail : nous montons le dossier", icon: Landmark },
 ];
 
 /**
- * Le paiement en ligne : une formation, une semaine, un profil, une case — puis Stripe.
+ * Le paiement en ligne : une formation (ou le Pack 360), des dates, un profil, une case — puis Stripe.
  * Tout ce que Stripe sait collecter (nom, adresse, TVA, carte) n'est pas redemandé ici.
  */
 export function TunnelReservation({ ouverte }: { ouverte: boolean }) {
   const params = useSearchParams();
   const sessions = useMemo(() => planning(new Date(), 6).filter((s) => s.statut === "ouvert"), []);
+  const cycles = useMemo(() => cyclesPack(new Date(), 6), []);
 
-  const initFormation = (ORDRE as string[]).includes(params.get("formation") ?? "") ? (params.get("formation") as CodeFormation) : "IA360";
-  const initSession = sessions.find((s) => s.code === params.get("session") && s.formation === initFormation)?.code
-    ?? sessions.find((s) => s.formation === initFormation)?.code
+  /** Les dates réservables d'un produit : les sessions d'une formation, ou les mois du Pack 360. */
+  const datesDe = (p: Produit): Creneau[] =>
+    p === "PACK360"
+      ? cycles.map((c) => ({ code: c.code, debut: c.debut, fin: c.fin, libelle: nomMois(c.mois) }))
+      : sessions.filter((s) => s.formation === p).map((s) => ({ code: s.code, debut: s.debut, fin: s.fin, libelle: libelleDates(s) }));
+
+  const demande = params.get("formation") ?? "";
+  const initFormation: Produit = demande === "PACK360" || (ORDRE as string[]).includes(demande) ? (demande as Produit) : "IA360";
+  const initSession = datesDe(initFormation).find((s) => s.code === params.get("session"))?.code
+    ?? datesDe(initFormation)[0]?.code
     ?? "";
   const initProfil = (params.get("profil") as Choix) || "particulier";
 
-  const [formation, setFormation] = useState<CodeFormation>(initFormation);
+  const [formation, setFormation] = useState<Produit>(initFormation);
   const [sessionCode, setSessionCode] = useState(initSession);
   const [profil, setProfil] = useState<Choix>(PROFILS.some((p) => p.id === initProfil) ? initProfil : "particulier");
   const [quantite, setQuantite] = useState(1);
   const [cgv, setCgv] = useState(false);
   const [accordEcheancier, setAccordEcheancier] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [erreur, setErreur] = useState<string | null>(params.get("annule") ? "Paiement interrompu — votre place n'est pas encore réservée." : null);
+  const [erreur, setErreur] = useState<string | null>(params.get("annule") ? "Paiement interrompu : votre inscription n'est pas encore réservée." : null);
 
-  const f = FORMATIONS[formation];
-  const semaines = sessions.filter((s) => s.formation === formation).slice(0, 4);
+  const estPack = formation === "PACK360";
+  const f = estPack
+    ? { nom: PACK.nom, accroche: PACK.accroche, prix: PACK.prix, couleur: { texte: "text-teal-700" }, inclus: ORDRE.map((c) => `${FORMATIONS[c].nom} · ${duree(FORMATIONS[c])}`) }
+    : FORMATIONS[formation];
+  const dureeProduit = estPack ? `${PACK.heures} heures en ${PACK.jours} jours` : duree(FORMATIONS[formation]);
+  const semaines = datesDe(formation).slice(0, 4);
   const creneau = semaines.find((s) => s.code === sessionCode) ?? semaines[0];
 
   const plan = useMemo(() => {
@@ -66,9 +84,9 @@ export function TunnelReservation({ ouverte }: { ouverte: boolean }) {
   const total = f.prix * (profil === "entreprise" ? quantite : 1);
   const pret = Boolean(creneau) && cgv && (profil !== "particulier" || accordEcheancier);
 
-  function choisirFormation(c: CodeFormation) {
+  function choisirFormation(c: Produit) {
     setFormation(c);
-    setSessionCode(sessions.find((s) => s.formation === c)?.code ?? "");
+    setSessionCode(datesDe(c)[0]?.code ?? "");
   }
 
   async function payer() {
@@ -109,8 +127,8 @@ export function TunnelReservation({ ouverte }: { ouverte: boolean }) {
       <div className="space-y-6">
         {/* 1. Formation et semaine */}
         <fieldset>
-          <legend className="font-display text-lg font-bold text-ink">1. Votre formation et votre semaine</legend>
-          <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
+          <legend className="font-display text-lg font-bold text-ink">1. Votre formation et vos dates</legend>
+          <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-5">
             {ORDRE.map((c) => {
               const x = FORMATIONS[c];
               const actif = c === formation;
@@ -123,10 +141,19 @@ export function TunnelReservation({ ouverte }: { ouverte: boolean }) {
                   className={`min-h-[72px] rounded-2xl border-2 p-3 text-left transition ${actif ? `${x.couleur.bord} ${x.couleur.fond}` : "border-mist bg-white hover:border-teal-300"}`}
                 >
                   <span className="block font-display text-sm font-bold leading-tight text-ink">{x.nom}</span>
-                  <span className="mt-1 block text-xs font-semibold text-ink-soft">{euros(x.prix)}</span>
+                  <span className="mt-1 block text-xs font-semibold text-ink-soft">{euros(x.prix)} · {x.jours} jours</span>
                 </button>
               );
             })}
+            <button
+              type="button"
+              onClick={() => choisirFormation("PACK360")}
+              aria-pressed={estPack}
+              className={`min-h-[72px] rounded-2xl border-2 p-3 text-left transition ${estPack ? "border-teal-500 bg-teal-50" : "border-mist bg-white hover:border-teal-300"}`}
+            >
+              <span className="block font-display text-sm font-bold leading-tight text-ink">{PACK.nom} · les 4</span>
+              <span className="mt-1 block text-xs font-semibold text-teal-700">{euros(PACK.prix)}</span>
+            </button>
           </div>
           <div className="mt-3 flex flex-wrap gap-2">
             {semaines.map((s) => (
@@ -139,10 +166,18 @@ export function TunnelReservation({ ouverte }: { ouverte: boolean }) {
                   creneau?.code === s.code ? "border-teal-500 bg-teal-50 text-teal-700" : "border-mist bg-white text-ink-soft hover:border-teal-300"
                 }`}
               >
-                Semaine {libelleSemaine(s)}
+                {s.libelle}
               </button>
             ))}
+            {semaines.length === 0 ? <p className="text-sm text-ink-soft">Aucune date ouverte pour le moment : écrivez-nous.</p> : null}
           </div>
+          {estPack && creneau ? (
+            <ul className="mt-3 space-y-1 text-xs text-ink-soft">
+              {cycles.find((c) => c.code === creneau.code)?.sessions.map((s) => (
+                <li key={s.code}><b className="text-ink">{FORMATIONS[s.formation].nom}</b> · {libelleDates(s)}</li>
+              ))}
+            </ul>
+          ) : null}
         </fieldset>
 
         {/* 2. Profil */}
@@ -172,14 +207,14 @@ export function TunnelReservation({ ouverte }: { ouverte: boolean }) {
 
         {profil === "financeur" ? (
           <div className="rounded-2xl border border-mist bg-cloud p-6">
-            <p className="font-display text-lg font-bold text-ink">Votre financeur règle la place : rien à payer en ligne.</p>
+            <p className="font-display text-lg font-bold text-ink">Votre financeur règle la formation : rien à payer en ligne.</p>
             <p className="mt-2 text-sm leading-relaxed text-ink-soft">
               HBS FORMATION est certifiée Qualiopi au titre des actions de formation. Salarié, votre OPCO peut financer la
-              formation ; demandeur d&apos;emploi, France Travail peut la prendre en charge selon votre projet. Réservez votre
-              semaine : nous vous envoyons devis et programme sous 48 heures ouvrées.
+              formation ; demandeur d&apos;emploi, France Travail peut la prendre en charge selon votre projet. Faites votre
+              demande : nous vous envoyons devis et programme sous 48 heures ouvrées.
             </p>
             <Link
-              href={creneau ? `/preinscription?formation=${formation}&session=${creneau.code}` : "/preinscription"}
+              href={creneau && !estPack ? `/preinscription?formation=${formation}&session=${creneau.code}` : "/preinscription"}
               className="bouton-neon mt-5 inline-flex min-h-[48px] items-center gap-2 rounded-full px-6 font-bold"
             >
               Je réserve et je demande mon devis <ArrowRight size={18} aria-hidden />
@@ -189,14 +224,14 @@ export function TunnelReservation({ ouverte }: { ouverte: boolean }) {
           <>
             {profil === "entreprise" ? (
               <fieldset>
-                <legend className="font-display text-lg font-bold text-ink">3. Nombre de places</legend>
+                <legend className="font-display text-lg font-bold text-ink">3. Nombre de participants</legend>
                 <div className="mt-4 flex items-center gap-4">
-                  <button type="button" aria-label="Retirer une place" onClick={() => setQuantite((q) => Math.max(1, q - 1))}
+                  <button type="button" aria-label="Retirer un participant" onClick={() => setQuantite((q) => Math.max(1, q - 1))}
                     className="flex h-12 w-12 items-center justify-center rounded-full border border-mist bg-white text-ink hover:border-teal-400 disabled:opacity-40" disabled={quantite <= 1}>
                     <Minus size={18} />
                   </button>
                   <span className="min-w-[3ch] text-center font-display text-3xl font-extrabold text-ink" aria-live="polite">{quantite}</span>
-                  <button type="button" aria-label="Ajouter une place" onClick={() => setQuantite((q) => Math.min(PLACES_MAX, q + 1))}
+                  <button type="button" aria-label="Ajouter un participant" onClick={() => setQuantite((q) => Math.min(PLACES_MAX, q + 1))}
                     className="flex h-12 w-12 items-center justify-center rounded-full border border-mist bg-white text-ink hover:border-teal-400 disabled:opacity-40" disabled={quantite >= PLACES_MAX}>
                     <Plus size={18} />
                   </button>
@@ -262,7 +297,7 @@ export function TunnelReservation({ ouverte }: { ouverte: boolean }) {
               className="bouton-neon flex min-h-[56px] w-full items-center justify-center gap-2 rounded-full px-6 text-lg font-bold disabled:cursor-not-allowed disabled:opacity-50"
             >
               {busy ? <Loader2 size={20} className="animate-spin" /> : <Lock size={18} aria-hidden />}
-              {!ouverte ? "Je réserve ma place" : profil === "entreprise" ? `Payer ${euros(total)}` : "Je réserve — 0 € aujourd'hui"}
+              {!ouverte ? "Je réserve" : profil === "entreprise" ? `Payer ${euros(total)}` : "Je réserve — 0 € aujourd'hui"}
               {!busy ? <ArrowRight size={18} aria-hidden /> : null}
             </button>
             <p className="flex items-center justify-center gap-2 text-xs text-ink-muted">
@@ -278,13 +313,13 @@ export function TunnelReservation({ ouverte }: { ouverte: boolean }) {
             <p className="text-xs font-bold uppercase tracking-widest text-red-600">Votre réservation</p>
             <p className="mt-2 font-display text-2xl font-extrabold text-ink">{f.nom}</p>
             <p className={`font-semibold ${f.couleur.texte}`}>{f.accroche}</p>
-            <p className="mt-1 text-sm text-ink-soft">{creneau ? `Semaine ${libelleSemaine(creneau)}` : "Dates à venir"} · à distance, en direct</p>
+            <p className="mt-1 text-sm text-ink-soft">{creneau ? creneau.libelle : "Dates à venir"} · à distance, en direct</p>
             <ul className="mt-4 space-y-1.5 text-sm text-ink-soft">
-              <li>✓ 21 h en direct, sur la semaine</li>
+              <li>✓ {dureeProduit}, 7 h par jour</li>
               {f.inclus.map((x) => <li key={x}>✓ {x}</li>)}
             </ul>
             <div className="mt-5 flex items-baseline justify-between border-t border-mist pt-4">
-              <span className="text-sm text-ink-soft">{profil === "entreprise" ? `${quantite} place${quantite > 1 ? "s" : ""}` : "1 place"}</span>
+              <span className="text-sm text-ink-soft">{profil === "entreprise" ? `${quantite} participant${quantite > 1 ? "s" : ""}` : "1 participant"}</span>
               <span className="font-display text-3xl font-extrabold text-ink">{profil === "financeur" ? "Pris en charge" : euros(total)}</span>
             </div>
             <p className="mt-1 text-right text-xs text-ink-muted">TTC</p>

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import type Stripe from "stripe";
 import { stripe, surCompte, commission, venteOuverte, compteConnecte } from "@/lib/stripe";
-import { FORMATIONS, PLACES_MAX, RETRACTATION_JOURS, CGV_VERSION, echeancier, montantsEcheances, euros, sessionParCode, libelleSemaine, type CodeFormation } from "@/lib/commande";
+import { FORMATIONS, ORDRE, PACK, PLACES_MAX, RETRACTATION_JOURS, CGV_VERSION, cycleParCode, duree, echeancier, montantsEcheances, euros, sessionParCode, libelleDates, type CodeFormation } from "@/lib/commande";
 import { checkRateLimit } from "@/lib/rateLimit";
 import { log, errMsg } from "@/lib/log";
 import { site } from "@/lib/site";
@@ -10,7 +10,7 @@ import { site } from "@/lib/site";
 export const runtime = "nodejs";
 
 const schema = z.object({
-  formation: z.enum(["DATA360", "CONTENT360", "MKT360", "IA360"]),
+  formation: z.enum(["DATA360", "CONTENT360", "MKT360", "IA360", "PACK360"]),
   session: z.string().max(40),
   profil: z.enum(["entreprise", "particulier"]),
   quantite: z.number().int().min(1).max(PLACES_MAX),
@@ -58,19 +58,30 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  // La session est recalculée depuis le planning : un code inventé, une semaine passée ou
-  // complète, ou la session d'une autre formation ne passent pas.
-  const creneau = sessionParCode(data.session);
-  if (!creneau || creneau.formation !== data.formation || creneau.statut !== "ouvert") {
-    return NextResponse.json({ error: "Cette session n'est plus ouverte à la réservation. Choisissez une autre semaine." }, { status: 409 });
+  // Les dates sont recalculées depuis le planning : un code inventé, une session passée ou
+  // complète, ou la session d'une autre formation ne passent pas. Le Pack 360 réserve les
+  // quatre sessions d'un même mois.
+  const estPack = data.formation === PACK.code;
+  const cycle = estPack ? cycleParCode(data.session) : null;
+  const unique = estPack ? null : sessionParCode(data.session);
+  const creneau = estPack
+    ? cycle && { code: cycle.code, debut: cycle.debut, fin: cycle.fin }
+    : unique && unique.formation === data.formation && unique.statut === "ouvert" ? unique : null;
+  if (!creneau) {
+    return NextResponse.json({ error: "Ces dates ne sont plus ouvertes à la réservation. Choisissez une autre session." }, { status: 409 });
   }
-  const f = FORMATIONS[data.formation as CodeFormation];
-  const semaine = `semaine ${libelleSemaine(creneau)}`;
+  const f = estPack
+    ? { code: PACK.code, nom: PACK.nom, accroche: PACK.accroche, prix: PACK.prix }
+    : FORMATIONS[data.formation as CodeFormation];
+  const semaine = libelleDates(creneau);
+  const detail = estPack
+    ? ORDRE.map((c) => FORMATIONS[c].nom).join(", ") + ` — ${PACK.heures} heures en ${PACK.jours} jours`
+    : duree(FORMATIONS[data.formation as CodeFormation]);
 
   const origine = process.env.NEXT_PUBLIC_SITE_URL || site.url;
   const total = f.prix * data.quantite;
   const acceptees = new Date().toISOString();
-  const metadata = {
+  const metadata: Record<string, string> = {
     produit: f.code,
     session_code: creneau.code,
     session_debut: creneau.debut,
@@ -80,6 +91,7 @@ export async function POST(request: NextRequest) {
     cgv_version: CGV_VERSION,
     cgv_acceptees_le: acceptees,
   };
+  if (cycle) metadata.sessions = cycle.sessions.map((s) => s.code).join(",");
 
   const commun: Stripe.Checkout.SessionCreateParams = {
     locale: "fr",
@@ -111,7 +123,7 @@ export async function POST(request: NextRequest) {
                 tax_behavior: "inclusive",
                 product_data: {
                   name: `${f.nom} — ${semaine}`,
-                  description: `${f.accroche}. 21 heures de formation en direct.`,
+                  description: `${f.accroche}. ${detail}, en direct.`,
                   metadata: { produit: f.code },
                 },
               },
@@ -125,13 +137,13 @@ export async function POST(request: NextRequest) {
           invoice_creation: {
             enabled: true,
             invoice_data: {
-              description: `${f.nom} — ${semaine} — ${data.quantite} place(s)`,
+              description: `${f.nom} — ${semaine} — ${data.quantite} participant(s)`,
               footer: "HBS FORMATION — organisme de formation, déclaration d'activité n° 28760809976 (préfet de région Normandie). Certifié Qualiopi — actions de formation.",
               metadata,
             },
           },
           payment_intent_data: {
-            description: `${f.nom} — ${data.quantite} place(s)`,
+            description: `${f.nom} — ${data.quantite} participant(s)`,
             statement_descriptor_suffix: "FORMATION",
             application_fee_amount: commission(total),
             metadata,

@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { LegalPage } from "@/components/layout/LegalPage";
 import { legal, site } from "@/lib/site";
-import { echeancier, FORMATIONS, ORDRE, euros } from "@/lib/commande";
+import { echeancier, FORMATIONS, ORDRE, PACK, duree, euros } from "@/lib/commande";
 
 export const metadata: Metadata = {
   title: "Conditions générales de vente",
   description:
-    "Conditions générales de vente de HBS FORMATION : Formation IA 360, prix, paiement en ligne, rétractation, annulation, financement OPCO et France Travail.",
+    "Conditions générales de vente de HBS FORMATION : Analyse de données, Création de contenu, Marketing, La Forge IA et Pack 360 — prix, paiement en ligne, rétractation, annulation, financement OPCO et France Travail.",
   alternates: { canonical: "/cgv" },
 };
 
@@ -78,9 +78,18 @@ export default function CgvPage() {
           contenu: (
             <>
               <p>
-                HBS FORMATION propose quatre formations — Data Analyse 360, Content Making 360, Marketing 360
-                et Formation IA 360 — de 21 heures chacune, réparties sur une semaine et dispensées à distance
-                en direct (ou en présentiel dans les locaux du Client professionnel sur accord). Le programme,
+                HBS FORMATION propose quatre formations, dispensées à distance en direct (ou en présentiel dans
+                les locaux du Client professionnel sur accord), à raison de 7 heures par jour :
+              </p>
+              <ul>
+                {ORDRE.map((c) => (
+                  <li key={c}>
+                    {FORMATIONS[c].nom} : {duree(FORMATIONS[c])} consécutifs ;
+                  </li>
+                ))}
+              </ul>
+              <p>
+                ainsi que le {PACK.nom}, qui réunit les quatre formations d&apos;un même mois. Le programme,
                 les objectifs, les prérequis, les modalités d&apos;évaluation et d&apos;accès de chaque formation
                 sont décrits sur sa page, et les dates sur la page{" "}
                 <Link href="/planning" className="text-teal-700 underline">Planning</Link> ; ces informations font
@@ -93,7 +102,7 @@ export default function CgvPage() {
               </p>
               <p>
                 À l&apos;issue de chaque formation, le participant reçoit une attestation de fin de formation. Pour
-                la Formation IA 360, la réussite à l&apos;épreuve finale donne en outre lieu au Certificat IA 360
+                La Forge IA, la réussite à l&apos;épreuve finale donne en outre lieu au Certificat La Forge IA
                 délivré par {legal.raisonSociale}. Aucune de ces formations ne délivre de diplôme d&apos;État ni de
                 certification enregistrée au RNCP ou au répertoire spécifique ; elles ne sont pas éligibles au
                 compte personnel de formation.
@@ -107,7 +116,7 @@ export default function CgvPage() {
           contenu: (
             <>
               <p>
-                Les prix par place, toutes taxes comprises, sont les suivants :
+                Les prix par participant, toutes taxes comprises, sont les suivants :
               </p>
               <ul>
                 {ORDRE.map((c) => (
@@ -115,11 +124,15 @@ export default function CgvPage() {
                     {FORMATIONS[c].nom} : <b>{euros(FORMATIONS[c].prix)}</b>
                   </li>
                 ))}
+                <li>
+                  {PACK.nom} (les quatre formations) : <b>{euros(PACK.prix)}</b>, soit une remise de 15 % sur La Forge
+                  IA et sur Création de contenu et de 10 % sur Marketing, au lieu de {euros(PACK.prixSepare)}.
+                </li>
               </ul>
               <p>
                 Le prix comprend la formation, le test de positionnement, les supports et modèles remis,
                 l&apos;évaluation, l&apos;attestation de fin de formation et le questionnaire de suivi à trois mois ;
-                pour la Formation IA 360, il comprend aussi le Certificat IA 360 en cas de réussite et la mise à
+                pour La Forge IA, il comprend aussi le Certificat La Forge IA en cas de réussite et la mise à
                 disposition des outils IA présentés sur le site, dans les conditions précisées dans la convention
                 ou le contrat.
               </p>
@@ -174,6 +187,10 @@ export default function CgvPage() {
                 <li>{pct(e[1].part)} le premier jour de la formation (ou, s&apos;il est antérieur, le jour suivant la première échéance) ;</li>
                 <li>{pct(e[2].part)} le dernier jour de la formation (ou, s&apos;il est antérieur, le jour suivant la deuxième échéance).</li>
               </ul>
+              <p>
+                Pour le {PACK.nom}, le premier jour est celui de la première formation du mois, et le dernier jour
+                celui de la dernière.
+              </p>
               <p>
                 Le Client est informé par courriel avant chaque prélèvement. En cas d&apos;échec, un lien de
                 paiement lui est adressé ; à défaut de régularisation sous 8 jours, {legal.raisonSociale} peut

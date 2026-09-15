@@ -197,10 +197,10 @@ export type CommandeMail = {
 
 export function buildCommandeClient(d: CommandeMail) {
   const etapes = d.profil === "entreprise"
-    ? `${para(`Votre paiement de <strong>${esc(d.montant)}</strong> pour ${d.quantite} place${d.quantite > 1 ? "s" : ""} à ${esc(d.formation)} (${esc(d.session)}) est confirmé.`)}
+    ? `${para(`Votre paiement de <strong>${esc(d.montant)}</strong> pour ${d.quantite} participant${d.quantite > 1 ? "s" : ""} à ${esc(d.formation)} (${esc(d.session)}) est confirmé.`)}
        ${d.facture ? bouton(d.facture, "Télécharger la facture") : para("Votre facture vous parvient par un courriel séparé.")}
        ${para("<strong>Prochaines étapes :</strong> nous vous adressons la convention de formation à signer, puis vous nous communiquez le nom des participants au plus tard 7 jours avant la session. Chaque participant passe un court test de positionnement.")}`
-    : `${para(`Votre place à ${esc(d.formation)} (${esc(d.session)}) est réservée. Votre carte est enregistrée : <strong>rien n'a été prélevé</strong>.`)}
+    : `${para(`Votre inscription à ${esc(d.formation)} (${esc(d.session)}) est réservée. Votre carte est enregistrée : <strong>rien n'a été prélevé</strong>.`)}
        ${d.echeances?.length ? `<p style="margin:16px 0 6px;color:${ENCRE}"><strong style="color:${MARINE}">Votre échéancier (${esc(d.montant)} au total)</strong></p>
          ${d.echeances.map((e) => `<p style="margin:4px 0;color:${DOUX}">${esc(e.date)} — ${esc(e.montant)}</p>`).join("")}
          ${para("Vous recevez un rappel quelques jours avant chaque prélèvement.")}` : ""}
