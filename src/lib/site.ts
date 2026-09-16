@@ -46,6 +46,7 @@ export const legal = {
 };
 
 export const navLinks = [
+  { label: "Nos produits", href: "/produits" },
   { label: "Formations", href: "/#formations" },
   { label: "Pack 360", href: "/pack-360" },
   { label: "Planning", href: "/planning" },

@@ -23,6 +23,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     page("/formations/creation-de-contenu", 0.95, "weekly"),
     page("/formations/marketing", 0.95, "weekly"),
     page("/pack-360", 0.95, "weekly"),
+    page("/produits", 0.9, "weekly"),
     page("/reserver", 0.95, "weekly"),
     page("/financement", 0.9),
     page("/entreprises", 0.85),
