@@ -7,6 +7,7 @@ import { fadeUp, viewportOnce } from "@/lib/animations";
 import { FORMATIONS, ORDRE, PACK, euros } from "@/lib/commande";
 
 import { ChampNeuronal } from "@/components/visuel/ChampNeuronal";
+import { PrixPack } from "@/components/ui/PrixPack";
 
 export function CTASection() {
   return (
@@ -37,7 +38,7 @@ export function CTASection() {
                 {ORDRE.map((c) => (
                   <li key={c} className="flex items-baseline justify-between gap-3 text-white/80">
                     <span>{FORMATIONS[c].nom}</span>
-                    <b className="whitespace-nowrap text-white">{euros(FORMATIONS[c].prix)}</b>
+                    <PrixPack code={c} sombre />
                   </li>
                 ))}
                 <li className="flex items-baseline justify-between gap-3 border-t border-white/15 pt-1.5 text-white">

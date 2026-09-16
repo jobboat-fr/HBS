@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, BarChart3, PenTool, Megaphone, Sparkles, CalendarDays, Check } from "lucide-react";
+import { PrixPack } from "@/components/ui/PrixPack";
 import { FORMATIONS, ORDRE, PACK, cyclesPack, dureeCourte, euros, libelleDates, nomMois, type CodeFormation } from "@/lib/commande";
 
 /**
@@ -70,7 +71,7 @@ export function ComplementSection() {
   );
 }
 
-/** La carte du Pack 360 : les quatre formations et leur prix, le prix du pack, un seul bouton. */
+/** La carte du Pack 360 : les quatre formations avec la remise du pack, le prix du pack, un seul bouton. */
 export function PackOffre({ titre = true }: { titre?: boolean }) {
   const prochain = cyclesPack(new Date(), 6)[0];
   return (
@@ -99,9 +100,7 @@ export function PackOffre({ titre = true }: { titre?: boolean }) {
                     <Check size={14} className="mr-1.5 inline text-cyan-300" aria-hidden />
                     {f.nom} <span className="text-white/50">· {dureeCourte(f)}</span>
                   </span>
-                  <span className="whitespace-nowrap">
-                    <b className="text-white">{euros(f.prix)}</b>
-                  </span>
+                  <PrixPack code={c} sombre />
                 </li>
               );
             })}

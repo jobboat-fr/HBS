@@ -5,6 +5,7 @@ import { ContactForm } from "@/components/forms/ContactForm";
 import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 import { site, legal } from "@/lib/site";
 import { FORMATIONS, ORDRE, PACK, dureeCourte, euros } from "@/lib/commande";
+import { PrixPack } from "@/components/ui/PrixPack";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -63,7 +64,7 @@ export default function ContactPage() {
                 {ORDRE.map((c) => (
                   <li key={c} className="flex justify-between gap-3">
                     <span>{FORMATIONS[c].nom} <span className="text-ink-muted">· {dureeCourte(FORMATIONS[c])}</span></span>
-                    <b className="whitespace-nowrap text-ink">{euros(FORMATIONS[c].prix)}</b>
+                    <PrixPack code={c} />
                   </li>
                 ))}
                 <li className="flex justify-between gap-3 border-t border-mist pt-1.5">
