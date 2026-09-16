@@ -10,7 +10,7 @@ import { FORMATIONS, dateCourte, duree, euros, prochaineSession } from "@/lib/co
 export const metadata: Metadata = {
   title: "Formation AI Act : l'obligation de maîtrise de l'IA (article 4) pour vos salariés",
   description:
-    "Depuis le 2 février 2025, l'article 4 du règlement européen sur l'IA impose aux entreprises de former leurs équipes à l'IA. La Forge IA y répond : 21 heures en 3 jours, conformité RGPD et AI Act, outils IA inclus dans votre forfait, 1 300 €.",
+    "Depuis le 2 février 2025, l'article 4 du règlement européen sur l'IA impose aux entreprises de former leurs équipes à l'IA. IA 360 y répond : 21 heures en 3 jours, conformité RGPD et AI Act, outils IA inclus dans votre forfait, 1 300 €.",
   alternates: { canonical: "/formation-ia-ai-act" },
 };
 
@@ -25,7 +25,7 @@ const questions = [
   },
   {
     q: "Comment prouver que l'entreprise a agi ?",
-    a: "En conservant la trace des actions menées : programme, émargements, évaluations, attestations, et un registre des usages d'IA. La Forge IA fait produire à chaque participant un dossier IA daté qui sert précisément à cela.",
+    a: "En conservant la trace des actions menées : programme, émargements, évaluations, attestations, et un registre des usages d'IA. IA 360 fait produire à chaque participant un dossier IA daté qui sert précisément à cela.",
   },
 ];
 
@@ -72,7 +72,7 @@ export default function AiActPage() {
               nécessiter la consultation du CSE.
             </p>
 
-            <h2 className="pt-4 font-display text-display-md font-extrabold text-ink">Ce que La Forge IA apporte</h2>
+            <h2 className="pt-4 font-display text-display-md font-extrabold text-ink">Ce que IA 360 apporte</h2>
             <ul className="space-y-3">
               {[
                 "Une journée entière consacrée à la conformité : vérification des résultats, confidentialité, RGPD, AI Act.",

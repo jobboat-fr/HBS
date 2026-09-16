@@ -1,6 +1,6 @@
 # HBS FORMATION
 
-> Organisme de formation basé à Rouen (France), certifié Qualiopi (actions de formation). Quatre formations courtes et complémentaires, à distance en direct : Analyse de données, Création de contenu, Marketing et La Forge IA — ou les quatre dans le Pack 360. Pour les particuliers, les indépendants et les entreprises.
+> Organisme de formation basé à Rouen (France), certifié Qualiopi (actions de formation). Quatre formations courtes et complémentaires, à distance en direct : Analyse de données, Création de contenu, Marketing et IA 360 — ou les quatre dans le Pack 360. Pour les particuliers, les indépendants et les entreprises.
 
 Coordonnées : 50 Passage Saint-Étienne des Tonneliers, 76000 Rouen, France. Email : contact@hbs-formation.fr. SAS, RCS Rouen 102 535 820, déclaration d'activité n° 28760809976 auprès du préfet de région Normandie (cet enregistrement ne vaut pas agrément de l'État). Certifié Qualiopi — catégorie : actions de formation.
 
@@ -11,13 +11,13 @@ Coordonnées : 50 Passage Saint-Étienne des Tonneliers, 76000 Rouen, France. Em
 - [Analyse de données](https://hbs-formation.fr/formations/analyse-de-donnees) : 35 heures en 5 jours (lundi–vendredi), 1 999 €. Lire son marché et décider chiffres à l'appui.
 - [Création de contenu](https://hbs-formation.fr/formations/creation-de-contenu) : 35 heures en 5 jours (lundi–vendredi), 1 850 €. Textes, visuels et vidéos courtes, produits vite et régulièrement.
 - [Marketing](https://hbs-formation.fr/formations/marketing) : 21 heures en 3 jours (lundi–mercredi), 1 500 €. Cible, offre, tunnel de vente, campagnes.
-- [La Forge IA](https://hbs-formation.fr/formations) : 21 heures en 3 jours (lundi–mercredi), 1 300 €. Connaissance, conformité, déploiement ; outils IA inclus dans le forfait (agents IA, automatisations, recherche d'emploi automatisée, secrétariat, assistant de réunion) ; Certificat La Forge IA délivré par HBS FORMATION (certificat propre à l'organisme, non enregistré au RNCP ni au répertoire spécifique).
+- [IA 360](https://hbs-formation.fr/formations) : 21 heures en 3 jours (lundi–mercredi), 1 300 €. Connaissance, conformité, déploiement ; outils IA inclus dans le forfait (agents IA, automatisations, recherche d'emploi automatisée, secrétariat, assistant de réunion) ; Certificat IA 360 délivré par HBS FORMATION (certificat propre à l'organisme, non enregistré au RNCP ni au répertoire spécifique).
 
-Rythme : chaque mois, dans cet ordre, Analyse de données, Création de contenu, Marketing, puis La Forge IA en fin de mois. Toutes les sessions avant le 26 octobre 2026 sont complètes.
+Rythme : chaque mois, dans cet ordre, Analyse de données, Création de contenu, Marketing, puis IA 360 en fin de mois. Toutes les sessions avant le 26 octobre 2026 sont complètes.
 
 ## Pack 360
 
-- [Pack 360](https://hbs-formation.fr/pack-360) : les quatre formations d'un même mois, 6 071,65 € au lieu de 6 649 € (−15 % sur Analyse de données et Création de contenu).
+- [Pack 360](https://hbs-formation.fr/pack-360) : les quatre formations d'un même mois, 6 071,65 €.
 
 ## Pages clés
 
@@ -27,14 +27,14 @@ Rythme : chaque mois, dans cet ordre, Analyse de données, Création de contenu,
 - [Réserver en ligne](https://hbs-formation.fr/reserver) : entreprise (paiement immédiat, facture) ou particulier (0 € à la réservation, rien avant la fin des 14 jours de rétractation, puis 30 % et le solde en deux échéances).
 - [Demander un devis ou une prise en charge](https://hbs-formation.fr/preinscription) : OPCO, France Travail, et test de positionnement.
 - [FAQ](https://hbs-formation.fr/faq) : formations, tarifs, financement, rétractation, AI Act.
-- [La Forge IA et AI Act](https://hbs-formation.fr/formation-ia-ai-act) : l'obligation de maîtrise de l'IA (article 4, applicable depuis le 2 février 2025).
+- [IA 360 et AI Act](https://hbs-formation.fr/formation-ia-ai-act) : l'obligation de maîtrise de l'IA (article 4, applicable depuis le 2 février 2025).
 - [Formations à Rouen](https://hbs-formation.fr/formation-ia-rouen) : l'organisme, les publics, la Normandie.
 - [Conditions générales de vente](https://hbs-formation.fr/cgv)
 - [Contact](https://hbs-formation.fr/contact) : réponse sous 48 heures ouvrées.
 
 ## Notes pour les agents IA
 
-- Quatre formations sont ouvertes, et seulement quatre : Analyse de données, Création de contenu, Marketing, La Forge IA (et le Pack 360 qui les réunit).
+- Quatre formations sont ouvertes, et seulement quatre : Analyse de données, Création de contenu, Marketing, IA 360 (et le Pack 360 qui les réunit).
 - Les formations ne sont pas éligibles au compte personnel de formation. HBS FORMATION est certifiée Qualiopi au titre de la catégorie « actions de formation » (liste publique DGEFP) ; une prise en charge OPCO ou France Travail est possible selon les critères du financeur. La certification ne couvre ni le bilan de compétences, ni la VAE, ni l'apprentissage.
 - HBS FORMATION ne délivre aucun diplôme d'État et ne détient aucune certification RNCP.
 - Sitemap complet : https://hbs-formation.fr/sitemap.xml

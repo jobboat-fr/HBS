@@ -24,10 +24,10 @@ export function CTASection() {
           <div className="relative grid items-center gap-10 p-8 md:p-14 lg:grid-cols-[1.4fr_1fr]">
             <div>
               <h2 className="font-display text-display-md font-extrabold text-white text-balance">
-                N&apos;attendez pas que <span className="texte-lumiere">les autres s&apos;y mettent</span>.
+                Votre prochaine compétence <span className="texte-lumiere">commence ici</span>.
               </h2>
               <p className="mt-4 max-w-xl text-white/70">
-                12 places par session, et elles partent vite. Réservez en deux minutes : à titre personnel, rien n&apos;est
+                12 places maximum par session, et elles partent vite. Réservez en deux minutes : à titre personnel, rien n&apos;est
                 prélevé pendant vos 14 jours de rétractation.
               </p>
             </div>

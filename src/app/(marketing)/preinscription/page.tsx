@@ -33,7 +33,7 @@ import { site } from "@/lib/site";
  */
 
 export const metadata: Metadata = {
-  title: "Demande d'inscription — Analyse de données, Création de contenu, Marketing, La Forge IA",
+  title: "Demande d'inscription — Analyse de données, Création de contenu, Marketing, IA 360",
   description:
     "Demandez votre inscription chez HBS FORMATION : choisissez vos dates, laissez vos coordonnées, passez un test de positionnement de 15 minutes. Idéal si un OPCO ou France Travail finance votre formation.",
   alternates: { canonical: "/preinscription" },
@@ -181,7 +181,7 @@ export default async function InscriptionPage({
               <div className="verre-clair rounded-2xl border border-mist p-6">
                 <p className="font-display text-lg font-extrabold text-ink">Pas encore choisi vos dates ?</p>
                 <p className="mt-2 text-sm text-ink-soft">
-                  Chaque mois : Analyse de données, Création de contenu, Marketing, puis La Forge IA.
+                  Chaque mois : Analyse de données, Création de contenu, Marketing, puis IA 360.
                 </p>
                 <Link href="/planning" className="bouton-neon mt-4 inline-flex min-h-[48px] items-center rounded-full px-5 font-bold">
                   Voir le planning

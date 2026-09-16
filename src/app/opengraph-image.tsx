@@ -39,7 +39,7 @@ export default function Og() {
             de changer de cap.
           </div>
           <div style={{ display: "flex", marginTop: 28, fontSize: 30, color: "rgba(255,255,255,0.8)" }}>
-            Analyse de données · Création de contenu · Marketing · La Forge IA
+            Analyse de données · Création de contenu · Marketing · IA 360
           </div>
         </div>
 

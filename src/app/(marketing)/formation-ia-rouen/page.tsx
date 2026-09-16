@@ -10,7 +10,7 @@ import { FORMATIONS, ORDRE, PACK, dateCourte, duree, dureeCourte, euros, prochai
 export const metadata: Metadata = {
   title: "Formation IA, marketing, contenu et données à Rouen — organisme certifié Qualiopi",
   description:
-    "Formations à Rouen et en Normandie : La Forge IA (3 jours), Marketing (3 jours), Création de contenu (5 jours), Analyse de données (5 jours). En direct à distance ou dans votre entreprise, OPCO et France Travail.",
+    "Formations à Rouen et en Normandie : IA 360 (3 jours), Marketing (3 jours), Création de contenu (5 jours), Analyse de données (5 jours). En direct à distance ou dans votre entreprise, OPCO et France Travail.",
   alternates: { canonical: "/formation-ia-rouen" },
 };
 
@@ -30,7 +30,7 @@ const publics = [
   {
     icon: Briefcase,
     titre: "Demandeurs d'emploi",
-    texte: "Une prise en charge France Travail est possible si la formation s'inscrit dans votre projet. Avec La Forge IA, le moteur de recherche d'emploi automatisé est inclus.",
+    texte: "Une prise en charge France Travail est possible si la formation s'inscrit dans votre projet. Avec IA 360, le moteur de recherche d'emploi automatisé est inclus.",
     lien: { href: "/preinscription", label: "Demander un devis" },
   },
 ];
@@ -71,7 +71,7 @@ export default function RouenPage() {
               </li>
             </ul>
             <p>
-              <b>La Forge IA</b> part de votre activité réelle : 21 heures en 3 jours, et un cas de votre entreprise
+              <b>IA 360</b> part de votre activité réelle : 21 heures en 3 jours, et un cas de votre entreprise
               traité de bout en bout — de la compréhension des outils à leur déploiement fiable, dans le respect du
               RGPD et du règlement européen sur l&apos;IA.
             </p>
@@ -81,7 +81,7 @@ export default function RouenPage() {
               en Normandie.
             </p>
             <p>
-              Avec La Forge IA, votre forfait inclut les outils IA qui continuent de travailler après la formation : agents IA,
+              Avec IA 360, votre forfait inclut les outils IA qui continuent de travailler après la formation : agents IA,
               automatisations, assistance au secrétariat, assistant de réunion et moteur de recherche
               d&apos;emploi automatisé.
             </p>

@@ -19,7 +19,7 @@ import { outilsInclus, site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Nos produits — formations, Pack 360, outils IA et espace apprenant",
   description:
-    "L'offre complète de HBS FORMATION : quatre formations de 3 à 5 jours, le Pack 360 qui les réunit, les outils IA inclus dans La Forge IA, et l'espace apprenant en ligne.",
+    "L'offre complète de HBS FORMATION : quatre formations de 3 à 5 jours, le Pack 360 qui les réunit, les outils IA inclus dans IA 360, et l'espace apprenant en ligne.",
   alternates: { canonical: "/produits" },
 };
 
@@ -37,7 +37,7 @@ export default function ProduitsPage() {
 
       <PageHeader
         eyebrow="Nos produits"
-        title={<>Tout ce que nous proposons, <span className="texte-lumiere">au même endroit</span></>}
+        title={<>Formations, outils, suivi : <span className="texte-lumiere">tout pour avancer</span></>}
         subtitle="Quatre formations, un pack qui les réunit, des outils qui continuent de travailler après, et un espace en ligne pour suivre votre parcours."
       />
 
@@ -49,7 +49,7 @@ export default function ProduitsPage() {
             <h2 className="font-display text-display-md font-extrabold text-ink">Les formations</h2>
           </div>
           <p className="mt-2 max-w-2xl text-ink-soft">
-            À distance, en direct, 7 heures par jour, 12 places au plus. Chacune se suit seule.
+            À distance, en direct, 7 heures par jour, 12 places maximum.
           </p>
 
           <ul className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
@@ -92,8 +92,7 @@ export default function ProduitsPage() {
         <div className="container-page">
           <h2 className="font-display text-display-md font-extrabold text-ink">Le {PACK.nom}</h2>
           <p className="mt-2 max-w-2xl text-ink-soft">
-            Les quatre formations d&apos;un même mois, dans un seul forfait : {euros(PACK.prix)} au lieu de{" "}
-            {euros(PACK.prixSepare)}.
+            Les quatre formations d&apos;un même mois, dans un seul forfait : {euros(PACK.prix)}.
           </p>
           <div className="mt-8">
             <PackOffre />
@@ -109,7 +108,7 @@ export default function ProduitsPage() {
             <h2 className="font-display text-display-md font-extrabold text-ink">Les outils inclus dans votre forfait</h2>
           </div>
           <p className="mt-2 max-w-2xl text-ink-soft">
-            Livrés avec La Forge IA : vous ne repartez pas avec des notes, mais avec des outils qui travaillent.
+            Livrés avec IA 360 : vous ne repartez pas avec des notes, mais avec des outils qui travaillent.
           </p>
           <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {outilsInclus.map((o) => (

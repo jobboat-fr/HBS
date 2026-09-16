@@ -16,7 +16,7 @@ import {
 
 /**
  * Le planning des quatre formations, calculé — pas saisi. Chaque mois, dans le même ordre :
- * Analyse de données, Création de contenu, Marketing, et La Forge IA en fin de mois.
+ * Analyse de données, Création de contenu, Marketing, et IA 360 en fin de mois.
  * Composant serveur : la page qui l'affiche fixe sa fréquence de revalidation, pour qu'une
  * session commencée disparaisse d'elle-même.
  */

@@ -15,9 +15,9 @@ import { formations, programme, tarif, annonce, certificat, site } from "@/lib/s
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "La Forge IA — formation intelligence artificielle en 3 jours, outils IA inclus",
+  title: "IA 360 — formation intelligence artificielle en 3 jours, outils IA inclus",
   description:
-    "La Forge IA : 21 heures en 3 jours pour mettre l'IA au travail, outils IA inclus dans votre forfait (agents, automatisations, recherche d'emploi, secrétariat, assistant de réunion). 1 300 €. Programme détaillé.",
+    "IA 360 : 21 heures en 3 jours pour mettre l'IA au travail, outils IA inclus dans votre forfait (agents, automatisations, recherche d'emploi, secrétariat, assistant de réunion). 1 300 €. Programme détaillé.",
   alternates: { canonical: "/formations" },
 };
 
@@ -31,7 +31,7 @@ export default function FormationsPage() {
       <BreadcrumbJsonLd
         items={[
           { name: "Accueil", url: site.url },
-          { name: "La Forge IA", url: `${site.url}/formations` },
+          { name: "IA 360", url: `${site.url}/formations` },
         ]}
       />
 
@@ -46,7 +46,7 @@ export default function FormationsPage() {
               Prochaine session · {prochaine ? libelleDates(prochaine) : annonce.dateLisible}
             </span>
             <h1 className="mt-5 font-display text-5xl font-extrabold leading-[1.03] text-white md:text-6xl">
-              La Forge <span className="texte-lumiere">IA</span>
+              IA <span className="texte-lumiere">360</span>
             </h1>
             <p className="mt-3 text-lg font-semibold text-white/80">{ia.tagline}</p>
             <p className="mt-5 max-w-2xl text-lg leading-relaxed text-white/70">{ia.description}</p>

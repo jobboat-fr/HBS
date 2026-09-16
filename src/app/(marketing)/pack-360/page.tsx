@@ -9,8 +9,8 @@ import { FORMATIONS, ORDRE, PACK, duree, euros } from "@/lib/commande";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: `Pack 360 — les 4 formations pour ${euros(PACK.prix)} au lieu de ${euros(PACK.prixSepare)}`,
-  description: `Analyse de données, Création de contenu, Marketing et La Forge IA dans un seul forfait : ${PACK.heures} heures en ${PACK.jours} jours sur un mois, en direct. ${euros(PACK.prix)} au lieu de ${euros(PACK.prixSepare)}.`,
+  title: `Pack 360 — les 4 formations pour ${euros(PACK.prix)}`,
+  description: `Analyse de données, Création de contenu, Marketing et IA 360 dans un seul forfait : ${PACK.heures} heures en ${PACK.jours} jours sur un mois, en direct. ${euros(PACK.prix)}.`,
   alternates: { canonical: PACK.href },
 };
 
@@ -28,7 +28,7 @@ export default function Pack360Page() {
       <PageHeader
         eyebrow={`Pack 360 · ${euros(PACK.prix)}`}
         title={<>Lire, créer, vendre, automatiser. <span className="texte-lumiere">En un mois.</span></>}
-        subtitle={`Les 4 formations d'un même mois, ${PACK.heures} heures en ${PACK.jours} jours, pour ${euros(PACK.prixSepare - PACK.prix)} de moins. Le parcours complet pour lancer votre projet.`}
+        subtitle={`Les 4 formations d'un même mois, ${PACK.heures} heures en ${PACK.jours} jours, en un seul forfait. Le parcours complet pour lancer votre projet.`}
       />
 
       <ComplementSection />

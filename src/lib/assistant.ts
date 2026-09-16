@@ -51,7 +51,7 @@ export function localAnswer(input: string): AssistantReply {
   if (has("conseiller", "contact", "devis", "rdv", "rendez", "parler", "telephone", "appeler", "humain"))
     return { text: "Avec plaisir. Laissez vos coordonnées : un conseiller vous recontacte sous 48 heures ouvrées.", links: [{ label: "Nous contacter", href: "/contact" }] };
   if (has("ia", "intelligence artificielle", "chatgpt", "forge"))
-    return { text: "La Forge IA : 21 heures en 3 jours pour mettre l'IA au travail sur vos vrais dossiers, outils inclus dans votre forfait. 1 300 €.", links: [{ label: "Découvrir La Forge IA", href: "/formations" }] };
+    return { text: "IA 360 : 21 heures en 3 jours pour mettre l'IA au travail sur vos vrais dossiers, outils inclus dans votre forfait. 1 300 €.", links: [{ label: "Découvrir IA 360", href: "/formations" }] };
   if (has("formation", "programme", "atelier"))
     return { text: faq("formations"), links: [{ label: "Nos 4 formations", href: "/#formations" }] };
 

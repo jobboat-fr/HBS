@@ -33,7 +33,7 @@ export default function CertificationsPage() {
               Les parcours certifiants <span className="texte-lumiere">arrivent bientôt</span>
             </h1>
             <p className="mx-auto mt-4 max-w-2xl text-lg text-white/70">
-              En attendant, nos 4 formations sont ouvertes : Analyse de données, Création de contenu, Marketing et La Forge IA.
+              En attendant, nos 4 formations sont ouvertes : Analyse de données, Création de contenu, Marketing et IA 360.
             </p>
             <Link href="/formations" className="bouton-neon mt-8 inline-flex items-center gap-2 rounded-full px-7 py-4 font-bold">
               Découvrir nos 4 formations <ArrowRight size={18} aria-hidden />

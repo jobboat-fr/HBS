@@ -121,7 +121,7 @@ export const FORMATIONS: Record<CodeFormation, Formation> = {
   IA360: {
     code: "IA360",
     slug: "la-forge-ia",
-    nom: "La Forge IA",
+    nom: "IA 360",
     accroche: "Mettez l'IA au travail",
     role: "Tout faire plus vite",
     jours: 3,
@@ -138,7 +138,7 @@ export const FORMATIONS: Record<CodeFormation, Formation> = {
       "Protéger vos données : RGPD et règlement européen sur l'IA",
       "Déployer agents et automatisations sur votre propre cas",
     ],
-    inclus: ["Outils IA inclus dans votre forfait : agents, automatisations, assistant de réunion…", "Votre dossier IA de 9 pièces", "Certificat La Forge IA"],
+    inclus: ["Outils IA inclus dans votre forfait : agents, automatisations, assistant de réunion…", "Votre dossier IA de 9 pièces", "Certificat IA 360"],
     href: "/formations",
   },
 };
@@ -175,8 +175,8 @@ export const nomProduit = (code: string | null | undefined) =>
 // ── Le planning ───────────────────────────────────────────────────────────────────────
 //
 // Chaque mois suit le même ordre : 1er lundi Analyse de données (5 jours), 2e Création de
-// contenu (5 jours), 3e Marketing (3 jours, lundi–mercredi), et le dernier lundi du mois La
-// Forge IA (3 jours, lundi–mercredi). Un mois à cinq lundis laisse sa 4e semaine libre
+// contenu (5 jours), 3e Marketing (3 jours, lundi–mercredi), et le dernier lundi du mois IA
+// 360 (3 jours, lundi–mercredi). Un mois à cinq lundis laisse sa 4e semaine libre
 // (sessions dédiées aux entreprises).
 //
 // Tout ce qui commence avant le 26 octobre 2026 est complet.
@@ -293,7 +293,7 @@ export const libelleSemaine = (s: Pick<Session, "debut" | "fin">) => {
 };
 export const libelleDates = libelleSemaine;
 
-// ── Compatibilité : La Forge IA et sa première session ouverte ────────────────────────
+// ── Compatibilité : IA 360 et sa première session ouverte ────────────────────────
 
 export const PRODUIT = {
   code: "IA360",

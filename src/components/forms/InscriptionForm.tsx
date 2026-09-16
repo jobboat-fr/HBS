@@ -288,7 +288,7 @@ export function InscriptionForm({
               <ul className="mt-3 space-y-1.5 text-sm text-ink-soft">
                 <li className="flex items-start gap-2">
                   <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-red-500" />
-                  {euros(PACK.prix)} au lieu de {euros(PACK.prixSepare)}
+                  {euros(PACK.prix)} les 4 formations
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-red-500" />

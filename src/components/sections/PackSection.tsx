@@ -70,9 +70,8 @@ export function ComplementSection() {
   );
 }
 
-/** La carte du Pack 360 : le détail des remises, le prix, un seul bouton. */
+/** La carte du Pack 360 : les quatre formations et leur prix, le prix du pack, un seul bouton. */
 export function PackOffre({ titre = true }: { titre?: boolean }) {
-  const economie = PACK.prixSepare - PACK.prix;
   const prochain = cyclesPack(new Date(), 6)[0];
   return (
     <div className="fond-espace relative overflow-hidden rounded-3xl">
@@ -83,7 +82,7 @@ export function PackOffre({ titre = true }: { titre?: boolean }) {
             <>
               <p className="text-xs font-bold uppercase tracking-widest text-cyan-300">Pack 360 · les 4 formations</p>
               <h3 className="mt-2 font-display text-display-md font-extrabold text-white text-balance">
-                Tout le parcours. <span className="texte-lumiere">{euros(economie)} de moins.</span>
+                Tout le parcours. <span className="texte-lumiere">Un seul forfait.</span>
               </h3>
             </>
           ) : null}
@@ -94,7 +93,6 @@ export function PackOffre({ titre = true }: { titre?: boolean }) {
           <ul className="mt-6 divide-y divide-white/10 rounded-2xl bg-white/5 text-sm">
             {ORDRE.map((c) => {
               const f = FORMATIONS[c];
-              const remise = f.remisePack > 0;
               return (
                 <li key={c} className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 px-4 py-3">
                   <span className="text-white">
@@ -102,9 +100,7 @@ export function PackOffre({ titre = true }: { titre?: boolean }) {
                     {f.nom} <span className="text-white/50">· {dureeCourte(f)}</span>
                   </span>
                   <span className="whitespace-nowrap">
-                    {remise ? <s className="mr-2 text-white/40">{euros(f.prix)}</s> : null}
-                    <b className="text-white">{euros(PACK.prixDans(c))}</b>
-                    {remise ? <span className="ml-2 rounded-full bg-cyan-300/15 px-2 py-0.5 text-xs font-bold text-cyan-200">−{Math.round(f.remisePack * 100)} %</span> : null}
+                    <b className="text-white">{euros(f.prix)}</b>
                   </span>
                 </li>
               );
@@ -113,9 +109,7 @@ export function PackOffre({ titre = true }: { titre?: boolean }) {
         </div>
 
         <div className="verre rounded-2xl p-6 text-center lg:text-left">
-          <p className="text-sm text-white/60">
-            Au lieu de <s>{euros(PACK.prixSepare)}</s>
-          </p>
+          <p className="text-sm text-white/60">Pack 360</p>
           <p className="mt-1 font-display text-5xl font-extrabold text-white">{euros(PACK.prix)}</p>
           <p className="text-sm text-white/65">TTC · OPCO ou France Travail possible</p>
           {prochain ? (
@@ -129,7 +123,7 @@ export function PackOffre({ titre = true }: { titre?: boolean }) {
           >
             Je prends le Pack 360 <ArrowRight size={18} aria-hidden />
           </Link>
-          <p className="mt-3 text-xs text-white/55">12 places par session. Quand c&apos;est complet, c&apos;est le mois suivant.</p>
+          <p className="mt-3 text-xs text-white/55">12 places maximum par session. Quand c&apos;est complet, c&apos;est le mois suivant.</p>
         </div>
       </div>
     </div>
@@ -144,7 +138,7 @@ export function PackCycles({ mois = 6 }: { mois?: number }) {
     <div>
       <h2 className="font-display text-display-md font-extrabold text-ink">Le Pack 360, mois par mois</h2>
       <p className="mt-2 text-sm text-ink-soft">
-        Les 4 formations d&apos;un même mois pour {euros(PACK.prix)} au lieu de {euros(PACK.prixSepare)}.
+        Les 4 formations d&apos;un même mois pour {euros(PACK.prix)}.
       </p>
       <ul className="mt-6 space-y-3">
         {cycles.map((c) => (

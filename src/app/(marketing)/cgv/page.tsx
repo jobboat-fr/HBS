@@ -7,7 +7,7 @@ import { echeancier, FORMATIONS, ORDRE, PACK, duree, euros } from "@/lib/command
 export const metadata: Metadata = {
   title: "Conditions générales de vente",
   description:
-    "Conditions générales de vente de HBS FORMATION : Analyse de données, Création de contenu, Marketing, La Forge IA et Pack 360 — prix, paiement en ligne, rétractation, annulation, financement OPCO et France Travail.",
+    "Conditions générales de vente de HBS FORMATION : Analyse de données, Création de contenu, Marketing, IA 360 et Pack 360 — prix, paiement en ligne, rétractation, annulation, financement OPCO et France Travail.",
   alternates: { canonical: "/cgv" },
 };
 
@@ -102,7 +102,7 @@ export default function CgvPage() {
               </p>
               <p>
                 À l&apos;issue de chaque formation, le participant reçoit une attestation de fin de formation. Pour
-                La Forge IA, la réussite à l&apos;épreuve finale donne en outre lieu au Certificat La Forge IA
+                IA 360, la réussite à l&apos;épreuve finale donne en outre lieu au Certificat IA 360
                 délivré par {legal.raisonSociale}. Aucune de ces formations ne délivre de diplôme d&apos;État ni de
                 certification enregistrée au RNCP ou au répertoire spécifique ; elles ne sont pas éligibles au
                 compte personnel de formation.
@@ -125,14 +125,13 @@ export default function CgvPage() {
                   </li>
                 ))}
                 <li>
-                  {PACK.nom} (les quatre formations) : <b>{euros(PACK.prix)}</b>, soit une remise de 15 % sur Analyse de
-                  données et sur Création de contenu, au lieu de {euros(PACK.prixSepare)}.
+                  {PACK.nom} (les quatre formations) : <b>{euros(PACK.prix)}</b>.
                 </li>
               </ul>
               <p>
                 Le prix comprend la formation, le test de positionnement, les supports et modèles remis,
                 l&apos;évaluation, l&apos;attestation de fin de formation et le questionnaire de suivi à trois mois ;
-                pour La Forge IA, il comprend aussi le Certificat La Forge IA en cas de réussite et la mise à
+                pour IA 360, il comprend aussi le Certificat IA 360 en cas de réussite et la mise à
                 disposition des outils IA présentés sur le site, dans les conditions précisées dans la convention
                 ou le contrat.
               </p>

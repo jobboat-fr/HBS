@@ -11,14 +11,14 @@ import { media, site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Formation professionnelle entreprise — données, contenu, marketing et IA pour vos équipes",
   description:
-    "Formez vos équipes à l'analyse de données, la création de contenu, le marketing et l'IA (La Forge IA), sur vos propres dossiers. À distance ou dans vos locaux, OPCO possible, organisme certifié Qualiopi.",
+    "Formez vos équipes à l'analyse de données, la création de contenu, le marketing et l'IA (IA 360), sur vos propres dossiers. À distance ou dans vos locaux, OPCO possible, organisme certifié Qualiopi.",
   alternates: { canonical: "/entreprises" },
 };
 
 const offres = [
   { icon: Target, title: "Les compétences qui vous manquent", text: "Données, contenu, marketing ou IA : on part de vos objectifs et on forme là où ça rapporte." },
   { icon: Layers, title: "Dans vos locaux, sur vos dossiers", text: "Nos 4 formations organisées pour vos collaborateurs, sur vos propres chiffres, offres et processus." },
-  { icon: Users2, title: "Toute l'équipe d'un coup", text: "De 4 à 12 collaborateurs par session. Avec La Forge IA, les outils IA sont inclus dans le forfait de chacun." },
+  { icon: Users2, title: "Toute l'équipe d'un coup", text: "De 4 à 12 collaborateurs par session. Avec IA 360, les outils IA sont inclus dans le forfait de chacun." },
   { icon: LineChart, title: "Un suivi à trois mois", text: "On mesure ce qui a réellement été déployé dans vos équipes, et ce qui reste à faire." },
 ];
 
@@ -38,7 +38,7 @@ export default function EntreprisesPage() {
             Vos équipes ont 3 jours ? <span className="texte-lumiere">Elles repartent transformées.</span>
           </>
         }
-        subtitle="Analyse de données, Création de contenu, Marketing, La Forge IA : formez vos collaborateurs sur vos vrais dossiers, et voyez la différence dès le lundi suivant."
+        subtitle="Analyse de données, Création de contenu, Marketing, IA 360 : formez vos collaborateurs sur vos vrais dossiers, et voyez la différence dès le lundi suivant."
       />
 
       <section className="py-16 lg:py-24">

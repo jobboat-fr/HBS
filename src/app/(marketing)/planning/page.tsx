@@ -8,9 +8,9 @@ import { ORDRE } from "@/lib/commande";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Planning des formations — Analyse de données, Création de contenu, Marketing, La Forge IA",
+  title: "Planning des formations — Analyse de données, Création de contenu, Marketing, IA 360",
   description:
-    "Toutes les dates HBS FORMATION : chaque mois Analyse de données (5 jours), Création de contenu (5 jours), Marketing (3 jours) et La Forge IA (3 jours). Prix, places et réservation en ligne.",
+    "Toutes les dates HBS FORMATION : chaque mois Analyse de données (5 jours), Création de contenu (5 jours), Marketing (3 jours) et IA 360 (3 jours). Prix, places et réservation en ligne.",
   alternates: { canonical: "/planning" },
 };
 
