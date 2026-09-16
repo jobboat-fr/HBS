@@ -68,7 +68,7 @@ export function HeroSection({ prochaine }: { prochaine: ProchaineSession }) {
           <ul className="mt-9 flex flex-wrap gap-x-6 gap-y-2 text-sm text-white/65">
             <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-cyan-300" />3 ou 5 jours, en direct</li>
             <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-cyan-300" />12 places par session</li>
-            <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-cyan-300" />Pack 360 : les 4 formations, 622,50 € de moins</li>
+            <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-cyan-300" />Pack 360 : les 4 formations, 577,35 € de moins</li>
             <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-cyan-300" />Organisme certifié Qualiopi</li>
           </ul>
         </motion.div>

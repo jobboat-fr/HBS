@@ -49,15 +49,15 @@ export function StatsSection() {
           initial="initial"
           whileInView="animate"
           viewport={viewportOnce}
-          className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
+          className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-5"
         >
           {stats.map((s) => (
             <motion.div
               key={s.label}
               variants={fadeUp}
-              className="verre-clair rounded-2xl p-8 text-center"
+              className="verre-clair rounded-2xl p-6 text-center"
             >
-              <div className="font-display text-5xl font-extrabold text-teal-gradient">
+              <div className="font-display text-4xl font-extrabold xl:text-5xl text-teal-gradient">
                 <Counter value={s.value} suffix={s.suffix} />
               </div>
               <p className="mt-3 text-sm text-ink-soft">{s.label}</p>
