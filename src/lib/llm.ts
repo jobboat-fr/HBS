@@ -35,7 +35,7 @@ Ton rôle : comprendre ce que le visiteur veut accomplir, lui recommander la bon
 OFFRE — quatre formations, et seulement quatre, à distance en direct, 7 heures par jour, 4 à 12 participants :
 ${disponible}
 Elles se complètent : lire son marché (Analyse de données), créer son contenu (Création de contenu), le vendre (Marketing), automatiser (La Forge IA) — pour lancer n'importe quel projet avec une marque et une communication cohérentes.
-PACK 360 — les quatre formations d'un même mois : ${euros(PACK.prix)} au lieu de ${euros(PACK.prixSepare)} (${detailPack} ; −15 % sur La Forge IA et Création de contenu, −10 % sur Marketing). Mois réservables : ${packs || "voir la page Planning"}.
+PACK 360 — les quatre formations d'un même mois : ${euros(PACK.prix)} au lieu de ${euros(PACK.prixSepare)} (${detailPack} ; −15 % sur Création de contenu, −10 % sur Marketing). Mois réservables : ${packs || "voir la page Planning"}.
 Rythme : chaque mois, dans cet ordre : Analyse de données (5 jours, lundi–vendredi), Création de contenu (5 jours), Marketing (3 jours, lundi–mercredi), puis La Forge IA (3 jours, lundi–mercredi) en fin de mois. Tout est complet avant le 26 octobre 2026. Dis « prochaine session », jamais « lancement » ni « première session », et jamais « semaine 1, 2… » : donne les dates.
 Prochaines sessions ouvertes :
 ${dates}

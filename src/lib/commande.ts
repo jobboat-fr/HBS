@@ -127,7 +127,7 @@ export const FORMATIONS: Record<CodeFormation, Formation> = {
     jours: 3,
     heures: 21,
     prix: 130_000,
-    remisePack: 0.15,
+    remisePack: 0,
     couleur: { texte: "text-red-700", fond: "bg-red-50", bord: "border-red-300", degrade: "from-red-500 to-rose-600" },
     resume: "En 3 jours, l'IA travaille pour vous : agents, automatisations, documents fiables. Vous gagnez des heures dès la semaine suivante.",
     pourQui: "Particuliers, indépendants, salariés, entreprises — sans compétence technique.",
@@ -310,7 +310,7 @@ export const PRODUIT = {
 export type Profil = "entreprise" | "particulier";
 
 /** Version des CGV acceptée — conservée sur la commande ; à changer avec la page /cgv. */
-export const CGV_VERSION = "2026-09-15";
+export const CGV_VERSION = "2026-09-16";
 
 /** 14 jours : les 10 de L6353-5 du Code du travail et les 14 du Code de la consommation. */
 export const RETRACTATION_JOURS = 14;

@@ -12,7 +12,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Tarifs des formations — Analyse de données, Création de contenu, Marketing, La Forge IA",
   description:
-    "Analyse de données 1 999 €, Création de contenu 1 850 €, Marketing 1 500 €, La Forge IA 1 300 €, ou les 4 avec le Pack 360 à 6 026,50 €. Paiement en ligne, en 3 fois pour les particuliers, OPCO ou France Travail possible.",
+    "Analyse de données 1 999 €, Création de contenu 1 850 €, Marketing 1 500 €, La Forge IA 1 300 €, ou les 4 avec le Pack 360 à 6 221,50 €. Paiement en ligne, en 3 fois pour les particuliers, OPCO ou France Travail possible.",
   alternates: { canonical: "/financement" },
 };
 

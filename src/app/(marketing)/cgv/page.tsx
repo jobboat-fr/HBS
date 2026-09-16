@@ -125,8 +125,8 @@ export default function CgvPage() {
                   </li>
                 ))}
                 <li>
-                  {PACK.nom} (les quatre formations) : <b>{euros(PACK.prix)}</b>, soit une remise de 15 % sur La Forge
-                  IA et sur Création de contenu et de 10 % sur Marketing, au lieu de {euros(PACK.prixSepare)}.
+                  {PACK.nom} (les quatre formations) : <b>{euros(PACK.prix)}</b>, soit une remise de 15 % sur Création de
+                  contenu et de 10 % sur Marketing, au lieu de {euros(PACK.prixSepare)}.
                 </li>
               </ul>
               <p>

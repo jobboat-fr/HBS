@@ -296,12 +296,12 @@ export const faqs = [
   {
     id: "pack",
     q: "Qu'est-ce que le Pack 360 ?",
-    a: "Les quatre formations d'un même mois, dans un seul forfait : vous lisez votre marché, créez votre contenu, le vendez et automatisez le tout. 6 026,50 € au lieu de 6 649 € : −15 % sur La Forge IA et sur Création de contenu, −10 % sur Marketing.",
+    a: "Les quatre formations d'un même mois, dans un seul forfait : vous lisez votre marché, créez votre contenu, le vendez et automatisez le tout. 6 221,50 € au lieu de 6 649 € : −15 % sur Création de contenu, −10 % sur Marketing.",
   },
   {
     id: "tarif",
     q: "Combien coûtent les formations ?",
-    a: "Analyse de données : 1 999 €. Création de contenu : 1 850 €. Marketing : 1 500 €. La Forge IA : 1 300 €, outils IA inclus dans votre forfait. Pack 360 : 6 026,50 €. Règlement par votre entreprise, à titre personnel, ou prise en charge par un OPCO ou France Travail selon leurs critères : HBS FORMATION est certifiée Qualiopi au titre des actions de formation.",
+    a: "Analyse de données : 1 999 €. Création de contenu : 1 850 €. Marketing : 1 500 €. La Forge IA : 1 300 €, outils IA inclus dans votre forfait. Pack 360 : 6 221,50 €. Règlement par votre entreprise, à titre personnel, ou prise en charge par un OPCO ou France Travail selon leurs critères : HBS FORMATION est certifiée Qualiopi au titre des actions de formation.",
   },
   {
     id: "prochaine-session",
