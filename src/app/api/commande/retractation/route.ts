@@ -42,12 +42,12 @@ export async function POST(request: NextRequest) {
   await db.from("hbs_commandes").update({ statut: "retractee", retractee_le: maintenant, updated_at: maintenant }).eq("id", c.id);
   await db.from("hbs_echeances").update({ statut: "annulee" }).eq("commande_id", c.id).neq("statut", "payee");
 
-  if (c.email) await envoyer(c.email, "Votre rétractation est enregistrée — HBS FORMATION", buildRetractationConfirmee({ nom: c.nom, formation: nomProduit(c.produit) }));
+  if (c.email) await envoyer(c.email, "Votre rétractation est enregistrée — HBS FORMATION", buildRetractationConfirmee({ nom: c.nom, formation: nomProduit(c.produit) }), undefined, "facturation");
   await envoyer(destinatairesOrganisme(), `Rétractation — ${c.nom ?? c.email}`,
     buildAlerteOrganisme("Rétractation", [
       `${c.nom ?? ""} (${c.email ?? ""}) s'est rétracté(e) le ${new Date().toLocaleString("fr-FR", { timeZone: "Europe/Paris" })}.`,
       "Échéances annulées, aucun prélèvement effectué.",
-    ]));
+    ]), undefined, "compte");
 
   log.info("commande.retractee", { id: c.id });
   return NextResponse.json({ ok: true });

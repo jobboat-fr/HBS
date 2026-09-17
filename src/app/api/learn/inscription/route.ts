@@ -124,7 +124,7 @@ export async function POST(request: NextRequest) {
       try {
         const { Resend } = await import("resend");
         const resend = new Resend(process.env.RESEND_API_KEY);
-        const from = process.env.CONTACT_FROM || "HBS FORMATION <contact@vtlvs.com>";
+        const { entetes, expediteur, objet } = await import("@/lib/email/lexique");
         const notifyTo = process.env.CONTACT_NOTIFY_TO
           ? process.env.CONTACT_NOTIFY_TO.split(",").map((a) => a.trim()).filter(Boolean)
           : [];
@@ -132,7 +132,8 @@ export async function POST(request: NextRequest) {
         const envois = await Promise.allSettled([
           notifyTo.length
             ? resend.emails.send({
-                from,
+                from: expediteur("compte"),
+                headers: entetes("compte"),
                 to: notifyTo,
                 subject: `Demande d'inscription — ${data.full_name}`,
                 replyTo: data.email,
@@ -140,9 +141,11 @@ export async function POST(request: NextRequest) {
               })
             : Promise.resolve({ error: { message: "CONTACT_NOTIFY_TO absente" } }),
           resend.emails.send({
-            from,
+            from: expediteur("formation"),
+            headers: entetes("formation"),
+            replyTo: process.env.CONTACT_NOTIFY_TO?.split(",")[0]?.trim() || "contact@hbs-formation.fr",
             to: data.email,
-            subject: "Votre demande d'inscription — HBS FORMATION",
+            subject: objet("Votre demande d'inscription"),
             html: buildInscriptionConfirmation(charge),
           }),
         ]);

@@ -81,7 +81,8 @@ async function prevenirOrganisme(
   try {
     const { Resend } = await import("resend");
     const r = await new Resend(cle).emails.send({
-      from: process.env.CONTACT_FROM || "HBS FORMATION <contact@vtlvs.com>",
+      from: (await import("@/lib/email/lexique")).expediteur("compte"),
+      headers: (await import("@/lib/email/lexique")).entetes("compte"),
       to,
       subject: `Test de positionnement terminé — niveau ${graded.level ?? "à préciser"}`,
       html: buildPositionnementNotification({ ...graded, titre: copie?.title ?? "Test de positionnement", lignes }),

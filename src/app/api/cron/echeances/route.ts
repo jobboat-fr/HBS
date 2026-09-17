@@ -65,7 +65,8 @@ export async function GET(request: NextRequest) {
     // Rappel à J-3 (ou dès que possible si la commande est plus récente).
     if (!l.rappel_le && c.email) {
       await envoyer(c.email, `Rappel : échéance du ${dateFr(due)} — ${nomFormation}`,
-        buildRappelEcheance({ nom: c.nom, montant: euros(l.montant), date: dateFr(due), rang: l.rang, formation: nomFormation }));
+        buildRappelEcheance({ nom: c.nom, montant: euros(l.montant), date: dateFr(due), rang: l.rang, formation: nomFormation }),
+        undefined, "facturation");
       await db.from("hbs_echeances").update({ rappel_le: maintenant.toISOString() }).eq("id", l.id);
       bilan.rappels++;
     }
@@ -114,7 +115,8 @@ export async function GET(request: NextRequest) {
           }
           if (c.email && payee.hosted_invoice_url) {
             await envoyer(c.email, `Votre facture — ${nomFormation}, échéance ${l.rang}/3`,
-              buildFactureEcheance({ nom: c.nom, formation: nomFormation, rang: l.rang, montant: euros(l.montant), lien: payee.hosted_invoice_url }));
+              buildFactureEcheance({ nom: c.nom, formation: nomFormation, rang: l.rang, montant: euros(l.montant), lien: payee.hosted_invoice_url }),
+              undefined, "facturation");
           }
         } catch (e) {
           log.error("echeances.facture", { echeance: l.id, err: errMsg(e) });
@@ -152,7 +154,8 @@ export async function GET(request: NextRequest) {
         );
         if (c.email && lien.url) {
           await envoyer(c.email, `Votre échéance n'a pas pu être prélevée — ${nomFormation}`,
-            buildEcheanceEchec({ nom: c.nom, montant: euros(l.montant), rang: l.rang, lien: lien.url, formation: nomFormation }));
+            buildEcheanceEchec({ nom: c.nom, montant: euros(l.montant), rang: l.rang, lien: lien.url, formation: nomFormation }),
+            undefined, "facturation");
         }
       } catch (e2) {
         log.error("echeances.lien", { echeance: l.id, err: errMsg(e2) });
@@ -162,7 +165,7 @@ export async function GET(request: NextRequest) {
           `Échéance ${l.rang}/3 (${euros(l.montant)}) de ${c.nom ?? ""} (${c.email ?? ""}).`,
           `Motif : ${message}`,
           "Un lien de paiement lui a été envoyé.",
-        ]));
+        ]), undefined, "compte");
     }
   }
 

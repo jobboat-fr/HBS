@@ -47,29 +47,41 @@ export function esc(v: unknown): string {
     .replace(/'/g, "&#39;");
 }
 
+// Même gabarit que les e-mails de la plateforme VTLVS (hbs-backend app/learn/mail/gabarit.py) :
+// logo et nom de l'organisme sur un filet à sa couleur, corps, mentions légales, puis
+// « Envoyé avec VTLVS ». Mise en page en tableaux et styles en ligne pour les messageries.
 const ENCRE = "#0B2239";
 const MARINE = "#1D3FAE";
-const NUAGE = "#F4F7FB";
+const NUAGE = "#F4F6FA";
 const DOUX = "#41506A";
+const GRIS = "#5B6B7F";
+const LOGO_ORGANISME = `${site.url}/logo.png`;
+const LOGO_VTLVS = "https://app.vtlvs.com/logo-lockup.png";
 
-const wrap = (inner: string) => `
-  <div style="font-family:Inter,Arial,sans-serif;background:${NUAGE};padding:40px 16px">
-    <div style="max-width:560px;margin:0 auto;background:#ffffff;border:1px solid #E3EAF3;border-radius:16px;overflow:hidden">
-      <div style="height:4px;background:${MARINE}"></div>
-      <div style="padding:32px">
-        <div style="font-family:Poppins,Arial,sans-serif;font-size:18px;font-weight:700;color:${MARINE};letter-spacing:0.08em;text-transform:uppercase">${esc(site.name)}</div>
-        ${inner}
-        <hr style="border:none;border-top:1px solid #E3EAF3;margin:28px 0" />
-        <div style="font-size:12px;color:#6B7A90;line-height:1.6">
-          ${esc(site.name)} — ${esc(site.city)} · ${esc(site.email)} · ${esc(site.phone)}<br />
-          Déclaration d'activité n° ${esc(legal.numeroDeclarationActivite)} — cet enregistrement ne vaut pas agrément de l'État.
-        </div>
-      </div>
-    </div>
-  </div>`;
+const wrap = (inner: string) => `<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:${NUAGE}">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${NUAGE}"><tr><td align="center" style="padding:24px 12px">
+<table role="presentation" width="600" align="center" cellpadding="0" cellspacing="0" style="width:100%;max-width:600px;margin:0 auto;background:#ffffff;border-radius:12px;font-family:Arial,Helvetica,sans-serif">
+<tr><td style="padding:24px 32px;border-bottom:3px solid ${MARINE}">
+<img src="${esc(LOGO_ORGANISME)}" alt="${esc(site.name)}" height="44" style="display:block;height:44px;max-width:220px;border:0">
+</td></tr>
+<tr><td style="padding:28px 32px 8px;color:${ENCRE}">${inner}</td></tr>
+<tr><td style="padding:22px 32px 26px;font-size:12px;line-height:1.5;color:${GRIS}">
+${esc(legal.raisonSociale)} · ${esc(legal.siege)} · NDA ${esc(legal.numeroDeclarationActivite)} · SIRET ${esc(legal.siret)}<br>
+${esc(site.email)} · ${esc(site.phone)} — l'enregistrement de la déclaration d'activité ne vaut pas agrément de l'État.
+</td></tr>
+</table>
+<table role="presentation" width="600" align="center" cellpadding="0" cellspacing="0" style="width:100%;max-width:600px;margin:0 auto"><tr>
+<td align="center" style="padding:18px 12px;font-family:Arial,Helvetica,sans-serif;font-size:11px;color:${GRIS}">
+<a href="https://vtlvs.com" style="text-decoration:none;color:${GRIS}">
+<img src="${LOGO_VTLVS}" alt="VTLVS" height="18" style="display:block;margin:0 auto 6px;height:18px;border:0">
+Envoyé avec VTLVS</a></td></tr></table>
+</td></tr></table></body></html>`;
 
+// Même titre que le gabarit VTLVS : Arial, 22 px, encre.
 const titre = (t: string) =>
-  `<h1 style="font-family:Poppins,Arial,sans-serif;font-weight:600;font-size:23px;line-height:1.25;color:${ENCRE};margin:18px 0 10px">${esc(t)}</h1>`;
+  `<h1 style="font-family:Arial,Helvetica,sans-serif;font-weight:700;font-size:22px;line-height:1.3;color:${ENCRE};margin:0 0 18px">${esc(t)}</h1>`;
 
 const para = (html: string) =>
   `<p style="line-height:1.65;color:${DOUX};margin:0 0 12px">${html}</p>`;
@@ -265,7 +277,7 @@ export function buildRetractationConfirmee(d: { nom?: string | null; formation: 
   return wrap(`
     ${titre("Votre rétractation est enregistrée")}
     ${para(`Bonjour${d.nom ? " " + esc(d.nom) : ""},`)}
-    ${para("Votre rétractation à ${esc(d.formation)} est bien prise en compte. Aucune somme n'a été prélevée et aucun prélèvement ne le sera. Votre carte n'est plus utilisée pour cette commande.")}
+    ${para(`Votre rétractation à ${esc(d.formation)} est bien prise en compte. Aucune somme n'a été prélevée et aucun prélèvement ne le sera. Votre carte n'est plus utilisée pour cette commande.`)}
     ${para(`Si vous changez d'avis, vous pouvez réserver à nouveau à tout moment.<br />L'équipe ${esc(site.name)}`)}
   `);
 }

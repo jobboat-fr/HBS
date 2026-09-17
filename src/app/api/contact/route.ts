@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
     if (resendKey) {
       const { Resend } = await import("resend");
       const resend = new Resend(resendKey);
-      const from = process.env.CONTACT_FROM || "HBS FORMATION <contact@vtlvs.com>";
+      const { entetes, expediteur, objet } = await import("@/lib/email/lexique");
       // Sans destinataire configuré, la notification *interne* — avec le message et les
       // coordonnées — partait au visiteur lui-même. Adresse de repli : celle du site.
       const notifyTo = (process.env.CONTACT_NOTIFY_TO || site.email)
@@ -91,16 +91,19 @@ export async function POST(request: NextRequest) {
 
       const [notification, confirmation] = await Promise.allSettled([
         resend.emails.send({
-          from,
+          from: expediteur("compte"),
+          headers: entetes("compte"),
           to: notifyTo,
           subject: `Nouvelle demande — ${data.name}${data.company ? ` (${data.company})` : ""}`,
           replyTo: data.email,
           html: buildNotificationEmail(data),
         }),
         resend.emails.send({
-          from,
+          from: expediteur("formation"),
+          headers: entetes("formation"),
+          replyTo: site.email,
           to: data.email,
-          subject: "Nous avons bien reçu votre demande — HBS FORMATION",
+          subject: objet("Nous avons bien reçu votre demande"),
           html: buildConfirmationEmail(data),
         }),
       ]);
@@ -116,7 +119,7 @@ export async function POST(request: NextRequest) {
       // La notification est la seule qui compte pour l'organisme : sans elle, la demande
       // dort dans une table que personne ne consulte. Elle se journalise en erreur.
       if (echecNotif) {
-        log.error("contact.email.notification_echec", { to: notifyTo, from, err: echecNotif });
+        log.error("contact.email.notification_echec", { to: notifyTo, from: expediteur("compte"), err: echecNotif });
       } else {
         log.info("contact.email.notification_ok", { to: notifyTo });
       }

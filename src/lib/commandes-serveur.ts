@@ -8,14 +8,19 @@ import { buildCommandeClient, buildCommandeOrganisme, type CommandeMail } from "
 import { log, errMsg } from "@/lib/log";
 import { archiverPdf } from "@/lib/coffre";
 import { site } from "@/lib/site";
+import { entetes, expediteur, objet, type Famille } from "@/lib/email/lexique";
 
 const origine = () => process.env.NEXT_PUBLIC_SITE_URL || site.url;
 
 export const dateFr = (d: Date | string) =>
   new Date(d).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric", timeZone: "Europe/Paris" });
 
-/** Un courriel transactionnel. Ne lève jamais : un envoi raté se journalise, il ne défait pas une commande. */
-export async function envoyer(to: string | string[], subject: string, html: string, replyTo?: string) {
+/**
+ * Un courriel transactionnel. Ne lève jamais : un envoi raté se journalise, il ne défait pas une commande.
+ * `famille` choisit l'adresse d'expédition (lexique VTLVS) : formation@, facturation@, noreply@…
+ */
+export async function envoyer(to: string | string[], subject: string, html: string, replyTo?: string,
+                              famille: Famille = "formation") {
   const cle = process.env.RESEND_API_KEY;
   // Domaines réservés (RFC 2606) : jamais d'envoi — un rebond abîme la réputation de l'expéditeur.
   const reserve = /@(?:[^@]+\.)?(example\.(com|net|org)|[^@]+\.(test|invalid|example|localhost))$/i;
@@ -24,11 +29,12 @@ export async function envoyer(to: string | string[], subject: string, html: stri
   try {
     const { Resend } = await import("resend");
     const r = await new Resend(cle).emails.send({
-      from: process.env.CONTACT_FROM || "HBS FORMATION <contact@vtlvs.com>",
+      from: expediteur(famille),
       to: dest,
-      subject,
+      subject: objet(subject),
       html,
-      replyTo,
+      replyTo: replyTo ?? site.email,
+      headers: entetes(famille),
     });
     if (r.error) {
       log.error("commande.email.echec", { subject, err: r.error.message });
@@ -197,13 +203,14 @@ export async function enregistrerCommande(sessionId: string, compte?: string) {
   };
 
   if (client?.email) {
-    await envoyer(client.email, `Votre réservation — ${formation.nom}`, buildCommandeClient(mail), destinatairesOrganisme()[0]);
+    await envoyer(client.email, `Votre réservation — ${formation.nom}`, buildCommandeClient(mail), destinatairesOrganisme()[0], "formation");
   }
   await envoyer(
     destinatairesOrganisme(),
     `Commande en ligne — ${raison ?? client?.name ?? client?.email} — ${euros(total)}`,
     buildCommandeOrganisme(mail),
     client?.email ?? undefined,
+    "compte",
   );
 
   log.info("commande.enregistree", { id: cmd.id, profil, quantite, livemode: s.livemode });
