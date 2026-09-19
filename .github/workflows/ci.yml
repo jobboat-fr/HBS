@@ -1,44 +1,59 @@
+# CI hbs-formation — types, build, dépendances, secrets.
+# Actions épinglées par empreinte : une étiquette peut être déplacée, pas un commit.
+# `next lint` a disparu avec Next 16 ; le contrôle de types le remplace.
 name: CI
 
 on:
   push:
     branches: [main]
   pull_request:
-    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
 
+concurrency:
+  group: site-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
-    name: Lint, type-check & build
+    name: Types et build
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     env:
-      # Placeholders : le build n'a pas besoin des vrais secrets (runtime = Vercel).
+      # Le build n'a pas besoin des vrais secrets : ils vivent sur Vercel.
       NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
       NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder
-      NEXT_PUBLIC_SITE_URL: https://hbs-formation.vercel.app
+      NEXT_PUBLIC_SITE_URL: https://hbs-formation.fr
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: 20
           cache: npm
       - run: npm ci
-      - run: npm run lint
-      - run: npm run build
-      - name: npm audit (high, non-bloquant)
-        run: npm audit --omit=dev --audit-level=high || true
+      - name: Types
+        run: npx tsc --noEmit
+      - name: Build
+        run: npm run build
 
-  secrets-scan:
-    name: Secret scan (gitleaks)
+  dependances:
+    name: Dépendances et secrets
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:
           fetch-depth: 0
-      - name: Run gitleaks
-        run: |
-          VER=8.18.4
-          curl -sSL "https://github.com/gitleaks/gitleaks/releases/download/v${VER}/gitleaks_${VER}_linux_x64.tar.gz" | tar -xz gitleaks
-          ./gitleaks detect --source . --no-banner --redact --exit-code 1
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - name: Vulnérabilités npm (bloquant à partir de « high »)
+        run: npm audit --omit=dev --audit-level=high
+      - name: Secrets dans l'historique
+        uses: gitleaks/gitleaks-action@dcedce43c6f43de0b836d1fe38946645c9c638dc # v2
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
