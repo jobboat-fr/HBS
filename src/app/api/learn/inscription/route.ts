@@ -3,10 +3,6 @@ import { z } from "zod";
 import { submitDemande, configured, LearnError } from "@/lib/learn";
 import { log, errMsg } from "@/lib/log";
 import { site } from "@/lib/site";
-import {
-  buildInscriptionNotification,
-  buildInscriptionConfirmation,
-} from "@/lib/email/templates";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/rateLimit";
 import { domaineRecoitDuCourrier } from "@/lib/email/mx";
 
@@ -108,7 +104,9 @@ export async function POST(request: NextRequest) {
     // L'envoi ne conditionne pas la réponse : la demande est déjà créée côté plateforme, et
     // la faire échouer parce qu'un courriel n'est pas parti ferait recommencer le visiteur
     // pour rien — la seconde tentative serait refusée par l'index d'unicité.
-    if (result.created && process.env.RESEND_API_KEY) {
+    // Même raison qu'ailleurs : la présence de la clé Resend ne conditionne plus rien
+    // ici, puisque l'envoi passe par LEARN.
+    if (result.created) {
       const lienAbsolu = result.positionnement_path
         ? new URL(result.positionnement_path, process.env.NEXT_PUBLIC_SITE_URL || site.url).toString()
         : null;
@@ -122,43 +120,42 @@ export async function POST(request: NextRequest) {
       };
 
       try {
-        const { Resend } = await import("resend");
-        const resend = new Resend(process.env.RESEND_API_KEY);
-        const { entetes, expediteur, objet } = await import("@/lib/email/lexique");
+        const { envoyer, envoyerA } = await import("@/lib/email/learn");
         const notifyTo = process.env.CONTACT_NOTIFY_TO
           ? process.env.CONTACT_NOTIFY_TO.split(",").map((a) => a.trim()).filter(Boolean)
           : [];
 
-        const envois = await Promise.allSettled([
+        const ctx = {
+          organisme: site.name,
+          nom: data.full_name,
+          email: data.email,
+          telephone: data.phone ?? null,
+          structure: data.company ?? null,
+          message: data.message || null,
+          positionnement: lienAbsolu ?? null,
+        };
+
+        const [avis, accuse] = await Promise.all([
           notifyTo.length
-            ? resend.emails.send({
-                from: expediteur("compte"),
-                headers: entetes("compte"),
-                to: notifyTo,
-                subject: `Demande d'inscription — ${data.full_name}`,
-                replyTo: data.email,
-                html: buildInscriptionNotification(charge),
-              })
-            : Promise.resolve({ error: { message: "CONTACT_NOTIFY_TO absente" } }),
-          resend.emails.send({
-            from: expediteur("formation"),
-            headers: entetes("formation"),
-            replyTo: process.env.CONTACT_NOTIFY_TO?.split(",")[0]?.trim() || "contact@hbs-formation.fr",
-            to: data.email,
-            subject: objet("Votre demande d'inscription"),
-            html: buildInscriptionConfirmation(charge),
-          }),
+            ? envoyerA(notifyTo, { cle: "vitrine_inscription_avis", ctx, relatedKind: "inscription" })
+            : Promise.resolve([]),
+          envoyer({ email: data.email, cle: "vitrine_inscription_accuse", ctx, relatedKind: "inscription" }),
         ]);
 
-        // Le SDK Resend *résout* en portant l'erreur d'API dans `{ error }` : une promesse
-        // tenue ne veut pas dire un courriel parti.
-        const echec = (r: PromiseSettledResult<{ error?: { message?: string } | null }>) =>
-          r.status === "rejected" ? errMsg(r.reason) : r.value?.error?.message ?? null;
-
-        const [notif, confirm] = envois.map(echec);
-        if (notif) log.error("inscription.email.notification_echec", { to: notifyTo, err: notif });
-        if (confirm) log.error("inscription.email.confirmation_echec", { err: confirm });
-        if (!notif && !confirm) log.info("inscription.email.ok", { lien: Boolean(lienAbsolu) });
+        if (!notifyTo.length) {
+          log.error("inscription.email.notification_echec", { err: "CONTACT_NOTIFY_TO absente" });
+        } else {
+          const perdus = avis.filter((r) => !r.envoye && !r.differe);
+          if (perdus.length) {
+            log.error("inscription.email.notification_echec", {
+              to: notifyTo, err: perdus.map((r) => r.raison).join(" · "),
+            });
+          }
+        }
+        if (!accuse.envoye && !accuse.differe) {
+          log.error("inscription.email.confirmation_echec", { err: accuse.raison });
+        }
+        log.info("inscription.email.ok", { lien: Boolean(lienAbsolu) });
       } catch (e) {
         log.error("inscription.email.exception", { err: errMsg(e) });
       }

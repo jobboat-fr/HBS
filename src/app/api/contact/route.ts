@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { contactSchema } from "@/lib/validation/contact";
-import { buildNotificationEmail, buildConfirmationEmail } from "@/lib/email/templates";
 import { log, errMsg } from "@/lib/log";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/rateLimit";
 import { site } from "@/lib/site";
@@ -62,72 +61,64 @@ export async function POST(request: NextRequest) {
     }
     log.info("contact.saved", { email: data.email, formation: data.formation || null });
 
-    // 2) Emails via Resend.
+    // 2) Les courriels.
     //
     // La demande est déjà enregistrée : un envoi qui échoue ne doit pas faire échouer la
     // soumission du visiteur. Mais il ne doit pas non plus passer inaperçu, et c'est
-    // exactement ce qui se produisait. `Promise.allSettled` était appelé sans que son
-    // résultat soit lu, puis « contact.email.sent » était journalisé quoi qu'il arrive.
+    // exactement ce qui se produisait avant — `Promise.allSettled` appelé sans que son
+    // résultat soit lu, puis « envoyé » journalisé quoi qu'il arrive.
     //
-    // Deux façons distinctes d'échouer, et il fallait les deux : la promesse peut être
-    // rejetée (réseau, clé absente), et le SDK Resend peut aussi *résoudre* en portant une
-    // erreur d'API dans `{ error }` plutôt qu'en levant. Un envoi refusé arrivait donc ici
-    // sous la forme d'une promesse tenue.
-    //
-    // Ce n'était pas théorique. `CONTACT_FROM` valait `onboarding@resend.dev`, l'expéditeur
-    // bac à sable de Resend, qui ne peut écrire qu'au titulaire du compte : *toutes* les
-    // notifications vers contact@hbs-formation.fr étaient refusées, en silence, pendant que
-    // le visiteur lisait « message envoyé ». Le défaut par défaut pointe désormais vers le
-    // domaine réellement vérifié sur le compte.
-    const resendKey = process.env.RESEND_API_KEY;
-    if (resendKey) {
-      const { Resend } = await import("resend");
-      const resend = new Resend(resendKey);
-      const { entetes, expediteur, objet } = await import("@/lib/email/lexique");
-      // Sans destinataire configuré, la notification *interne* — avec le message et les
-      // coordonnées — partait au visiteur lui-même. Adresse de repli : celle du site.
-      const notifyTo = (process.env.CONTACT_NOTIFY_TO || site.email)
-        .split(",").map((addr) => addr.trim()).filter(Boolean);
+    // Ce n'était pas théorique : `CONTACT_FROM` a longtemps valu `onboarding@resend.dev`,
+    // l'expéditeur bac à sable de Resend, qui ne peut écrire qu'au titulaire du compte.
+    // Toutes les notifications vers contact@hbs-formation.fr étaient refusées, en silence,
+    // pendant que le visiteur lisait « message envoyé ». D'où la règle qu'on garde ici :
+    // on lit le résultat de chaque envoi, et un avis interne perdu se journalise en erreur.
+    // Tout part par LEARN : liste de suppression, préférences, désinscription et journal.
+    // Le SDK Resend n'est plus appelé d'ici — il contournait tout cela, et une adresse en
+    // rebond continuait d'être sollicitée à chaque demande.
+    const { envoyer, envoyerA } = await import("@/lib/email/learn");
 
-      const [notification, confirmation] = await Promise.allSettled([
-        resend.emails.send({
-          from: expediteur("compte"),
-          headers: entetes("compte"),
-          to: notifyTo,
-          subject: `Nouvelle demande — ${data.name}${data.company ? ` (${data.company})` : ""}`,
-          replyTo: data.email,
-          html: buildNotificationEmail(data),
-        }),
-        resend.emails.send({
-          from: expediteur("formation"),
-          headers: entetes("formation"),
-          replyTo: site.email,
-          to: data.email,
-          subject: objet("Nous avons bien reçu votre demande"),
-          html: buildConfirmationEmail(data),
-        }),
-      ]);
+    // Sans destinataire configuré, la notification *interne* — avec le message et les
+    // coordonnées du visiteur — partait au visiteur lui-même. Repli : l'adresse du site.
+    const notifyTo = (process.env.CONTACT_NOTIFY_TO || site.email)
+      .split(",").map((addr) => addr.trim()).filter(Boolean);
 
-      const echec = (r: PromiseSettledResult<{ error?: { message?: string } | null }>) =>
-        r.status === "rejected"
-          ? errMsg(r.reason)
-          : r.value?.error?.message ?? null;
+    const [avis, accuse] = await Promise.all([
+      envoyerA(notifyTo, {
+        cle: "vitrine_contact_avis",
+        ctx: {
+          nom: data.name,
+          email: data.email,
+          telephone: data.phone ?? null,
+          structure: data.company ?? null,
+          formation: data.formation ?? null,
+          financement: data.financement ?? null,
+          message: data.message,
+        },
+        relatedKind: "contact",
+      }),
+      envoyer({
+        email: data.email,
+        cle: "vitrine_contact_accuse",
+        ctx: { organisme: site.name, nom: data.name },
+        relatedKind: "contact",
+      }),
+    ]);
 
-      const echecNotif = echec(notification);
-      const echecConfirm = echec(confirmation);
-
-      // La notification est la seule qui compte pour l'organisme : sans elle, la demande
-      // dort dans une table que personne ne consulte. Elle se journalise en erreur.
-      if (echecNotif) {
-        log.error("contact.email.notification_echec", { to: notifyTo, from: expediteur("compte"), err: echecNotif });
-      } else {
-        log.info("contact.email.notification_ok", { to: notifyTo });
-      }
-      if (echecConfirm) {
-        log.warn("contact.email.confirmation_echec", { err: echecConfirm });
-      }
+    // L'avis interne est le seul qui compte pour l'organisme : sans lui, la demande dort
+    // dans une table que personne ne consulte. Il se journalise en erreur.
+    const avisPerdu = avis.filter((r) => !r.envoye && !r.differe);
+    if (avisPerdu.length) {
+      log.error("contact.email.notification_echec", {
+        to: notifyTo, err: avisPerdu.map((r) => r.raison).join(" · "),
+      });
     } else {
-      log.error("contact.email.skipped", { reason: "RESEND_API_KEY absente" });
+      log.info("contact.email.notification_ok", {
+        to: notifyTo, differe: avis.some((r) => r.differe),
+      });
+    }
+    if (!accuse.envoye) {
+      log.warn("contact.email.confirmation_echec", { err: accuse.raison, differe: accuse.differe });
     }
 
     return NextResponse.json({ success: true });

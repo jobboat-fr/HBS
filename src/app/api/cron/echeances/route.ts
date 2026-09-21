@@ -3,11 +3,9 @@ import type Stripe from "stripe";
 import { stripe, commission, options } from "@/lib/stripe";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { envoyer, destinatairesOrganisme, dateFr } from "@/lib/commandes-serveur";
-import { buildRappelEcheance, buildEcheanceEchec, buildAlerteOrganisme } from "@/lib/email/templates";
 import { euros, nomProduit } from "@/lib/commande";
 import { log, errMsg } from "@/lib/log";
 import { archiverPdf } from "@/lib/coffre";
-import { buildFactureEcheance } from "@/lib/email/templates";
 import { site } from "@/lib/site";
 
 export const runtime = "nodejs";
@@ -64,9 +62,9 @@ export async function GET(request: NextRequest) {
 
     // Rappel à J-3 (ou dès que possible si la commande est plus récente).
     if (!l.rappel_le && c.email) {
-      await envoyer(c.email, `Rappel : échéance du ${dateFr(due)} — ${nomFormation}`,
-        buildRappelEcheance({ nom: c.nom, montant: euros(l.montant), date: dateFr(due), rang: l.rang, formation: nomFormation }),
-        undefined, "facturation");
+      await envoyer(c.email, "echeance_rappel",
+        { nom: c.nom, montant: euros(l.montant), date: dateFr(due), rang: l.rang, formation: nomFormation },
+        "echeance");
       await db.from("hbs_echeances").update({ rappel_le: maintenant.toISOString() }).eq("id", l.id);
       bilan.rappels++;
     }
@@ -114,9 +112,9 @@ export async function GET(request: NextRequest) {
             await archiverPdf({ url: payee.invoice_pdf, filename: `facture-${payee.number ?? payee.id}.pdf`, kind: "facture", sessionCode: c.session_code, ref: `stripe:${payee.id}` });
           }
           if (c.email && payee.hosted_invoice_url) {
-            await envoyer(c.email, `Votre facture — ${nomFormation}, échéance ${l.rang}/3`,
-              buildFactureEcheance({ nom: c.nom, formation: nomFormation, rang: l.rang, montant: euros(l.montant), lien: payee.hosted_invoice_url }),
-              undefined, "facturation");
+            await envoyer(c.email, "facture_echeance",
+              { nom: c.nom, formation: nomFormation, rang: l.rang, montant: euros(l.montant), lien: payee.hosted_invoice_url },
+              "echeance");
           }
         } catch (e) {
           log.error("echeances.facture", { echeance: l.id, err: errMsg(e) });
@@ -153,19 +151,21 @@ export async function GET(request: NextRequest) {
           options(c.stripe_account),
         );
         if (c.email && lien.url) {
-          await envoyer(c.email, `Votre échéance n'a pas pu être prélevée — ${nomFormation}`,
-            buildEcheanceEchec({ nom: c.nom, montant: euros(l.montant), rang: l.rang, lien: lien.url, formation: nomFormation }),
-            undefined, "facturation");
+          await envoyer(c.email, "echeance_echec",
+            { nom: c.nom, montant: euros(l.montant), rang: l.rang, lien: lien.url, formation: nomFormation },
+            "echeance");
         }
       } catch (e2) {
         log.error("echeances.lien", { echeance: l.id, err: errMsg(e2) });
       }
-      await envoyer(destinatairesOrganisme(), `Échéance impayée — ${c.nom ?? c.email}`,
-        buildAlerteOrganisme("Échéance impayée", [
+      await envoyer(destinatairesOrganisme(), "alerte_organisme", {
+        titre: "Échéance impayée",
+        lignes: [
           `Échéance ${l.rang}/3 (${euros(l.montant)}) de ${c.nom ?? ""} (${c.email ?? ""}).`,
           `Motif : ${message}`,
           "Un lien de paiement lui a été envoyé.",
-        ]), undefined, "compte");
+        ],
+      }, "echeance");
     }
   }
 

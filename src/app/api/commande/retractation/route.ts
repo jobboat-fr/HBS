@@ -3,8 +3,8 @@ import { z } from "zod";
 import { signatureValide } from "@/lib/stripe";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { envoyer, destinatairesOrganisme } from "@/lib/commandes-serveur";
-import { buildRetractationConfirmee, buildAlerteOrganisme } from "@/lib/email/templates";
 import { log } from "@/lib/log";
+import { site } from "@/lib/site";
 import { nomProduit } from "@/lib/commande";
 
 export const runtime = "nodejs";
@@ -42,12 +42,17 @@ export async function POST(request: NextRequest) {
   await db.from("hbs_commandes").update({ statut: "retractee", retractee_le: maintenant, updated_at: maintenant }).eq("id", c.id);
   await db.from("hbs_echeances").update({ statut: "annulee" }).eq("commande_id", c.id).neq("statut", "payee");
 
-  if (c.email) await envoyer(c.email, "Votre rétractation est enregistrée — HBS FORMATION", buildRetractationConfirmee({ nom: c.nom, formation: nomProduit(c.produit) }), undefined, "facturation");
-  await envoyer(destinatairesOrganisme(), `Rétractation — ${c.nom ?? c.email}`,
-    buildAlerteOrganisme("Rétractation", [
+  if (c.email) {
+    await envoyer(c.email, "retractation_confirmee",
+      { organisme: site.name, nom: c.nom, formation: nomProduit(c.produit) }, "commande");
+  }
+  await envoyer(destinatairesOrganisme(), "alerte_organisme", {
+    titre: "Rétractation",
+    lignes: [
       `${c.nom ?? ""} (${c.email ?? ""}) s'est rétracté(e) le ${new Date().toLocaleString("fr-FR", { timeZone: "Europe/Paris" })}.`,
       "Échéances annulées, aucun prélèvement effectué.",
-    ]), undefined, "compte");
+    ],
+  }, "commande");
 
   log.info("commande.retractee", { id: c.id });
   return NextResponse.json({ ok: true });

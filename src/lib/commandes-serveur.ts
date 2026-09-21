@@ -4,11 +4,10 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { stripe, signer, options } from "@/lib/stripe";
 import { FORMATIONS, PACK, RETRACTATION_JOURS, echeancier, montantsEcheances, euros, libelleDates, type CodeFormation } from "@/lib/commande";
 import { submitDemande, catalogue, configured as learnConfigured } from "@/lib/learn";
-import { buildCommandeClient, buildCommandeOrganisme, type CommandeMail } from "@/lib/email/templates";
+import type { CommandeMail } from "@/lib/email/templates";
 import { log, errMsg } from "@/lib/log";
 import { archiverPdf } from "@/lib/coffre";
 import { site } from "@/lib/site";
-import { entetes, expediteur, objet, type Famille } from "@/lib/email/lexique";
 
 const origine = () => process.env.NEXT_PUBLIC_SITE_URL || site.url;
 
@@ -16,35 +15,64 @@ export const dateFr = (d: Date | string) =>
   new Date(d).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric", timeZone: "Europe/Paris" });
 
 /**
- * Un courriel transactionnel. Ne lève jamais : un envoi raté se journalise, il ne défait pas une commande.
- * `famille` choisit l'adresse d'expédition (lexique VTLVS) : formation@, facturation@, noreply@…
+ * Un courriel transactionnel, expédié par LEARN.
+ *
+ * Ne lève jamais : un envoi raté se journalise, il ne défait pas une commande. Ce qui
+ * change par rapport au SDK Resend appelé ici auparavant, c'est ce qui entoure l'envoi —
+ * liste de suppression, préférences, désinscription, et une ligne de journal par
+ * destinataire. Une carte refusée puis une adresse en rebond, c'était deux fois la même
+ * relance envoyée dans le vide, sans trace.
+ *
+ * L'expéditeur n'est plus choisi ici : il découle de la famille du modèle côté LEARN, donc
+ * `facturation@hbs-formation.fr` pour une facture et `formation@` pour une convocation,
+ * sans que l'appelant ait à s'en souvenir.
  */
-export async function envoyer(to: string | string[], subject: string, html: string, replyTo?: string,
-                              famille: Famille = "formation") {
-  const cle = process.env.RESEND_API_KEY;
-  // Domaines réservés (RFC 2606) : jamais d'envoi — un rebond abîme la réputation de l'expéditeur.
+export async function envoyer(
+  to: string | string[],
+  cle: string,
+  ctx: Record<string, unknown>,
+  relatedKind?: string,
+): Promise<boolean> {
+  // Domaines réservés (RFC 2606) : jamais d'envoi — un rebond abîme la réputation de
+  // l'expéditeur, et ces adresses-là ne rebondissent pas par accident.
   const reserve = /@(?:[^@]+\.)?(example\.(com|net|org)|[^@]+\.(test|invalid|example|localhost))$/i;
   const dest = (Array.isArray(to) ? to : [to]).filter((a) => a && !reserve.test(a));
-  if (!cle || !dest.length) return false;
-  try {
-    const { Resend } = await import("resend");
-    const r = await new Resend(cle).emails.send({
-      from: expediteur(famille),
-      to: dest,
-      subject: objet(subject),
-      html,
-      replyTo: replyTo ?? site.email,
-      headers: entetes(famille),
-    });
-    if (r.error) {
-      log.error("commande.email.echec", { subject, err: r.error.message });
-      return false;
-    }
-    return true;
-  } catch (e) {
-    log.error("commande.email.exception", { subject, err: errMsg(e) });
+  if (!dest.length) return false;
+
+  const { envoyerA } = await import("@/lib/email/learn");
+  const resultats = await envoyerA(dest, { cle, ctx, relatedKind: relatedKind ?? null });
+  const perdus = resultats.filter((r) => !r.envoye && !r.differe);
+  if (perdus.length) {
+    log.error("commande.email.echec", { cle, err: perdus.map((r) => r.raison).join(" · ") });
     return false;
   }
+  return true;
+}
+
+/**
+ * `CommandeMail` → le contexte attendu par les modèles LEARN.
+ *
+ * Le type local reste la source : il est construit au même endroit que la commande, avec
+ * les montants déjà mis en forme. On ne le remplace pas, on le traduit — un seul endroit
+ * à relire le jour où un champ change de nom.
+ */
+function mailCtx(m: CommandeMail): Record<string, unknown> {
+  return {
+    organisme: site.name,
+    nom: m.nom ?? null,
+    raison_sociale: m.raisonSociale ?? null,
+    email: m.email ?? null,
+    telephone: m.telephone ?? null,
+    profil: m.profil,
+    quantite: m.quantite,
+    montant: m.montant,
+    formation: m.formation,
+    session: m.session,
+    positionnement: m.positionnement ?? null,
+    facture: m.facture ?? null,
+    retractation: m.retractation ?? null,
+    echeances: m.echeances ?? [],
+  };
 }
 
 export const destinatairesOrganisme = () =>
@@ -203,15 +231,9 @@ export async function enregistrerCommande(sessionId: string, compte?: string) {
   };
 
   if (client?.email) {
-    await envoyer(client.email, `Votre réservation — ${formation.nom}`, buildCommandeClient(mail), destinatairesOrganisme()[0], "formation");
+    await envoyer(client.email, "commande_confirmee", mailCtx(mail), "commande");
   }
-  await envoyer(
-    destinatairesOrganisme(),
-    `Commande en ligne — ${raison ?? client?.name ?? client?.email} — ${euros(total)}`,
-    buildCommandeOrganisme(mail),
-    client?.email ?? undefined,
-    "compte",
-  );
+  await envoyer(destinatairesOrganisme(), "commande_avis", mailCtx(mail), "commande");
 
   log.info("commande.enregistree", { id: cmd.id, profil, quantite, livemode: s.livemode });
   return { id: cmd.id };

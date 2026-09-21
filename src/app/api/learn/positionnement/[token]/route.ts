@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { paper, gradePaper, configured, LearnError, type Paper } from "@/lib/learn";
-import { buildPositionnementNotification } from "@/lib/email/templates";
 import { log, errMsg } from "@/lib/log";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/rateLimit";
 
@@ -67,9 +66,11 @@ async function prevenirOrganisme(
   answers: { question_id: string; given: string[] }[],
   graded: { lead_id: string; score: number; max_score: number; level: string | null },
 ) {
-  const cle = process.env.RESEND_API_KEY;
+  // Plus de garde sur RESEND_API_KEY : la vitrine n'expédie plus elle-même. Le laisser
+  // ferait disparaître les avis le jour où la clé est retirée de Vercel — une panne
+  // silencieuse, déclenchée par un nettoyage d'apparence anodine.
   const to = (process.env.CONTACT_NOTIFY_TO ?? "").split(",").map((a) => a.trim()).filter(Boolean);
-  if (!cle || !to.length) return;
+  if (!to.length) return;
   const parId = new Map(answers.map((a) => [a.question_id, a.given]));
   const lignes = (copie?.questions ?? []).map((q) => {
     const g = parId.get(q.id) ?? [];
@@ -79,15 +80,21 @@ async function prevenirOrganisme(
     return { question: q.prompt, reponse };
   });
   try {
-    const { Resend } = await import("resend");
-    const r = await new Resend(cle).emails.send({
-      from: (await import("@/lib/email/lexique")).expediteur("compte"),
-      headers: (await import("@/lib/email/lexique")).entetes("compte"),
-      to,
-      subject: `Test de positionnement terminé — niveau ${graded.level ?? "à préciser"}`,
-      html: buildPositionnementNotification({ ...graded, titre: copie?.title ?? "Test de positionnement", lignes }),
+    const { envoyerA } = await import("@/lib/email/learn");
+    const resultats = await envoyerA(to, {
+      cle: "vitrine_positionnement_avis",
+      ctx: {
+        formation: copie?.title ?? "Test de positionnement",
+        niveau: graded.level ?? null,
+        score: `${graded.score}/${graded.max_score}`,
+        lignes: lignes.map((l) => `${l.question} — ${l.reponse}`),
+      },
+      relatedKind: "positionnement",
     });
-    if (r.error) log.error("positionnement.email.echec", { err: r.error.message });
+    const perdus = resultats.filter((r) => !r.envoye && !r.differe);
+    if (perdus.length) {
+      log.error("positionnement.email.echec", { err: perdus.map((r) => r.raison).join(" · ") });
+    }
   } catch (e) {
     log.error("positionnement.email.exception", { err: errMsg(e) });
   }
