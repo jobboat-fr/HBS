@@ -120,8 +120,8 @@ export const FORMATIONS: Record<CodeFormation, Formation> = {
   },
   IA360: {
     code: "IA360",
-    slug: "la-forge-ia",
-    nom: "IA 360",
+    slug: "toplevel-ia",
+    nom: "TOPLEVEL IA",
     accroche: "Mettez l'IA au travail",
     role: "Tout faire plus vite",
     jours: 3,
@@ -138,7 +138,7 @@ export const FORMATIONS: Record<CodeFormation, Formation> = {
       "Protéger vos données : RGPD et règlement européen sur l'IA",
       "Déployer agents et automatisations sur votre propre cas",
     ],
-    inclus: ["Outils IA inclus dans votre forfait : agents, automatisations, assistant de réunion…", "Votre dossier IA de 9 pièces", "Certificat IA 360"],
+    inclus: ["Outils IA inclus dans votre forfait : agents, automatisations, assistant de réunion…", "Votre dossier IA de 9 pièces", "Certificat TOPLEVEL IA"],
     href: "/formations",
   },
 };
@@ -293,7 +293,7 @@ export const libelleSemaine = (s: Pick<Session, "debut" | "fin">) => {
 };
 export const libelleDates = libelleSemaine;
 
-// ── Compatibilité : IA 360 et sa première session ouverte ────────────────────────
+// ── Compatibilité : TOPLEVEL IA et sa première session ouverte ────────────────────────
 
 export const PRODUIT = {
   code: "IA360",

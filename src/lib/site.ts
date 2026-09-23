@@ -9,7 +9,7 @@ export const site = {
   baseline: "Lire, créer, vendre, automatiser",
   // Aucun dispositif de financement annoncé ici : c'est la phrase que les moteurs citent.
   description:
-    "Quatre formations courtes et concrètes : Analyse de données (5 jours), Création de contenu (5 jours), Marketing (3 jours) et IA 360 (3 jours), ou les quatre dans le Pack 360. HBS FORMATION, organisme de formation à Rouen, certifié Qualiopi.",
+    "Quatre formations courtes et concrètes : Analyse de données (5 jours), Création de contenu (5 jours), Marketing (3 jours) et TOPLEVEL IA (3 jours), ou les quatre dans le Pack 360. HBS FORMATION, organisme de formation à Rouen, certifié Qualiopi.",
   // Apex, pas www : www.hbs-formation.fr redirige (308) vers l'apex côté Vercel.
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://hbs-formation.fr",
   email: "contact@hbs-formation.fr",
@@ -56,7 +56,7 @@ export const navLinks = [
 ] as const;
 
 /**
- * Le titre remis à l'issue d'IA 360.
+ * Le titre remis à l'issue d'TOPLEVEL IA.
  *
  * **Ce n'est pas un diplôme, et le mot ne doit pas être employé.** Un diplôme est délivré
  * au nom de l'État par un établissement habilité. HBS FORMATION est un organisme de
@@ -71,7 +71,7 @@ export const navLinks = [
  * en entretien d'embauche se retourne contre l'organisme, pas contre le formateur.
  */
 export const certificat = {
-  nom: "Certificat IA 360",
+  nom: "Certificat TOPLEVEL IA",
   emetteur: "HBS FORMATION",
   mention: "Certificat délivré par l'organisme",
   // Ce qui rend le certificat sérieux, et qu'il faut dire à sa place.
@@ -86,7 +86,7 @@ export const annonce = {
   actif: true,
   iso: "2026-10-26",
   dateLisible: "26 octobre 2026",
-  titre: "IA 360",
+  titre: "TOPLEVEL IA",
   // « Prochaine » et jamais « première » : l'organisme ne se présente pas comme débutant. Le
   // bandeau calcule la prochaine session réelle depuis le planning ; ceci est le repli.
   texte: "Prochaine session le 26 octobre 2026.",
@@ -108,7 +108,7 @@ export const tarif = {
   resume: "21 heures en 3 jours, outils IA inclus dans votre forfait",
 } as const;
 
-/** Ce que comprend le forfait IA 360, au-delà des 21 heures de formation. */
+/** Ce que comprend le forfait TOPLEVEL IA, au-delà des 21 heures de formation. */
 export const outilsInclus = [
   { titre: "Agents IA", texte: "Des agents prêts à travailler sur vos tâches réelles." },
   { titre: "Couches d'automatisation", texte: "Vos enchaînements répétitifs confiés à la machine, sous contrôle." },
@@ -121,10 +121,10 @@ export const outilsInclus = [
 /** Piliers de formation — affichés en page d'accueil (3) et détaillés sur /formations. */
 export const formations = [
   {
-    slug: "la-forge-ia",
+    slug: "toplevel-ia",
     disponible: true,
     icon: "Sparkles",
-    title: "IA 360",
+    title: "TOPLEVEL IA",
     tagline: "21 heures en 3 jours",
     description:
       "3 jours pour mettre l'IA au travail sur vos vrais dossiers : agents, automatisations, documents fiables — outils inclus dans votre forfait.",
@@ -132,7 +132,7 @@ export const formations = [
       "21 heures en 3 jours",
       "Outils IA inclus dans votre forfait",
       "Particuliers, indépendants et entreprises",
-      "Certificat IA 360 délivré par HBS FORMATION",
+      "Certificat TOPLEVEL IA délivré par HBS FORMATION",
     ],
   },
   {
@@ -183,7 +183,7 @@ export const formations = [
 ] as const;
 
 /**
- * Le programme d'IA 360, tel qu'il figure au document d'information du public
+ * Le programme d'TOPLEVEL IA, tel qu'il figure au document d'information du public
  * (IA360_00, v2). Toute modification se fait d'abord dans le programme, puis ici.
  */
 export const programme = {
@@ -249,7 +249,7 @@ export const programme = {
 } as const;
 
 /** Les 3 piliers mis en avant en page d'accueil. */
-export const featuredFormationSlugs = ["la-forge-ia"] as const;
+export const featuredFormationSlugs = ["toplevel-ia"] as const;
 
 export const processSteps = [
   { step: "01", title: "Vous choisissez",
@@ -291,7 +291,7 @@ export const faqs = [
   {
     id: "formations",
     q: "Quelles formations proposez-vous ?",
-    a: "Quatre formations qui se complètent : Analyse de données (35 heures en 5 jours), Création de contenu (35 heures en 5 jours), Marketing (21 heures en 3 jours) et IA 360 (21 heures en 3 jours). Ou les quatre ensemble avec le Pack 360.",
+    a: "Quatre formations qui se complètent : Analyse de données (35 heures en 5 jours), Création de contenu (35 heures en 5 jours), Marketing (21 heures en 3 jours) et TOPLEVEL IA (21 heures en 3 jours). Ou les quatre ensemble avec le Pack 360.",
   },
   {
     id: "pack",
@@ -301,16 +301,16 @@ export const faqs = [
   {
     id: "tarif",
     q: "Combien coûtent les formations ?",
-    a: "Analyse de données : 1 999 €. Création de contenu : 1 850 €. Marketing : 1 500 €. IA 360 : 1 300 €, outils IA inclus dans votre forfait. Pack 360 : 6 071,65 €. Règlement par votre entreprise, à titre personnel, ou prise en charge par un OPCO ou France Travail selon leurs critères : HBS FORMATION est certifiée Qualiopi au titre des actions de formation.",
+    a: "Analyse de données : 1 999 €. Création de contenu : 1 850 €. Marketing : 1 500 €. TOPLEVEL IA : 1 300 €, outils IA inclus dans votre forfait. Pack 360 : 6 071,65 €. Règlement par votre entreprise, à titre personnel, ou prise en charge par un OPCO ou France Travail selon leurs critères : HBS FORMATION est certifiée Qualiopi au titre des actions de formation.",
   },
   {
     id: "prochaine-session",
     q: "Quand ont lieu les prochaines sessions ?",
-    a: "Chaque mois, dans le même ordre : Analyse de données, Création de contenu, Marketing, puis IA 360. Prochaine session le 26 octobre 2026 avec IA 360. Toutes les dates sont sur la page Planning. 12 places par session.",
+    a: "Chaque mois, dans le même ordre : Analyse de données, Création de contenu, Marketing, puis TOPLEVEL IA. Prochaine session le 26 octobre 2026 avec TOPLEVEL IA. Toutes les dates sont sur la page Planning. 12 places par session.",
   },
   {
     id: "outils",
-    q: "Quels outils sont inclus avec IA 360 ?",
+    q: "Quels outils sont inclus avec TOPLEVEL IA ?",
     a: "Agents IA, automatisations, recherche d'emploi automatisée, assistance au secrétariat, assistant de réunion, et d'autres encore. Tous inclus dans votre forfait.",
   },
   {
@@ -352,7 +352,7 @@ export const media = {
     "formations-certifiantes": U("1517245386807-bb43f82c33c4"),
     "bilan-de-competences": U("1454165804606-c3d57bc86b40"),
     vae: U("1434030216411-0b793f4b4173"),
-    "la-forge-ia": U("1677442136019-21780ecad995"),
+    "toplevel-ia": U("1677442136019-21780ecad995"),
     "e-learning-foad": U("1516321318423-f06f85e504b3"),
     "conseil-ingenierie": U("1552664730-d307ca884978"),
   } as Record<string, string>,

@@ -50,8 +50,8 @@ export function localAnswer(input: string): AssistantReply {
     return { text: faq("delai"), links: [{ label: "Faire une demande", href: "/contact" }] };
   if (has("conseiller", "contact", "devis", "rdv", "rendez", "parler", "telephone", "appeler", "humain"))
     return { text: "Avec plaisir. Laissez vos coordonnées : un conseiller vous recontacte sous 48 heures ouvrées.", links: [{ label: "Nous contacter", href: "/contact" }] };
-  if (has("ia", "intelligence artificielle", "chatgpt", "forge"))
-    return { text: "IA 360 : 21 heures en 3 jours pour mettre l'IA au travail sur vos vrais dossiers, outils inclus dans votre forfait. 1 300 €.", links: [{ label: "Découvrir IA 360", href: "/formations" }] };
+  if (has("ia", "intelligence artificielle", "chatgpt", "toplevel"))
+    return { text: "TOPLEVEL IA : 21 heures en 3 jours pour mettre l'IA au travail sur vos vrais dossiers, outils inclus dans votre forfait. 1 300 €.", links: [{ label: "Découvrir TOPLEVEL IA", href: "/formations" }] };
   if (has("formation", "programme", "atelier"))
     return { text: faq("formations"), links: [{ label: "Nos 4 formations", href: "/#formations" }] };
 

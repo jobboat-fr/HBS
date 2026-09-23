@@ -19,7 +19,7 @@ import { outilsInclus, site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Nos produits — formations, Pack 360, outils IA et espace apprenant",
   description:
-    "L'offre complète de HBS FORMATION : quatre formations de 3 à 5 jours, le Pack 360 qui les réunit, les outils IA inclus dans IA 360, et l'espace apprenant en ligne.",
+    "L'offre complète de HBS FORMATION : quatre formations de 3 à 5 jours, le Pack 360 qui les réunit, les outils IA inclus dans TOPLEVEL IA, et l'espace apprenant en ligne.",
   alternates: { canonical: "/produits" },
 };
 
@@ -108,7 +108,7 @@ export default function ProduitsPage() {
             <h2 className="font-display text-display-md font-extrabold text-ink">Les outils inclus dans votre forfait</h2>
           </div>
           <p className="mt-2 max-w-2xl text-ink-soft">
-            Livrés avec IA 360 : vous ne repartez pas avec des notes, mais avec des outils qui travaillent.
+            Livrés avec TOPLEVEL IA : vous ne repartez pas avec des notes, mais avec des outils qui travaillent.
           </p>
           <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {outilsInclus.map((o) => (

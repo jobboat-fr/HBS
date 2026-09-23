@@ -10,9 +10,9 @@ import { FORMATIONS, ORDRE, PACK, RETRACTATION_JOURS, duree, euros, prochaineSes
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Tarifs des formations — Analyse de données, Création de contenu, Marketing, IA 360",
+  title: "Tarifs des formations — Analyse de données, Création de contenu, Marketing, TOPLEVEL IA",
   description:
-    "Analyse de données 1 999 €, Création de contenu 1 850 €, Marketing 1 500 €, IA 360 1 300 €, ou les 4 avec le Pack 360 à 6 071,65 €. Paiement en ligne, en 3 fois pour les particuliers, OPCO ou France Travail possible.",
+    "Analyse de données 1 999 €, Création de contenu 1 850 €, Marketing 1 500 €, TOPLEVEL IA 1 300 €, ou les 4 avec le Pack 360 à 6 071,65 €. Paiement en ligne, en 3 fois pour les particuliers, OPCO ou France Travail possible.",
   alternates: { canonical: "/financement" },
 };
 

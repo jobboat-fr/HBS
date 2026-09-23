@@ -11,7 +11,7 @@ export type ProchaineSession = { nom: string; iso: string; date: string; href: s
 
 /**
  * Le héros : une promesse courte, les quatre formations au même niveau, la prochaine date.
- * La console montre un agent à l'œuvre — l'un des outils d'IA 360, pas le sujet unique.
+ * La console montre un agent à l'œuvre — l'un des outils d'TOPLEVEL IA, pas le sujet unique.
  */
 export function HeroSection({ prochaine }: { prochaine: ProchaineSession }) {
   return (
@@ -45,7 +45,7 @@ export function HeroSection({ prochaine }: { prochaine: ProchaineSession }) {
           </h1>
 
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-white/75">
-            Analyse de données, Création de contenu, Marketing, IA 360 : 4 formations courtes, en direct, pour
+            Analyse de données, Création de contenu, Marketing, TOPLEVEL IA : 4 formations courtes, en direct, pour
             gagner du temps et prendre de l&apos;avance pendant que les autres hésitent. En 3 jours, votre carrière peut
             déjà changer.
           </p>
@@ -84,7 +84,7 @@ export function HeroSection({ prochaine }: { prochaine: ProchaineSession }) {
           <div className="relative">
             <ConsoleAgent />
             <p className="mt-3 text-center text-xs text-white/45">
-              Un agent d&apos;IA 360 à l&apos;œuvre — outils inclus dans votre forfait, toujours sous votre validation.
+              Un agent d&apos;TOPLEVEL IA à l&apos;œuvre — outils inclus dans votre forfait, toujours sous votre validation.
             </p>
           </div>
         </motion.div>

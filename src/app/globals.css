@@ -86,7 +86,7 @@
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   Le cadre néon de la Formation IA 360.
+   Le cadre néon de la Formation TOPLEVEL IA.
    
    Un dégradé conique tourne autour de la carte. L'angle est animé via
    `@property` : sans lui, un navigateur ne sait pas interpoler un angle dans un
@@ -159,7 +159,7 @@
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   Verre et tissu — la matière des cartes de la Formation IA 360.
+   Verre et tissu — la matière des cartes de la Formation TOPLEVEL IA.
 
    Deux couches dans un seul `background` plutôt qu'un pseudo-élément : la trame tissée
    se superpose au dégradé du verre sans occuper `::before`, que `.cadre-neon` utilise

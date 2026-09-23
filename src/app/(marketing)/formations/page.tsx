@@ -15,9 +15,9 @@ import { formations, programme, tarif, annonce, certificat, site } from "@/lib/s
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "IA 360 — formation intelligence artificielle en 3 jours, outils IA inclus",
+  title: "TOPLEVEL IA — formation intelligence artificielle en 3 jours, outils IA inclus",
   description:
-    "IA 360 : 21 heures en 3 jours pour mettre l'IA au travail, outils IA inclus dans votre forfait (agents, automatisations, recherche d'emploi, secrétariat, assistant de réunion). 1 300 €. Programme détaillé.",
+    "TOPLEVEL IA : 21 heures en 3 jours pour mettre l'IA au travail, outils IA inclus dans votre forfait (agents, automatisations, recherche d'emploi, secrétariat, assistant de réunion). 1 300 €. Programme détaillé.",
   alternates: { canonical: "/formations" },
 };
 
@@ -31,12 +31,12 @@ export default function FormationsPage() {
       <BreadcrumbJsonLd
         items={[
           { name: "Accueil", url: site.url },
-          { name: "IA 360", url: `${site.url}/formations` },
+          { name: "TOPLEVEL IA", url: `${site.url}/formations` },
         ]}
       />
 
       {/* ── En-tête ─────────────────────────────────────────────────────────── */}
-      <header id="la-forge-ia" className="fond-espace relative overflow-hidden pt-[var(--entete)]">
+      <header id="toplevel-ia" className="fond-espace relative overflow-hidden pt-[var(--entete)]">
         <div aria-hidden className="grille-tech pointer-events-none absolute inset-0" />
         <ChampNeuronal className="pointer-events-none absolute inset-0 h-full w-full opacity-70" />
         <div className="container-page relative grid items-end gap-10 py-14 md:py-20 lg:grid-cols-[1.4fr_1fr]">
