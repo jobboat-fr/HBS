@@ -33,7 +33,7 @@ export default function Og() {
 
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div style={{ display: "flex", fontSize: 72, fontWeight: 800, color: "#fff", lineHeight: 1.05 }}>
-            C'est le moment
+            C&apos;est le moment
           </div>
           <div style={{ display: "flex", fontSize: 72, fontWeight: 800, color: "#D9DCE1", lineHeight: 1.05 }}>
             de changer de cap.
