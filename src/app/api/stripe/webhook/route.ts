@@ -4,8 +4,7 @@ import { stripe } from "@/lib/stripe";
 import { enregistrerCommande } from "@/lib/commandes-serveur";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { log, errMsg } from "@/lib/log";
-import { archiverPdf } from "@/lib/coffre";
-import { options } from "@/lib/stripe";
+import { refleterFacture, refleterFactureSansEchec } from "@/lib/factures";
 
 export const runtime = "nodejs";
 
@@ -56,12 +55,9 @@ export async function POST(request: NextRequest) {
               })
               .eq("id", session.metadata.echeance_id);
             const invId = typeof session.invoice === "string" ? session.invoice : session.invoice?.id;
-            if (invId) {
-              const inv = await stripe().invoices.retrieve(invId, {}, options(event.account)).catch(() => null);
-              if (inv?.invoice_pdf) {
-                await archiverPdf({ url: inv.invoice_pdf, filename: `facture-${inv.number ?? inv.id}.pdf`, kind: "facture", sessionCode: session.metadata.session_code, ref: `stripe:${inv.id}` });
-              }
-            }
+            // La facture de l'échéance : reflétée dans LEARN, sa pièce au coffre (même référence
+            // `stripe:<id>` qu'avant : une pièce déjà archivée n'est pas dédoublée).
+            if (invId) await refleterFactureSansEchec(invId, event.account);
           }
           break;
         }
@@ -70,6 +66,21 @@ export async function POST(request: NextRequest) {
           break;
         }
         await enregistrerCommande(session.id, event.account);
+        break;
+      }
+      // Le cycle de vie d'une facture, reflété dans LEARN (Finance, CRM, coffre, espaces).
+      // La facture est relue chez Stripe : l'ordre de livraison des événements n'importe pas.
+      // Une erreur de base lève — la réponse 500 fait réessayer Stripe.
+      case "invoice.finalized":
+      case "invoice.paid":
+      case "invoice.payment_failed":
+      case "invoice.voided":
+      case "invoice.marked_uncollectible": {
+        const inv = event.data.object as Stripe.Invoice;
+        if (event.type === "invoice.payment_failed") {
+          log.warn("stripe.facture.paiement_echoue", { id: inv.id, numero: inv.number });
+        }
+        if (inv.id) await refleterFacture(inv.id, event.account);
         break;
       }
       case "charge.refunded": {

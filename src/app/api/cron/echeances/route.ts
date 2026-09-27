@@ -5,7 +5,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { envoyer, destinatairesOrganisme, dateFr } from "@/lib/commandes-serveur";
 import { euros, nomProduit } from "@/lib/commande";
 import { log, errMsg } from "@/lib/log";
-import { archiverPdf } from "@/lib/coffre";
+import { refleterFactureSansEchec } from "@/lib/factures";
 import { site } from "@/lib/site";
 
 export const runtime = "nodejs";
@@ -108,9 +108,8 @@ export async function GET(request: NextRequest) {
           );
           const finale = await stripe().invoices.finalizeInvoice(brouillon.id!, { auto_advance: false }, options(c.stripe_account));
           const payee = await stripe().invoices.pay(finale.id!, { paid_out_of_band: true }, options(c.stripe_account));
-          if (payee.invoice_pdf) {
-            await archiverPdf({ url: payee.invoice_pdf, filename: `facture-${payee.number ?? payee.id}.pdf`, kind: "facture", sessionCode: c.session_code, ref: `stripe:${payee.id}` });
-          }
+          // Reflétée dans LEARN, sa pièce au coffre (même référence qu'avant : pas de doublon).
+          if (payee.id) await refleterFactureSansEchec(payee.id, c.stripe_account);
           if (c.email && payee.hosted_invoice_url) {
             await envoyer(c.email, "facture_echeance",
               { nom: c.nom, formation: nomFormation, rang: l.rang, montant: euros(l.montant), lien: payee.hosted_invoice_url },

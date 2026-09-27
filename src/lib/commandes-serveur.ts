@@ -6,7 +6,7 @@ import { FORMATIONS, PACK, RETRACTATION_JOURS, echeancier, montantsEcheances, eu
 import { submitDemande, catalogue, configured as learnConfigured } from "@/lib/learn";
 import type { CommandeMail } from "@/lib/email/templates";
 import { log, errMsg } from "@/lib/log";
-import { archiverPdf } from "@/lib/coffre";
+import { refleterFactureSansEchec } from "@/lib/factures";
 import { site } from "@/lib/site";
 
 const origine = () => process.env.NEXT_PUBLIC_SITE_URL || site.url;
@@ -209,9 +209,9 @@ export async function enregistrerCommande(sessionId: string, compte?: string) {
   if (facture?.id) {
     const f = await stripe().invoices.retrieve(facture.id, {}, opts).catch(() => null);
     factureUrl = f?.hosted_invoice_url ?? factureUrl;
-    if (f?.invoice_pdf) {
-      await archiverPdf({ url: f.invoice_pdf, filename: `facture-${f.number ?? f.id}.pdf`, kind: "facture", sessionCode: md.session_code, ref: `stripe:${f.id}` });
-    }
+    // Reflétée dans LEARN dès la commande, avec sa pièce au coffre : la ligne existe même si les
+    // événements `invoice.*` n'arrivent pas, et la commande est déjà là pour décider du débiteur.
+    await refleterFactureSansEchec(facture.id, compte);
   }
 
   const mail: CommandeMail = {
