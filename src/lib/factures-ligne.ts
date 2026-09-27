@@ -41,6 +41,16 @@ export interface LigneFacture {
   payee_le: string | null;
 }
 
+/**
+ * Faut-il envoyer la facture à son payeur (courriel dédié, PDF joint — décidé le 27/09) ?
+ * Payée : oui. Ouverte : seulement pour une commande d'entreprise, réglée par virement, qui a
+ * besoin de la pièce pour payer. Le reste (annulée, irrécouvrable) ne part pas.
+ * LEARN garantit l'unicité : appeler deux fois ne l'envoie qu'une fois.
+ */
+export function doitEnvoyer(statut: StatutFacture, profil?: string | null): boolean {
+  return statut === "paid" || (statut === "open" && profil === "entreprise");
+}
+
 const date = (s?: number | null) => (s ? new Date(s * 1000).toISOString() : null);
 const entier = (n?: number | null) => (typeof n === "number" && Number.isFinite(n) ? Math.round(n) : 0);
 

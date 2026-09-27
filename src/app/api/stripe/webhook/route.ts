@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
         if (event.type === "invoice.payment_failed") {
           log.warn("stripe.facture.paiement_echoue", { id: inv.id, numero: inv.number });
         }
-        if (inv.id) await refleterFacture(inv.id, event.account);
+        if (inv.id) await refleterFacture(inv.id, event.account, { rejouerSiEchec: true });
         break;
       }
       case "charge.refunded": {

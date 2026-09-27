@@ -112,9 +112,41 @@ export async function envoyer(c: Charge): Promise<Resultat> {
     const rep = (await r.json()) as { statut?: string; erreur?: string | null };
     // « refusé par l'entonnoir » n'est pas une panne : désinscrit, adresse suspendue, sans
     // consentement. C'est une décision, et elle est déjà consignée côté LEARN.
-    return { envoye: rep.statut === "sent", differe: false, raison: rep.erreur ?? undefined };
+    // LEARN répond en français (`envoye`, `annule`, `brouillon`, `echec`). La comparaison à « sent »
+    // rendait `envoye` toujours faux : chaque envoi réussi se journalisait comme perdu (27/09).
+    return { envoye: rep.statut === "envoye" || rep.statut === "sent", differe: false, raison: rep.erreur ?? undefined };
   } catch (e) {
     return deposer(c, e instanceof Error ? e.message : String(e));
+  }
+}
+
+/**
+ * La facture reflétée, envoyée par LEARN à son payeur avec le PDF du coffre (liste F4).
+ *
+ * LEARN garantit l'unicité (réservation sur `envoyee_le`) : appeler deux fois ne l'envoie qu'une
+ * fois, et un nouvel essai après échec est sans risque. D'où l'absence de file de secours : c'est
+ * l'événement Stripe suivant — ou le rejeu de celui-ci — qui retente. Renvoie le statut de LEARN
+ * (`envoyee`, `deja_envoyee`, `sans_piece`, `echec`…) ou la raison de l'échec d'appel.
+ */
+export async function envoyerFacture(stripeInvoiceId: string): Promise<{ statut: string; aRejouer: boolean }> {
+  const { base, jeton, tenant, auNomDe } = config();
+  if (!jeton || !tenant || !auNomDe) return { statut: "non_configure", aRejouer: false };
+  try {
+    const r = await fetch(`${base}/api/v1/learn/interne/factures/${encodeURIComponent(stripeInvoiceId)}/envoyer`, {
+      method: "POST",
+      headers: { "content-type": "application/json", authorization: `Bearer ${jeton}`, "X-Learn-On-Behalf-Of": auNomDe },
+      body: JSON.stringify({ tenant_id: tenant }),
+      signal: AbortSignal.timeout(20_000),
+    });
+    if (!r.ok) {
+      // 4xx : LEARN a compris et refusé — rejouer donnerait la même chose. 5xx : panne, à rejouer.
+      return { statut: `LEARN ${r.status}`, aRejouer: r.status >= 500 };
+    }
+    const rep = (await r.json()) as { statut?: string };
+    const statut = rep.statut ?? "inconnu";
+    return { statut, aRejouer: statut === "echec" };
+  } catch (e) {
+    return { statut: e instanceof Error ? e.message : String(e), aRejouer: true };
   }
 }
 

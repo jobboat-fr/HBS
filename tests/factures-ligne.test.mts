@@ -2,7 +2,7 @@
 // Hors du périmètre TypeScript de Next (extension .mts) : aucune dépendance de test à ajouter.
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { ligneFacture } from "../src/lib/factures-ligne.ts";
+import { doitEnvoyer, ligneFacture } from "../src/lib/factures-ligne.ts";
 
 const base = {
   id: "in_123", number: "HBS-0001", status: "paid", currency: "EUR", total: 120000, total_excluding_tax: 100000,
@@ -46,4 +46,14 @@ test("une facture ouverte n'a pas de date de paiement", () => {
 
 test("sans identifiant, rien", () => {
   assert.equal(ligneFacture({ ...base, id: null }), null);
+});
+
+test("envoi au payeur : payée toujours, ouverte seulement pour une entreprise", () => {
+  assert.equal(doitEnvoyer("paid", "particulier"), true);
+  assert.equal(doitEnvoyer("paid", null), true);
+  assert.equal(doitEnvoyer("open", "entreprise"), true);
+  assert.equal(doitEnvoyer("open", "particulier"), false);
+  assert.equal(doitEnvoyer("open", null), false);
+  assert.equal(doitEnvoyer("void", "entreprise"), false);
+  assert.equal(doitEnvoyer("uncollectible", "entreprise"), false);
 });

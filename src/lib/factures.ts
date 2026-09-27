@@ -2,7 +2,8 @@ import "server-only";
 import { stripe, options } from "@/lib/stripe";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { archiverPdf } from "@/lib/coffre";
-import { ligneFacture } from "@/lib/factures-ligne";
+import { doitEnvoyer, ligneFacture } from "@/lib/factures-ligne";
+import { envoyerFacture } from "@/lib/email/learn";
 import { log, errMsg } from "@/lib/log";
 
 /**
@@ -21,7 +22,11 @@ import { log, errMsg } from "@/lib/log";
  * Ne lève pas pour une facture non reflétable (brouillon, sans adresse) : elle se journalise.
  * Lève sur une erreur de base, pour que Stripe réessaie l'événement.
  */
-export async function refleterFacture(invoiceId: string, compte?: string | null): Promise<string | null> {
+export async function refleterFacture(
+  invoiceId: string,
+  compte?: string | null,
+  { rejouerSiEchec = false }: { rejouerSiEchec?: boolean } = {},
+): Promise<{ id: string; envoi: string | null } | null> {
   const inv = await stripe().invoices.retrieve(invoiceId, {}, options(compte));
   const ligne = ligneFacture(inv);
   if (!ligne) {
@@ -36,21 +41,21 @@ export async function refleterFacture(invoiceId: string, compte?: string | null)
   // La commande : celle qui porte cette facture, sinon la plus récente du même client Stripe
   // (les échéances et les factures de relance n'ont pas d'autre lien).
   const client = typeof inv.customer === "string" ? inv.customer : inv.customer?.id ?? null;
-  let commande: { id: string; session_code: string | null; email: string | null } | null = null;
+  let commande: { id: string; session_code: string | null; email: string | null; profil: string | null } | null = null;
   // Les factures d'échéance portent leur commande en métadonnée (cron/echeances) : lien le plus sûr.
   const parMeta = inv.metadata?.commande_id;
   if (parMeta) {
-    const { data } = await db.from("hbs_commandes").select("id, session_code, email").eq("id", parMeta).maybeSingle();
+    const { data } = await db.from("hbs_commandes").select("id, session_code, email, profil").eq("id", parMeta).maybeSingle();
     commande = data;
   }
   if (!commande) {
-    const { data } = await db.from("hbs_commandes").select("id, session_code, email").eq("stripe_invoice_id", inv.id).maybeSingle();
+    const { data } = await db.from("hbs_commandes").select("id, session_code, email, profil").eq("stripe_invoice_id", inv.id).maybeSingle();
     commande = data;
   }
   if (!commande && client) {
     const { data } = await db
       .from("hbs_commandes")
-      .select("id, session_code, email")
+      .select("id, session_code, email, profil")
       .eq("stripe_customer_id", client)
       .order("created_at", { ascending: false })
       .limit(1)
@@ -113,10 +118,22 @@ export async function refleterFacture(invoiceId: string, compte?: string | null)
     id: inv.id, numero: ligne.numero, statut: ligne.statut, commande: commande?.id ?? null,
     a_rattacher: data.a_rattacher, coffre: vaultId,
   });
-  return data.id as string;
+
+  // Au payeur, PDF joint (F4). LEARN n'envoie qu'une fois : rappeler est sans risque.
+  let statutEnvoi: string | null = null;
+  if (doitEnvoyer(ligne.statut, commande?.profil)) {
+    const envoi = await envoyerFacture(ligne.stripe_invoice_id);
+    statutEnvoi = envoi.statut;
+    log.info("facture.envoi", { id: inv.id, statut: envoi.statut });
+    if (envoi.aRejouer && rejouerSiEchec) {
+      // Côté webhook : l'erreur fait répondre 500, et Stripe rejoue l'événement.
+      throw new Error(`envoi de la facture ${inv.id} : ${envoi.statut}`);
+    }
+  }
+  return { id: data.id as string, envoi: statutEnvoi };
 }
 
-/** Pour les appelants qui ne doivent pas échouer (confirmation de commande) : journalise et continue. */
+/** Pour les appelants qui ne doivent pas échouer (commande, échéances) : journalise et continue. */
 export async function refleterFactureSansEchec(invoiceId: string, compte?: string | null) {
   try {
     return await refleterFacture(invoiceId, compte);
