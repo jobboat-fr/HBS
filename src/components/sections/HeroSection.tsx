@@ -24,7 +24,7 @@ export function HeroSection({ prochaine }: { prochaine: ProchaineSession }) {
           initial={{ y: 14 }}
           animate={{ y: 0 }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="flex max-w-4xl flex-col items-center"
+          className="flex max-w-5xl flex-col items-center"
         >
           {prochaine ? (
             <Link
@@ -38,10 +38,14 @@ export function HeroSection({ prochaine }: { prochaine: ProchaineSession }) {
             </Link>
           ) : null}
 
-          <h1 className="mt-6 font-display text-[2.6rem] font-extrabold leading-[1.02] tracking-tight text-white sm:text-6xl lg:text-7xl">
-            Des compétences qui comptent,
-            <br />
-            <span className="texte-lumiere">dès la semaine prochaine.</span>
+          {/* Trois lignes voulues sur grand écran : la première tient d'un seul tenant (983 px à 4rem
+              dans 64rem) ; en dessous, le titre s'équilibre de lui-même. */}
+          <h1 className="mt-6 text-balance font-display text-[2.4rem] font-extrabold leading-[1.04] tracking-tight text-white sm:text-5xl lg:text-[4rem]">
+            <span className="block lg:whitespace-nowrap">Ce que demain vous demande,</span>
+            <span className="texte-lumiere block">
+              <span className="whitespace-nowrap">bâtissons-le</span> ensemble,
+              <br className="hidden sm:inline" /> aujourd&apos;hui.
+            </span>
           </h1>
 
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-white/75">
@@ -84,7 +88,7 @@ export function HeroSection({ prochaine }: { prochaine: ProchaineSession }) {
           <div className="relative">
             <ConsoleAgent />
             <p className="mt-3 text-center text-xs text-white/55">
-              Un agent d&apos;SPACE AI à l&apos;œuvre — outils inclus dans votre forfait, toujours sous votre validation.
+              Un agent de SPACE AI à l&apos;œuvre — outils inclus dans votre forfait, toujours sous votre validation.
             </p>
           </div>
         </motion.div>
