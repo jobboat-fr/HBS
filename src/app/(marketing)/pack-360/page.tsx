@@ -10,7 +10,7 @@ import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: `Pack 360 — les 4 formations pour ${euros(PACK.prix)}`,
-  description: `Analyse de données, Création de contenu, Marketing et TOPLEVEL IA dans un seul forfait : ${PACK.heures} heures en ${PACK.jours} jours sur un mois, en direct. ${euros(PACK.prix)}.`,
+  description: `Analyse de données, Création de contenu, Marketing et SPACE AI dans un seul forfait : ${PACK.heures} heures en ${PACK.jours} jours sur un mois, en direct. ${euros(PACK.prix)}.`,
   alternates: { canonical: PACK.href },
 };
 

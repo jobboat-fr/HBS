@@ -92,7 +92,9 @@ export function CourseJsonLd({ code = "IA360" }: { code?: CodeFormation }) {
         "@type": "Course",
         "@id": `${site.url}${f.href}#cours`,
         name: f.nom,
-        alternateName: `${f.nom} — ${f.accroche}`,
+        // SPACE AI s'est appelée TOPLEVEL IA, et avant IA 360 : les anciens noms restent déclarés,
+        // pour qu'un moteur ou un modèle qui les connaît relie les deux (renommage du 29/09).
+        alternateName: f.nom === "SPACE AI" ? [`${f.nom} — ${f.accroche}`, "TOPLEVEL IA", "IA 360"] : `${f.nom} — ${f.accroche}`,
         description: f.resume,
         url: `${site.url}${f.href}`,
         inLanguage: "fr",

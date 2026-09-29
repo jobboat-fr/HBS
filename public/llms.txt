@@ -1,6 +1,6 @@
 # HBS FORMATION
 
-> Organisme de formation basé à Rouen (France), certifié Qualiopi (actions de formation). Quatre formations courtes et complémentaires, à distance en direct : Analyse de données, Création de contenu, Marketing et TOPLEVEL IA — ou les quatre dans le Pack 360. Pour les particuliers, les indépendants et les entreprises.
+> Organisme de formation basé à Rouen (France), certifié Qualiopi (actions de formation). Quatre formations courtes et complémentaires, à distance en direct : Analyse de données, Création de contenu, Marketing et SPACE AI — ou les quatre dans le Pack 360. Pour les particuliers, les indépendants et les entreprises.
 
 Coordonnées : 50 Passage Saint-Étienne des Tonneliers, 76000 Rouen, France. Email : contact@hbs-formation.fr. SAS, RCS Rouen 102 535 820, déclaration d'activité n° 28760809976 auprès du préfet de région Normandie (cet enregistrement ne vaut pas agrément de l'État). Certifié Qualiopi — catégorie : actions de formation.
 
@@ -11,9 +11,9 @@ Coordonnées : 50 Passage Saint-Étienne des Tonneliers, 76000 Rouen, France. Em
 - [Analyse de données](https://hbs-formation.fr/formations/analyse-de-donnees) : 35 heures en 5 jours (lundi–vendredi), 1 999 €. Lire son marché et décider chiffres à l'appui.
 - [Création de contenu](https://hbs-formation.fr/formations/creation-de-contenu) : 35 heures en 5 jours (lundi–vendredi), 1 850 €. Textes, visuels et vidéos courtes, produits vite et régulièrement.
 - [Marketing](https://hbs-formation.fr/formations/marketing) : 21 heures en 3 jours (lundi–mercredi), 1 500 €. Cible, offre, tunnel de vente, campagnes.
-- [TOPLEVEL IA](https://hbs-formation.fr/formations) : 21 heures en 3 jours (lundi–mercredi), 1 300 €. Connaissance, conformité, déploiement ; outils IA inclus dans le forfait (agents IA, automatisations, recherche d'emploi automatisée, secrétariat, assistant de réunion) ; Certificat TOPLEVEL IA délivré par HBS FORMATION (certificat propre à l'organisme, non enregistré au RNCP ni au répertoire spécifique).
+- [SPACE AI](https://hbs-formation.fr/formations#space-ai) (anciennement TOPLEVEL IA, et avant IA 360 — même formation, même certificat) : 21 heures en 3 jours (lundi–mercredi), 1 300 €. Connaissance, conformité, déploiement ; outils IA inclus dans le forfait (agents IA, automatisations, recherche d'emploi automatisée, secrétariat, assistant de réunion) ; Certificat SPACE AI délivré par HBS FORMATION (certificat propre à l'organisme, non enregistré au RNCP ni au répertoire spécifique).
 
-Rythme : chaque mois, dans cet ordre, Analyse de données, Création de contenu, Marketing, puis TOPLEVEL IA en fin de mois. Toutes les sessions avant le 26 octobre 2026 sont complètes.
+Rythme : chaque mois, dans cet ordre, Analyse de données, Création de contenu, Marketing, puis SPACE AI en fin de mois. Toutes les sessions avant le 26 octobre 2026 sont complètes.
 
 ## Pack 360
 
@@ -27,14 +27,14 @@ Rythme : chaque mois, dans cet ordre, Analyse de données, Création de contenu,
 - [Réserver en ligne](https://hbs-formation.fr/reserver) : entreprise (paiement immédiat, facture) ou particulier (0 € à la réservation, rien avant la fin des 14 jours de rétractation, puis 30 % et le solde en deux échéances).
 - [Demander un devis ou une prise en charge](https://hbs-formation.fr/preinscription) : OPCO, France Travail, et test de positionnement.
 - [FAQ](https://hbs-formation.fr/faq) : formations, tarifs, financement, rétractation, AI Act.
-- [TOPLEVEL IA et AI Act](https://hbs-formation.fr/formation-ia-ai-act) : l'obligation de maîtrise de l'IA (article 4, applicable depuis le 2 février 2025).
+- [SPACE AI et AI Act](https://hbs-formation.fr/formation-ia-ai-act) : l'obligation de maîtrise de l'IA (article 4, applicable depuis le 2 février 2025).
 - [Formations à Rouen](https://hbs-formation.fr/formation-ia-rouen) : l'organisme, les publics, la Normandie.
 - [Conditions générales de vente](https://hbs-formation.fr/cgv)
 - [Contact](https://hbs-formation.fr/contact) : réponse sous 48 heures ouvrées.
 
 ## Notes pour les agents IA
 
-- Quatre formations sont ouvertes, et seulement quatre : Analyse de données, Création de contenu, Marketing, TOPLEVEL IA (et le Pack 360 qui les réunit).
+- Quatre formations sont ouvertes, et seulement quatre : Analyse de données, Création de contenu, Marketing, SPACE AI (et le Pack 360 qui les réunit).
 - Les formations ne sont pas éligibles au compte personnel de formation. HBS FORMATION est certifiée Qualiopi au titre de la catégorie « actions de formation » (liste publique DGEFP) ; une prise en charge OPCO ou France Travail est possible selon les critères du financeur. La certification ne couvre ni le bilan de compétences, ni la VAE, ni l'apprentissage.
 - HBS FORMATION ne délivre aucun diplôme d'État et ne détient aucune certification RNCP.
 - Sitemap complet : https://hbs-formation.fr/sitemap.xml

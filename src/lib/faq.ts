@@ -25,17 +25,21 @@ export const faqComplete: Theme[] = [
       court("pack"),
       {
         q: "Pourquoi suivre plusieurs formations ?",
-        a: "Parce qu'un projet qui marche tient sur quatre piliers : lire son marché (Analyse de données), produire le contenu qui attire (Création de contenu), le transformer en ventes (Marketing) et gagner du temps sur tout le reste (TOPLEVEL IA). Chaque formation se suit seule ; ensemble, elles forment un tout cohérent pour votre marque et votre communication. Ce qu'on vous apprend, même une IA ne sait pas l'assembler d'un seul bloc ;)",
+        a: "Parce qu'un projet qui marche tient sur quatre piliers : lire son marché (Analyse de données), produire le contenu qui attire (Création de contenu), le transformer en ventes (Marketing) et gagner du temps sur tout le reste (SPACE AI). Chaque formation se suit seule ; ensemble, elles forment un tout cohérent pour votre marque et votre communication. Ce qu'on vous apprend, même une IA ne sait pas l'assembler d'un seul bloc ;)",
       },
       {
-        q: "Que contient le programme d'TOPLEVEL IA ?",
+        q: "SPACE AI, TOPLEVEL IA, IA 360 : est-ce la même formation ?",
+        a: "Oui. La formation IA de HBS FORMATION s'appelle SPACE AI depuis septembre 2026 ; elle s'est appelée TOPLEVEL IA, et avant IA 360. Même programme, même durée, même certificat — seul le nom a changé. Une inscription faite sous l'un des anciens noms reste valable.",
+      },
+      {
+        q: "Que contient le programme de SPACE AI ?",
         a: "Trois temps en 3 jours. Connaissance : ce que fait réellement un modèle d'IA, ses limites, le coût réel d'un usage. Conformité : vérifier les résultats, protéger les données, RGPD et règlement européen sur l'IA. Déploiement : agents et automatisations construits sur votre propre cas. Chaque journée compte deux ateliers pratiques de 3 h 30.",
       },
       court("prerequis"),
       court("distance"),
       {
         q: "Comment les formations sont-elles organisées dans le temps ?",
-        a: "7 heures par jour. Analyse de données et Création de contenu : 35 heures en 5 jours, du lundi au vendredi. Marketing et TOPLEVEL IA : 21 heures en 3 jours, du lundi au mercredi. Chaque mois, dans le même ordre : Analyse de données, Création de contenu, Marketing, puis TOPLEVEL IA. Les horaires exacts figurent dans votre convention ou votre contrat.",
+        a: "7 heures par jour. Analyse de données et Création de contenu : 35 heures en 5 jours, du lundi au vendredi. Marketing et SPACE AI : 21 heures en 3 jours, du lundi au mercredi. Chaque mois, dans le même ordre : Analyse de données, Création de contenu, Marketing, puis SPACE AI. Les horaires exacts figurent dans votre convention ou votre contrat.",
       },
       {
         q: "Combien de participants par session ?",
@@ -50,8 +54,8 @@ export const faqComplete: Theme[] = [
         a: "Oui, c'est le principe : environ vingt documents réels et représentatifs de votre activité. Ils restent sur votre poste, et aucune donnée personnelle réelle n'est déposée dans un outil d'IA pendant la session — on les anonymise avant, au besoin ensemble.",
       },
       {
-        q: "Qu'est-ce que le Certificat TOPLEVEL IA ?",
-        a: "Le certificat délivré par HBS FORMATION à l'issue d'TOPLEVEL IA, après une épreuve pratique de 45 minutes notée sur 20 (seuil 12) et une revue croisée de votre dossier. C'est un certificat propre à l'organisme : ce n'est ni un diplôme d'État, ni une certification enregistrée au RNCP ou au répertoire spécifique.",
+        q: "Qu'est-ce que le Certificat SPACE AI ?",
+        a: "Le certificat délivré par HBS FORMATION à l'issue de SPACE AI, après une épreuve pratique de 45 minutes notée sur 20 (seuil 12) et une revue croisée de votre dossier. C'est un certificat propre à l'organisme : ce n'est ni un diplôme d'État, ni une certification enregistrée au RNCP ou au répertoire spécifique.",
       },
       {
         q: "La formation est-elle accessible aux personnes en situation de handicap ?",
@@ -61,7 +65,7 @@ export const faqComplete: Theme[] = [
   },
   {
     id: "outils",
-    titre: "Les outils IA inclus avec TOPLEVEL IA",
+    titre: "Les outils IA inclus avec SPACE AI",
     questions: [
       court("outils"),
       {
@@ -153,7 +157,7 @@ export const faqComplete: Theme[] = [
     questions: [
       {
         q: "Le règlement européen sur l'IA oblige-t-il à former ses salariés ?",
-        a: "Depuis le 2 février 2025, l'article 4 du règlement européen sur l'intelligence artificielle impose aux entreprises qui utilisent des systèmes d'IA de prendre des mesures pour assurer un niveau suffisant de maîtrise de l'IA de leur personnel. C'est une obligation de moyens : former les équipes concernées en est la mesure la plus directe, et TOPLEVEL IA y consacre une journée entière.",
+        a: "Depuis le 2 février 2025, l'article 4 du règlement européen sur l'intelligence artificielle impose aux entreprises qui utilisent des systèmes d'IA de prendre des mesures pour assurer un niveau suffisant de maîtrise de l'IA de leur personnel. C'est une obligation de moyens : former les équipes concernées en est la mesure la plus directe, et SPACE AI y consacre une journée entière.",
       },
       {
         q: "Utiliser ChatGPT ou un autre outil d'IA est-il compatible avec le RGPD ?",

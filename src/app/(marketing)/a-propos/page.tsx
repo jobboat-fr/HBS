@@ -36,7 +36,7 @@ export default function AProposPage() {
             Des compétences <span className="texte-lumiere">qui changent une carrière</span>
           </>
         }
-        subtitle={`${site.name} est un organisme de formation basé à ${site.city}, certifié Qualiopi : Analyse de données, Création de contenu, Marketing et TOPLEVEL IA.`}
+        subtitle={`${site.name} est un organisme de formation basé à ${site.city}, certifié Qualiopi : Analyse de données, Création de contenu, Marketing et SPACE AI.`}
       />
 
       <section className="py-16 lg:py-24">

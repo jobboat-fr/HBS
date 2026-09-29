@@ -15,9 +15,9 @@ import { formations, programme, tarif, annonce, certificat, site } from "@/lib/s
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "TOPLEVEL IA — formation intelligence artificielle en 3 jours, outils IA inclus",
+  title: "SPACE AI — formation intelligence artificielle en 3 jours, outils IA inclus",
   description:
-    "TOPLEVEL IA : 21 heures en 3 jours pour mettre l'IA au travail, outils IA inclus dans votre forfait (agents, automatisations, recherche d'emploi, secrétariat, assistant de réunion). 1 300 €. Programme détaillé.",
+    "SPACE AI : 21 heures en 3 jours pour mettre l'IA au travail, outils IA inclus dans votre forfait (agents, automatisations, recherche d'emploi, secrétariat, assistant de réunion). 1 300 €. Programme détaillé.",
   alternates: { canonical: "/formations" },
 };
 
@@ -31,12 +31,12 @@ export default function FormationsPage() {
       <BreadcrumbJsonLd
         items={[
           { name: "Accueil", url: site.url },
-          { name: "TOPLEVEL IA", url: `${site.url}/formations` },
+          { name: "SPACE AI", url: `${site.url}/formations` },
         ]}
       />
 
       {/* ── En-tête ─────────────────────────────────────────────────────────── */}
-      <header id="toplevel-ia" className="fond-espace relative overflow-hidden pt-[var(--entete)]">
+      <header id="space-ai" className="fond-espace relative overflow-hidden pt-[var(--entete)]">
         <div aria-hidden className="grille-tech pointer-events-none absolute inset-0" />
         <ChampNeuronal className="pointer-events-none absolute inset-0 h-full w-full opacity-70" />
         <div className="container-page relative grid items-end gap-10 py-14 md:py-20 lg:grid-cols-[1.4fr_1fr]">
@@ -45,9 +45,12 @@ export default function FormationsPage() {
               <CalendarDays size={14} className="text-cyan-300" aria-hidden />
               Prochaine session · {prochaine ? libelleDates(prochaine) : annonce.dateLisible}
             </span>
+            {/* Les anciens liens (#toplevel-ia) arrivent toujours ici. */}
+            <span id="toplevel-ia" aria-hidden className="block" />
             <h1 className="mt-5 font-display text-5xl font-extrabold leading-[1.03] text-white md:text-6xl">
-              IA <span className="texte-lumiere">360</span>
+              SPACE <span className="texte-lumiere">AI</span>
             </h1>
+            <p className="mt-2 text-sm text-white/55">Anciennement TOPLEVEL IA, et avant IA 360 : la même formation.</p>
             <p className="mt-3 text-lg font-semibold text-white/80">{ia.tagline}</p>
             <p className="mt-5 max-w-2xl text-lg leading-relaxed text-white/70">{ia.description}</p>
           </div>

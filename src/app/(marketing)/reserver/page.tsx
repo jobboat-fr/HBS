@@ -7,7 +7,7 @@ import { venteOuverte } from "@/lib/stripe";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Réserver et payer en ligne — Analyse de données, Création de contenu, Marketing, TOPLEVEL IA",
+  title: "Réserver et payer en ligne — Analyse de données, Création de contenu, Marketing, SPACE AI",
   description:
     "Réservez votre formation en deux minutes : paiement en ligne pour les entreprises, 0 € aujourd'hui et paiement en 3 fois pour les particuliers, devis OPCO ou France Travail.",
   alternates: { canonical: "/reserver" },
