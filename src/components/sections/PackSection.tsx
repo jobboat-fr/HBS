@@ -59,10 +59,6 @@ export function ComplementSection() {
           })}
         </ol>
 
-        <p className="mx-auto mt-8 max-w-2xl text-center font-display text-lg font-bold text-ink">
-          Ce qu&apos;on vous apprend, même l&apos;IA ne sait pas l&apos;assembler d&apos;un seul bloc ;)
-        </p>
-
         <div className="mt-12">
           <PackOffre />
         </div>

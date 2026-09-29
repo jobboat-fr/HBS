@@ -282,8 +282,7 @@ export function InscriptionForm({
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-ink-soft">
                 Lire votre marché, créer votre contenu, vendre, automatiser : le {PACK.nom} réunit nos
-                4 formations sur un mois. Ce qu&apos;on vous apprend, même l&apos;IA ne sait pas
-                l&apos;assembler d&apos;un seul bloc ;)
+                4 formations sur un mois.
               </p>
               <ul className="mt-3 space-y-1.5 text-sm text-ink-soft">
                 <li className="flex items-start gap-2">

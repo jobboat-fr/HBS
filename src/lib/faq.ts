@@ -25,7 +25,7 @@ export const faqComplete: Theme[] = [
       court("pack"),
       {
         q: "Pourquoi suivre plusieurs formations ?",
-        a: "Parce qu'un projet qui marche tient sur quatre piliers : lire son marché (Analyse de données), produire le contenu qui attire (Création de contenu), le transformer en ventes (Marketing) et gagner du temps sur tout le reste (SPACE AI). Chaque formation se suit seule ; ensemble, elles forment un tout cohérent pour votre marque et votre communication. Ce qu'on vous apprend, même une IA ne sait pas l'assembler d'un seul bloc ;)",
+        a: "Parce qu'un projet qui marche tient sur quatre piliers : lire son marché (Analyse de données), produire le contenu qui attire (Création de contenu), le transformer en ventes (Marketing) et gagner du temps sur tout le reste (SPACE AI). Chaque formation se suit seule ; ensemble, elles forment un tout cohérent pour votre marque et votre communication.",
       },
       {
         q: "SPACE AI, TOPLEVEL IA, IA 360 : est-ce la même formation ?",

@@ -198,8 +198,7 @@ export default function FormationsPage() {
           <Reveal>
             <h2 className="text-center font-display text-display-md font-extrabold text-ink">Allez plus loin : nos 4 formations</h2>
             <p className="mx-auto mt-3 max-w-2xl text-center text-ink-soft">
-              L&apos;IA va plus vite quand on sait lire son marché, créer son contenu et vendre. Ce qu&apos;on vous apprend,
-              même l&apos;IA ne sait pas l&apos;assembler d&apos;un seul bloc ;)
+              L&apos;IA va plus vite quand on sait lire son marché, créer son contenu et vendre.
             </p>
           </Reveal>
           <div className="mt-10">
