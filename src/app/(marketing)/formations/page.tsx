@@ -78,12 +78,11 @@ export default function FormationsPage() {
         <div className="container-page">
           <dl className="grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
             {programme.fiche.map((f) => (
-              <Reveal key={f.label}>
-                <div className="verre-clair h-full rounded-2xl p-5">
-                  <dt className="text-[11px] font-semibold uppercase tracking-widest text-ink-muted">{f.label}</dt>
-                  <dd className="mt-1.5 font-display text-xl font-extrabold leading-tight text-ink">{f.valeur}</dd>
-                  <dd className="mt-1 text-xs leading-relaxed text-ink-soft">{f.detail}</dd>
-                </div>
+              // Reveal est lui-même le groupe dt/dd : un <dl> n'admet qu'un niveau de <div>.
+              <Reveal key={f.label} className="verre-clair h-full rounded-2xl p-5">
+                <dt className="text-[11px] font-semibold uppercase tracking-widest text-ink-muted">{f.label}</dt>
+                <dd className="mt-1.5 font-display text-xl font-extrabold leading-tight text-ink">{f.valeur}</dd>
+                <dd className="mt-1 text-xs leading-relaxed text-ink-soft">{f.detail}</dd>
               </Reveal>
             ))}
           </dl>

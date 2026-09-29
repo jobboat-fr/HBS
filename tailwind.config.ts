@@ -9,7 +9,7 @@ const config: Config = {
         ink: {
           DEFAULT: "#0B2239",
           soft: "#41506A",
-          muted: "#6B7A90",
+          muted: "#5E6D84", // 4,9:1 sur cloud, 5,2:1 sur blanc (4,1 avant : sous le seuil AA)
         },
         // Bleu marine du logo officiel (couleur principale) — clé "teal" conservée pour ne pas casser les classes existantes
         teal: {

@@ -13,7 +13,7 @@ import { AnnonceBanner } from "@/components/layout/AnnonceBanner";
 
 function Logo({ onClick }: { onClick?: () => void }) {
   return (
-    <Link href="/" onClick={onClick} className="flex items-center gap-2" aria-label="HBS FORMATION — accueil">
+    <Link href="/" onClick={onClick} className="flex items-center gap-2">
       <LogoMark className="h-9 w-9" />
       <span className="font-display text-xl font-extrabold tracking-tight text-ink">
         HBS<span className="text-teal-500"> FORMATION</span>

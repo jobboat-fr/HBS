@@ -22,14 +22,14 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold text-white">Formations</h3>
+            <h2 className="text-sm font-semibold text-white">Formations</h2>
             <ul className="mt-5 space-y-3 text-sm">
               {ORDRE.map((c) => (
                 <li key={c}>
                   <Link href={FORMATIONS[c].href} className="font-semibold text-white hover:text-teal-400">
                     {FORMATIONS[c].nom}
                   </Link>
-                  <span className="text-white/45"> · {euros(FORMATIONS[c].prix)}</span>
+                  <span className="text-white/55"> · {euros(FORMATIONS[c].prix)}</span>
                 </li>
               ))}
               <li>
@@ -39,7 +39,7 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold text-white">Navigation</h3>
+            <h2 className="text-sm font-semibold text-white">Navigation</h2>
             <ul className="mt-5 space-y-3 text-sm">
               {navLinks.map((l) => (
                 <li key={l.href}>
@@ -52,7 +52,7 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold text-white">Contact</h3>
+            <h2 className="text-sm font-semibold text-white">Contact</h2>
             <ul className="mt-5 space-y-4 text-sm">
               <li className="flex items-start gap-2.5">
                 <MapPin size={16} className="mt-0.5 shrink-0 text-teal-400" />
@@ -75,7 +75,7 @@ export function Footer() {
         </div>
 
         <div className="mt-14 border-t border-white/10 pt-8">
-          <div className="flex flex-col gap-3 text-xs text-white/45 md:flex-row md:items-center md:justify-between">
+          <div className="flex flex-col gap-3 text-xs text-white/55 md:flex-row md:items-center md:justify-between">
             <p>
               © {new Date().getFullYear()} {legal.raisonSociale} — {legal.formeJuridique} au capital de{" "}
               {legal.capital} · RCS {legal.rcs} · Déclaration d&apos;activité n°{" "}
@@ -89,7 +89,7 @@ export function Footer() {
               <Link href="/confidentialite" className="hover:text-teal-400">Confidentialité</Link>
             </div>
           </div>
-          <p className="mt-3 text-[11px] text-white/35">
+          <p className="mt-3 text-[11px] text-white/55">
             Certification Qualiopi délivrée au titre de la catégorie d&apos;action : {legal.qualiopiCategorie}.{" "}
             Enregistré sous le n° {legal.numeroDeclarationActivite} auprès du {legal.declarationAutorite}.
             Cet enregistrement ne vaut pas agrément de l&apos;État.

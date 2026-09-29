@@ -83,7 +83,7 @@ export function HeroSection({ prochaine }: { prochaine: ProchaineSession }) {
           <div aria-hidden className="absolute -inset-6 rounded-[2rem] bg-[radial-gradient(closest-side,rgba(46,95,224,0.45),transparent)] blur-2xl" />
           <div className="relative">
             <ConsoleAgent />
-            <p className="mt-3 text-center text-xs text-white/45">
+            <p className="mt-3 text-center text-xs text-white/55">
               Un agent d&apos;SPACE AI à l&apos;œuvre — outils inclus dans votre forfait, toujours sous votre validation.
             </p>
           </div>

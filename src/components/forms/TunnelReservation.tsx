@@ -2,7 +2,6 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import { ArrowRight, Building2, UserRound, Landmark, Minus, Plus, Lock, ShieldCheck, Loader2, AlertTriangle, CalendarClock } from "lucide-react";
 import {
   FORMATIONS,
@@ -36,8 +35,10 @@ const PROFILS: { id: Choix; titre: string; texte: string; icon: typeof Building2
  * Le paiement en ligne : une formation (ou le Pack 360), des dates, un profil, une case — puis Stripe.
  * Tout ce que Stripe sait collecter (nom, adresse, TVA, carte) n'est pas redemandé ici.
  */
-export function TunnelReservation({ ouverte }: { ouverte: boolean }) {
-  const params = useSearchParams();
+/** Les paramètres d'arrivée (`/reserver?formation=…&session=…`), lus côté serveur par la page. */
+export type DemandeReservation = { formation?: string; session?: string; profil?: string; annule?: string };
+
+export function TunnelReservation({ ouverte, demande: arrivee = {} }: { ouverte: boolean; demande?: DemandeReservation }) {
   const sessions = useMemo(() => planning(new Date(), 6).filter((s) => s.statut === "ouvert"), []);
   const cycles = useMemo(() => cyclesPack(new Date(), 6), []);
 
@@ -47,12 +48,12 @@ export function TunnelReservation({ ouverte }: { ouverte: boolean }) {
       ? cycles.map((c) => ({ code: c.code, debut: c.debut, fin: c.fin, libelle: nomMois(c.mois) }))
       : sessions.filter((s) => s.formation === p).map((s) => ({ code: s.code, debut: s.debut, fin: s.fin, libelle: libelleDates(s) }));
 
-  const demande = params.get("formation") ?? "";
+  const demande = arrivee.formation ?? "";
   const initFormation: Produit = demande === "PACK360" || (ORDRE as string[]).includes(demande) ? (demande as Produit) : "IA360";
-  const initSession = datesDe(initFormation).find((s) => s.code === params.get("session"))?.code
+  const initSession = datesDe(initFormation).find((s) => s.code === arrivee.session)?.code
     ?? datesDe(initFormation)[0]?.code
     ?? "";
-  const initProfil = (params.get("profil") as Choix) || "particulier";
+  const initProfil = (arrivee.profil as Choix) || "particulier";
 
   const [formation, setFormation] = useState<Produit>(initFormation);
   const [sessionCode, setSessionCode] = useState(initSession);
@@ -61,7 +62,7 @@ export function TunnelReservation({ ouverte }: { ouverte: boolean }) {
   const [cgv, setCgv] = useState(false);
   const [accordEcheancier, setAccordEcheancier] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [erreur, setErreur] = useState<string | null>(params.get("annule") ? "Paiement interrompu : votre inscription n'est pas encore réservée." : null);
+  const [erreur, setErreur] = useState<string | null>(arrivee.annule ? "Paiement interrompu : votre inscription n'est pas encore réservée." : null);
 
   const estPack = formation === "PACK360";
   const f = estPack

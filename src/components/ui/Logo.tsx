@@ -6,8 +6,8 @@ export function LogoMark({ className }: { className?: string }) {
     <svg
       viewBox="0 0 48 48"
       className={cn("h-9 w-9", className)}
-      role="img"
-      aria-label="HBS FORMATION"
+      // Toujours posée à côté du texte « HBS FORMATION » : décorative, sinon le nom est lu deux fois.
+      aria-hidden="true"
       xmlns="http://www.w3.org/2000/svg"
     >
       <defs>
