@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 const values = [
   { title: "Notre mission", text: "Donner à chacun les compétences qui font avancer un projet : lire son marché, créer, vendre, automatiser." },
-  { title: "Notre approche", text: "Des formations courtes, en direct, sur vos cas réels. Pas de théorie qui dort dans un classeur." },
+  { title: "Notre approche", text: "Des formations courtes, en présentiel à Rouen, sur vos cas réels. Pas de théorie qui dort dans un classeur." },
   { title: "Notre ambition", text: "Que chaque participant reparte équipé, et applique dès le lundi suivant ce qu'il a appris." },
 ];
 

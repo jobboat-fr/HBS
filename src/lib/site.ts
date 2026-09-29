@@ -9,7 +9,7 @@ export const site = {
   baseline: "Lire, créer, vendre, automatiser",
   // Aucun dispositif de financement annoncé ici : c'est la phrase que les moteurs citent.
   description:
-    "Quatre formations courtes et concrètes : Analyse de données (5 jours), Création de contenu (5 jours), Marketing (3 jours) et SPACE AI (3 jours), ou les quatre dans le Pack 360. HBS FORMATION, organisme de formation à Rouen, certifié Qualiopi.",
+    "Ce que demain vous demande se bâtit ici : Analyse de données (5 jours), Création de contenu (5 jours), Marketing (3 jours) et SPACE AI (3 jours), ou les quatre avec le Pack 360. Quatre formations courtes, en présentiel à Rouen, à distance sur demande. Organisme certifié Qualiopi.",
   // Apex, pas www : www.hbs-formation.fr redirige (308) vers l'apex côté Vercel.
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://hbs-formation.fr",
   email: "contact@hbs-formation.fr",
@@ -189,8 +189,8 @@ export const formations = [
 export const programme = {
   fiche: [
     { label: "Durée", valeur: "21 heures", detail: "en 3 jours · ateliers de 3 h 30" },
-    { label: "Rythme", valeur: "Lundi → mercredi", detail: "7 heures par jour, en direct" },
-    { label: "Modalité", valeur: "À distance, en direct", detail: "présentiel possible en entreprise" },
+    { label: "Rythme", valeur: "Lundi → mercredi", detail: "7 heures par jour, en présentiel" },
+    { label: "Modalité", valeur: "En présentiel à Rouen", detail: "à distance sur demande" },
     { label: "Effectif", valeur: "4 à 12", detail: "participants par session" },
     { label: "Horaires", valeur: "9h00 – 17h00", detail: "pause 12h30 – 13h30" },
     { label: "Prérequis", valeur: "Aucun technique", detail: "venir avec un cas réel de son activité" },
@@ -253,18 +253,18 @@ export const featuredFormationSlugs = ["space-ai"] as const;
 
 export const processSteps = [
   { step: "01", title: "Vous choisissez",
-    description: "Une formation ou les quatre avec le Pack 360. Vous réservez en deux minutes." },
-  { step: "02", title: "On vous positionne",
-    description: "Un test de 15 minutes : on part de votre niveau et de votre projet réel." },
-  { step: "03", title: "Vous pratiquez",
-    description: "3 ou 5 jours en direct, sur vos propres dossiers. Pas de théorie inutile." },
-  { step: "04", title: "Vous appliquez",
-    description: "Vous repartez avec vos outils et un plan d'action. On fait le point à 3 mois." },
+    description: "Une formation, ou les quatre avec le Pack 360. Deux minutes suffisent pour réserver." },
+  { step: "02", title: "On part de vous",
+    description: "Un test de 15 minutes : votre niveau, votre projet, votre point de départ." },
+  { step: "03", title: "Vous bâtissez",
+    description: "3 ou 5 jours en présentiel à Rouen, sur vos propres dossiers. Chaque heure produit quelque chose." },
+  { step: "04", title: "Vous avancez",
+    description: "Vous repartez équipé, avec votre plan d'action. On refait le point ensemble à 3 mois." },
 ] as const;
 
 export const stats = [
   { value: "4", suffix: "", label: "formations complémentaires" },
-  { value: "3 à 5", suffix: " jours", label: "par formation, en direct" },
+  { value: "3 à 5", suffix: " jours", label: "par formation, en présentiel" },
   { value: "12", suffix: "", label: "places maximum par session" },
   { value: "5", suffix: "+", label: "outils IA inclus dans vos formations" },
 ] as const;
@@ -320,8 +320,8 @@ export const faqs = [
   },
   {
     id: "distance",
-    q: "Les formations se suivent-elles à distance ?",
-    a: "Oui, en direct avec le formateur. Elles peuvent aussi être organisées en présentiel dans votre entreprise.",
+    q: "Les formations se suivent-elles en présentiel ou à distance ?",
+    a: "En présentiel, dans nos locaux au cœur de Rouen (50 passage Saint-Étienne des Tonneliers) : on avance plus vite dans la même salle, le formateur à vos côtés. Si vous ne pouvez pas vous déplacer, chaque formation peut se suivre à distance, en direct, sur demande. Pour une équipe, nous pouvons aussi venir dans votre entreprise.",
   },
   {
     id: "delai",

@@ -314,7 +314,7 @@ export function TunnelReservation({ ouverte, demande: arrivee = {} }: { ouverte:
             <p className="text-xs font-bold uppercase tracking-widest text-red-600">Votre réservation</p>
             <p className="mt-2 font-display text-2xl font-extrabold text-ink">{f.nom}</p>
             <p className={`font-semibold ${f.couleur.texte}`}>{f.accroche}</p>
-            <p className="mt-1 text-sm text-ink-soft">{creneau ? creneau.libelle : "Dates à venir"} · à distance, en direct</p>
+            <p className="mt-1 text-sm text-ink-soft">{creneau ? creneau.libelle : "Dates à venir"} · en présentiel à Rouen</p>
             <ul className="mt-4 space-y-1.5 text-sm text-ink-soft">
               <li>✓ {dureeProduit}, 7 h par jour</li>
               {f.inclus.map((x) => <li key={x}>✓ {x}</li>)}

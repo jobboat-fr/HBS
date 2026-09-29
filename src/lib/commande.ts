@@ -38,7 +38,7 @@ export type Formation = {
 };
 
 export const FORMAT = {
-  modalite: "À distance, en direct (présentiel possible en entreprise)",
+  modalite: "En présentiel à Rouen (à distance sur demande)",
   effectif: "4 à 12 participants",
 };
 
@@ -298,7 +298,7 @@ export const libelleDates = libelleSemaine;
 export const PRODUIT = {
   code: "IA360",
   nom: FORMATIONS.IA360.nom,
-  description: "21 heures en 3 jours, en direct, outils IA inclus dans votre forfait.",
+  description: "21 heures en 3 jours, en présentiel à Rouen, outils IA inclus dans votre forfait.",
   prixUnitaire: FORMATIONS.IA360.prix,
   devise: "eur",
   session: { code: `IA360-${LANCEMENT}`, debut: LANCEMENT, fin: "2026-10-28", libelle: "du 26 au 28 octobre 2026" },

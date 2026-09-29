@@ -47,7 +47,7 @@ export default function PlanningPage() {
         <div className="container-page mx-auto max-w-4xl">
           <h2 className="font-display text-display-md font-extrabold text-ink">Les prochaines sessions</h2>
           <p className="mt-2 text-sm text-ink-soft">
-            7 heures par jour, à distance en direct · 4 à 12 participants · une session dédiée à votre équipe est possible
+            7 heures par jour, en présentiel à Rouen · 4 à 12 participants · une session dédiée à votre équipe est possible
             à d&apos;autres dates.
           </p>
           <div className="mt-8">

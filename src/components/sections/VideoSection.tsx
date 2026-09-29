@@ -8,9 +8,9 @@ import { fadeUp, viewportOnce } from "@/lib/animations";
 import { media } from "@/lib/site";
 
 const points = [
-  "Cours en direct et en différé, accessibles partout",
+  "En présentiel au cœur de Rouen, à distance sur demande",
   "Un formateur référent qui suit votre progression",
-  "Une plateforme pensée pour apprendre à votre rythme",
+  "Votre espace en ligne pour retrouver supports et livrables",
 ];
 
 export function VideoSection() {
@@ -35,11 +35,12 @@ export function VideoSection() {
         >
           <Badge>L&apos;expérience HBS</Badge>
           <h2 className="mt-5 font-display text-display-lg font-extrabold text-ink text-balance">
-            Une formation <span className="text-teal-600">en ligne et humaine</span>
+            Une salle, un formateur, <span className="text-teal-600">votre projet sur la table</span>
           </h2>
           <p className="mt-4 text-ink-soft">
-            Le meilleur du distanciel sans jamais être seul : des contenus de qualité, des classes
-            virtuelles et un accompagnement individuel tout au long de votre parcours.
+            Douze participants au plus, dans nos locaux rouennais : on travaille sur vos vrais dossiers, on se
+            trompe ensemble, on corrige ensemble. Ce que vous bâtissez ici, vous le retrouvez lundi matin sur votre
+            bureau.
           </p>
           <ul className="mt-6 space-y-3">
             {points.map((p) => (

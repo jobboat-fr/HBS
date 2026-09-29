@@ -11,7 +11,7 @@ import { media, site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Formation professionnelle entreprise — données, contenu, marketing et IA pour vos équipes",
   description:
-    "Formez vos équipes à l'analyse de données, la création de contenu, le marketing et l'IA (SPACE AI), sur vos propres dossiers. À distance ou dans vos locaux, OPCO possible, organisme certifié Qualiopi.",
+    "Formez vos équipes à l'analyse de données, la création de contenu, le marketing et l'IA (SPACE AI), sur vos propres dossiers. En présentiel à Rouen, dans vos locaux ou à distance, OPCO possible, organisme certifié Qualiopi.",
   alternates: { canonical: "/entreprises" },
 };
 

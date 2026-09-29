@@ -56,7 +56,7 @@ function Ligne({ s }: { s: Session }) {
         <p className="mt-1.5 font-display text-lg font-extrabold leading-tight text-ink">
           {f.nom} <span className="font-semibold text-ink-soft">— {f.accroche}</span>
         </p>
-        <p className="text-xs text-ink-muted">{duree(f)} · à distance, en direct · {PLACES_MAX} places</p>
+        <p className="text-xs text-ink-muted">{duree(f)} · en présentiel à Rouen · {PLACES_MAX} places</p>
       </div>
       <div className="flex items-center justify-between gap-4 pl-2 sm:justify-end sm:pl-0">
         <p className="font-display text-2xl font-extrabold text-ink">{euros(f.prix)}</p>

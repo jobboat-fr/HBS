@@ -123,7 +123,7 @@ export async function POST(request: NextRequest) {
                 tax_behavior: "inclusive",
                 product_data: {
                   name: `${f.nom} — ${semaine}`,
-                  description: `${f.accroche}. ${detail}, en direct.`,
+                  description: `${f.accroche}. ${detail}, en présentiel à Rouen.`,
                   metadata: { produit: f.code },
                 },
               },

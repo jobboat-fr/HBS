@@ -33,10 +33,10 @@ export default function Og() {
 
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div style={{ display: "flex", fontSize: 72, fontWeight: 800, color: "#fff", lineHeight: 1.05 }}>
-            C'est le moment
+            Ce que demain vous demande,
           </div>
           <div style={{ display: "flex", fontSize: 72, fontWeight: 800, color: "#D9DCE1", lineHeight: 1.05 }}>
-            de changer de cap.
+            bâtissons-le aujourd'hui.
           </div>
           <div style={{ display: "flex", marginTop: 28, fontSize: 30, color: "rgba(255,255,255,0.8)" }}>
             Analyse de données · Création de contenu · Marketing · SPACE AI
@@ -45,7 +45,7 @@ export default function Og() {
 
         <div style={{ display: "flex", gap: 16, fontSize: 26, color: "#D9DCE1", fontWeight: 600 }}>
           <span>4 formations de 3 à 5 jours · Pack 360</span>
-          <span style={{ color: "rgba(255,255,255,0.5)" }}>· Rouen & à distance</span>
+          <span style={{ color: "rgba(255,255,255,0.5)" }}>· en présentiel à Rouen</span>
         </div>
       </div>
     ),

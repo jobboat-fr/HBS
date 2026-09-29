@@ -8,17 +8,34 @@ import { site, legal } from "@/lib/site";
 import { FORMATIONS, ORDRE, PACK, dateCourte, duree, dureeCourte, euros, prochaineSession } from "@/lib/commande";
 
 export const metadata: Metadata = {
-  title: "Formation IA, marketing, contenu et données à Rouen — organisme certifié Qualiopi",
+  title: "Formation IA, marketing et data à Rouen, en présentiel",
   description:
-    "Formations à Rouen et en Normandie : SPACE AI (3 jours), Marketing (3 jours), Création de contenu (5 jours), Analyse de données (5 jours). En direct à distance ou dans votre entreprise, OPCO et France Travail.",
+    "Formations en présentiel à Rouen (Seine-Maritime) : SPACE AI (IA, 3 jours), Marketing (3 jours), Création de contenu (5 jours), Analyse de données (5 jours). Accessibles depuis Le Havre, Évreux et Paris ; à distance sur demande. OPCO et France Travail.",
   alternates: { canonical: "/formation-ia-rouen" },
 };
+
+/**
+ * D'où l'on vient se former, dans l'ordre de ce que les gens tapent réellement.
+ *
+ * Relevé du 29/09/2026 (autocomplétion Google, fr-FR) : « formation … paris » renvoie le plus de
+ * requêtes, puis Rouen et Île-de-France, Le Havre, Versailles, Évreux. Les numéros de département
+ * (76, 27, 78) ne sont jamais tapés : on les cite pour situer, on ne les vise pas. Une seule page,
+ * pas une par ville — des pages quasi identiques par ville sont des pages satellites.
+ * Les temps de trajet sont des ordres de grandeur, et le disent (« environ »).
+ */
+const acces = [
+  { zone: "Rouen et la Métropole", dep: "Seine-Maritime (76)", trajet: "Sur place : nos locaux sont au cœur de Rouen." },
+  { zone: "Paris et l'Île-de-France", dep: "Paris (75) et petite couronne", trajet: "Environ 1 h 15 depuis Paris-Saint-Lazare, en train direct." },
+  { zone: "Le Havre et le littoral", dep: "Seine-Maritime (76)", trajet: "Environ 1 h de train jusqu'à Rouen." },
+  { zone: "Versailles et les Yvelines", dep: "Yvelines (78)", trajet: "Environ 1 h 30 par l'A13." },
+  { zone: "Évreux, Vernon et l'Eure", dep: "Eure (27)", trajet: "Environ 50 minutes de route depuis Évreux." },
+];
 
 const publics = [
   {
     icon: Building2,
     titre: "Entreprises normandes",
-    texte: "Vos équipes formées sur leurs propres processus, à distance ou en présentiel dans vos locaux à Rouen, au Havre, à Évreux ou à Caen. Financement OPCO possible.",
+    texte: "Vos équipes formées sur leurs propres processus, dans nos locaux à Rouen ou dans les vôtres — au Havre, à Évreux, à Caen. Financement OPCO possible.",
     lien: { href: "/reserver?profil=entreprise", label: "Inscrire mon équipe" },
   },
   {
@@ -52,8 +69,8 @@ export default function RouenPage() {
 
       <PageHeader
         eyebrow="Rouen · Normandie"
-        title={<>Vos formations <span className="texte-lumiere">nées à Rouen</span></>}
-        subtitle="HBS FORMATION, organisme rouennais certifié Qualiopi : 4 formations courtes pour lire votre marché, créer, vendre et mettre l'IA au travail."
+        title={<>Se former à Rouen, <span className="texte-lumiere">pour prendre de l&apos;avance</span></>}
+        subtitle="HBS FORMATION, organisme rouennais certifié Qualiopi : 4 formations courtes, en présentiel, pour lire votre marché, créer, vendre et mettre l'IA au travail."
       />
 
       <section className="py-14 lg:py-20">
@@ -76,9 +93,10 @@ export default function RouenPage() {
               RGPD et du règlement européen sur l&apos;IA.
             </p>
             <p>
-              Les sessions se suivent <b>en direct à distance</b>, depuis Rouen comme depuis toute la France.
-              Pour une équipe, la formation peut être organisée <b>en présentiel dans vos locaux</b>, partout
-              en Normandie.
+              Les sessions ont lieu <b>en présentiel, dans nos locaux au cœur de Rouen</b> : douze participants
+              au plus, un formateur à vos côtés, vos dossiers sur la table. Si vous ne pouvez pas vous déplacer,
+              chaque formation se suit aussi <b>à distance, sur demande</b>. Pour une équipe, nous venons
+              dans vos locaux, partout en Normandie.
             </p>
             <p>
               Avec SPACE AI, votre forfait inclut les outils IA qui continuent de travailler après la formation : agents IA,
@@ -109,6 +127,27 @@ export default function RouenPage() {
               </Link>
             </div>
           </aside>
+        </div>
+      </section>
+
+      <section className="py-14 lg:py-20">
+        <div className="container-page">
+          <h2 className="font-display text-display-md font-extrabold text-ink">
+            Venir se former à Rouen, <span className="text-teal-600">d&apos;où que vous partiez</span>
+          </h2>
+          <p className="mt-3 max-w-2xl text-ink-soft">
+            Rouen est à mi-chemin entre Paris et la mer : une journée de formation ici, c&apos;est une journée
+            gagnée sur tout le reste.
+          </p>
+          <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {acces.map((a) => (
+              <li key={a.zone} className="verre-clair rounded-2xl border border-mist p-5">
+                <p className="font-display text-lg font-bold text-ink">{a.zone}</p>
+                <p className="text-xs font-semibold uppercase tracking-widest text-ink-muted">{a.dep}</p>
+                <p className="mt-2 text-sm leading-relaxed text-ink-soft">{a.trajet}</p>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 

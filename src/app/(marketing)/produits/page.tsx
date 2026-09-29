@@ -49,7 +49,7 @@ export default function ProduitsPage() {
             <h2 className="font-display text-display-md font-extrabold text-ink">Les formations</h2>
           </div>
           <p className="mt-2 max-w-2xl text-ink-soft">
-            À distance, en direct, 7 heures par jour, 12 places maximum.
+            En présentiel à Rouen (à distance sur demande), 7 heures par jour, 12 places maximum.
           </p>
 
           <ul className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-4">

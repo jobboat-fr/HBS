@@ -49,9 +49,9 @@ export function HeroSection({ prochaine }: { prochaine: ProchaineSession }) {
           </h1>
 
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-white/75">
-            Analyse de données, Création de contenu, Marketing, SPACE AI : 4 formations courtes, en direct, pour
-            gagner du temps et prendre de l&apos;avance pendant que les autres hésitent. En 3 jours, votre carrière peut
-            déjà changer.
+            Analyse de données, Création de contenu, Marketing, SPACE AI : quatre formations courtes, en présentiel à
+            Rouen, pour prendre de l&apos;avance pendant que d&apos;autres hésitent. Trois jours peuvent suffire à changer
+            de cap.
           </p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-center">
@@ -71,7 +71,7 @@ export function HeroSection({ prochaine }: { prochaine: ProchaineSession }) {
           </div>
 
           <ul className="mt-9 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-white/65">
-            <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-cyan-300" />3 ou 5 jours, en direct</li>
+            <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-cyan-300" />3 ou 5 jours, en présentiel à Rouen</li>
             <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-cyan-300" />12 places maximum par session</li>
             <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-cyan-300" />Pack 360 : les 4 formations en un forfait</li>
             <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-cyan-300" />Organisme certifié Qualiopi</li>

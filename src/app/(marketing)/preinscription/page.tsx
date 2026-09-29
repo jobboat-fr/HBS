@@ -130,7 +130,7 @@ export default async function InscriptionPage({
                     <CalendarDays size={18} className="text-teal-600" aria-hidden /> {libelleDates(creneau)}
                   </p>
                   <p className="mt-1 flex items-center gap-2 text-sm text-ink-soft">
-                    <Users size={16} aria-hidden /> {duree(f)} en direct · {PLACES_MAX} places maximum
+                    <Users size={16} aria-hidden /> {duree(f)} en présentiel à Rouen · {PLACES_MAX} places maximum
                   </p>
                   <ul className="mt-4 space-y-1.5 text-sm text-ink-soft">
                     {f.inclus.map((x) => (

@@ -37,7 +37,18 @@ export function OrganizationJsonLd() {
         founder: { "@type": "Person", name: legal.president },
         address: adresse,
         geo: { "@type": "GeoCoordinates", latitude: 49.4406, longitude: 1.0914 },
-        areaServed: [{ "@type": "Country", name: "France" }, { "@type": "AdministrativeArea", name: "Normandie" }],
+        // Les zones d'où l'on vient réellement se former (cf. /formation-ia-rouen), plus la France
+        // entière pour la formation à distance sur demande.
+        areaServed: [
+          { "@type": "City", name: "Rouen" },
+          { "@type": "City", name: "Le Havre" },
+          { "@type": "City", name: "Évreux" },
+          { "@type": "AdministrativeArea", name: "Seine-Maritime" },
+          { "@type": "AdministrativeArea", name: "Eure" },
+          { "@type": "AdministrativeArea", name: "Normandie" },
+          { "@type": "AdministrativeArea", name: "Île-de-France" },
+          { "@type": "Country", name: "France" },
+        ],
         identifier: [
           { "@type": "PropertyValue", name: "SIREN", value: legal.siren },
           { "@type": "PropertyValue", name: "Numéro de déclaration d'activité", value: legal.numeroDeclarationActivite },
@@ -114,11 +125,13 @@ export function CourseJsonLd({ code = "IA360" }: { code?: CodeFormation }) {
         hasCourseInstance: sessions.map((x) => ({
           "@type": "CourseInstance",
           name: `${f.nom} — ${libelleDates(x)}`,
-          courseMode: "online",
+          // En présentiel dans les locaux de l'organisme depuis le 29/09 ; la distance reste une option
+          // sur demande, pas le mode de la session.
+          courseMode: "onsite",
           courseWorkload: `PT${f.heures}H`,
           startDate: x.debut,
           endDate: x.fin,
-          location: { "@type": "VirtualLocation", url: `${site.url}${f.href}` },
+          location: { "@type": "Place", name: `${legal.raisonSociale} — Rouen`, address: adresse },
           maximumAttendeeCapacity: PLACES_MAX,
           offers: offre(`${site.url}/reserver?formation=${code}&session=${x.code}`),
         })),

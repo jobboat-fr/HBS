@@ -47,7 +47,7 @@ export const faqComplete: Theme[] = [
       },
       {
         q: "De quel matériel ai-je besoin ?",
-        a: "Un ordinateur et une connexion Internet qui permet la visioconférence. Aucun logiciel payant à acheter : les outils utilisés pendant la formation sont inclus dans votre forfait.",
+        a: "Votre ordinateur portable : vous travaillez sur vos propres dossiers. Si vous n'en avez pas, dites-le-nous à l'inscription. Aucun logiciel payant à acheter : les outils utilisés pendant la formation sont inclus dans votre forfait. À distance, il faut en plus une connexion qui permet la visioconférence.",
       },
       {
         q: "Dois-je apporter mes propres documents ?",
@@ -105,7 +105,7 @@ export const faqComplete: Theme[] = [
       },
       {
         q: "Puis-je inscrire toute mon équipe ?",
-        a: "Oui, en choisissant le nombre de participants lors de la réservation entreprise. Pour un groupe de 8 à 12 personnes, une session dédiée — à distance ou dans vos locaux — est aussi possible : écrivez-nous.",
+        a: "Oui, en choisissant le nombre de participants lors de la réservation entreprise. Pour un groupe de 8 à 12 personnes, une session dédiée — dans nos locaux, dans les vôtres ou à distance — est aussi possible : écrivez-nous.",
       },
       {
         q: "Le paiement en ligne est-il sécurisé ?",
@@ -147,7 +147,7 @@ export const faqComplete: Theme[] = [
       },
       {
         q: "Où est situé l'organisme ?",
-        a: "À Rouen, en Normandie. Les formations se suivent à distance, en direct, partout en France ; elles peuvent aussi être organisée en présentiel dans votre entreprise.",
+        a: "Au cœur de Rouen, 50 passage Saint-Étienne des Tonneliers : c'est là que se tiennent les sessions, en présentiel. On y vient de toute la Normandie — Le Havre, Évreux, Dieppe, Vernon — et d'Île-de-France, à environ 1 h 15 de Paris-Saint-Lazare en train direct. Chaque formation peut aussi se suivre à distance, sur demande.",
       },
     ],
   },

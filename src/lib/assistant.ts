@@ -45,7 +45,7 @@ export function localAnswer(input: string): AssistantReply {
   if (has("bilan", "vae", "e-learning", "elearning", "foad", "autre formation", "quelles formations", "catalogue"))
     return { text: faq("formations"), links: [{ label: "Nos 4 formations", href: "/#formations" }] };
   if (has("entreprise", "equipe", "salarie", "intra", "collaborateur"))
-    return { text: "Nos 4 formations peuvent être organisées pour vos collaborateurs, sur vos propres dossiers, à distance ou dans vos locaux.", links: [{ label: "Offre entreprises", href: "/entreprises" }] };
+    return { text: "Nos 4 formations peuvent être organisées pour vos collaborateurs, sur vos propres dossiers : dans nos locaux à Rouen, dans les vôtres, ou à distance.", links: [{ label: "Offre entreprises", href: "/entreprises" }] };
   if (has("delai", "combien de temps", "reponse", "recontact", "rappel"))
     return { text: faq("delai"), links: [{ label: "Faire une demande", href: "/contact" }] };
   if (has("conseiller", "contact", "devis", "rdv", "rendez", "parler", "telephone", "appeler", "humain"))

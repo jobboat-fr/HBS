@@ -292,7 +292,7 @@ export function InscriptionForm({
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-red-500" />
-                  {PACK.heures} heures en {PACK.jours} jours, en direct
+                  {PACK.heures} heures en {PACK.jours} jours, en présentiel à Rouen
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-red-500" />

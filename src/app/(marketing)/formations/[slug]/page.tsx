@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!f) return {};
   return {
     title: `Formation ${f.nom} — ${f.accroche} · ${duree(f)}`,
-    description: `${f.resume} ${duree(f)} en direct, ${euros(f.prix)}. Organisme certifié Qualiopi, financement OPCO ou France Travail possible.`,
+    description: `${f.resume} ${duree(f)} en présentiel à Rouen, ${euros(f.prix)}. Organisme certifié Qualiopi, financement OPCO ou France Travail possible.`,
     alternates: { canonical: f.href },
   };
 }
