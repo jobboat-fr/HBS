@@ -36,7 +36,7 @@ export default function Og() {
             Ce que demain vous demande,
           </div>
           <div style={{ display: "flex", fontSize: 72, fontWeight: 800, color: "#D9DCE1", lineHeight: 1.05 }}>
-            bâtissons-le aujourd'hui.
+            bâtissons-le aujourd&apos;hui.
           </div>
           <div style={{ display: "flex", marginTop: 28, fontSize: 30, color: "rgba(255,255,255,0.8)" }}>
             Analyse de données · Création de contenu · Marketing · SPACE AI
